@@ -27,7 +27,7 @@
 {
     [super viewDidLoad];
     
-    self.signedIn = NO;
+    self.signedIn = YES;
     
 
 }
@@ -60,6 +60,12 @@
     return 0;
 }
 
+-(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    if (self.signedIn && section == 0) return @"Logged in as";
+    
+    return @"";
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
@@ -85,6 +91,27 @@
     // Configure the cell...
     
     return cell;
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if(self.signedIn){
+        if(indexPath.section == 1) {
+            if(indexPath.row == 0) {
+                self.signedIn = !self.signedIn;
+            } else {
+                //sync!
+            }
+        }
+    }
+    else if(indexPath.section == 0) {
+        if(indexPath.row == 0) {
+            self.signedIn = !self.signedIn;
+        } else {
+            //sync!
+        }
+    }
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [tableView reloadData];
 }
 
 /*

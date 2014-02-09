@@ -50,7 +50,7 @@
     
     [[UINavigationBar appearance] setTitleTextAttributes:@{
                                                            NSForegroundColorAttributeName: [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0],
-                                                           NSFontAttributeName: [UIFont fontWithName:@"Georgia" size:0.0],
+                                                           NSFontAttributeName: [UIFont fontWithName:@"Georgia-Bold" size:0.0],
                                                            }];
     
     [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:52/255.0 green:152/255.0 blue:219/255.0 alpha:1]];
