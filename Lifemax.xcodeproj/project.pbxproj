@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9874FD7F18A74CEC006F64D3 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9874FD7E18A74CEC006F64D3 /* QuartzCore.framework */; };
 		98C7496D18A745B1000A4CAF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98C7496C18A745B1000A4CAF /* Foundation.framework */; };
 		98C7496F18A745B1000A4CAF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98C7496E18A745B1000A4CAF /* CoreGraphics.framework */; };
 		98C7497118A745B1000A4CAF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98C7497018A745B1000A4CAF /* UIKit.framework */; };
@@ -21,6 +22,13 @@
 		98C7498E18A745B1000A4CAF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98C7497018A745B1000A4CAF /* UIKit.framework */; };
 		98C7499618A745B1000A4CAF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 98C7499418A745B1000A4CAF /* InfoPlist.strings */; };
 		98C7499818A745B1000A4CAF /* LifemaxTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 98C7499718A745B1000A4CAF /* LifemaxTests.m */; };
+		98C749A418A7495B000A4CAF /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98C749A318A7495B000A4CAF /* SWRevealViewController.m */; };
+		98C749A918A74AFB000A4CAF /* MenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98C749A618A74AFB000A4CAF /* MenuViewController.m */; };
+		98DF58A418A8207E00AC2BE0 /* LifeListFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 98DF58A318A8207E00AC2BE0 /* LifeListFilter.m */; };
+		98DF58A718A83E9000AC2BE0 /* GoogleSyncViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98DF58A618A83E9000AC2BE0 /* GoogleSyncViewController.m */; };
+		98FB50A918A7FCC800C916BC /* LifeListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98FB50A818A7FCC800C916BC /* LifeListViewController.m */; };
+		98FB50AF18A8044200C916BC /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98FB50AE18A8044200C916BC /* FacebookSDK.framework */; };
+		98FB50B218A80D0900C916BC /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98FB50B118A80D0900C916BC /* LoginViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +42,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9874FD7E18A74CEC006F64D3 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		9874FD8018A74D04006F64D3 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		98C7496918A745B1000A4CAF /* Lifemax.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lifemax.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		98C7496C18A745B1000A4CAF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		98C7496E18A745B1000A4CAF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -53,6 +63,19 @@
 		98C7499318A745B1000A4CAF /* LifemaxTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "LifemaxTests-Info.plist"; sourceTree = "<group>"; };
 		98C7499518A745B1000A4CAF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		98C7499718A745B1000A4CAF /* LifemaxTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LifemaxTests.m; sourceTree = "<group>"; };
+		98C749A218A7495B000A4CAF /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
+		98C749A318A7495B000A4CAF /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
+		98C749A518A74AFB000A4CAF /* MenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuViewController.h; sourceTree = "<group>"; };
+		98C749A618A74AFB000A4CAF /* MenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuViewController.m; sourceTree = "<group>"; };
+		98DF58A218A8207E00AC2BE0 /* LifeListFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LifeListFilter.h; sourceTree = "<group>"; };
+		98DF58A318A8207E00AC2BE0 /* LifeListFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LifeListFilter.m; sourceTree = "<group>"; };
+		98DF58A518A83E9000AC2BE0 /* GoogleSyncViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoogleSyncViewController.h; sourceTree = "<group>"; };
+		98DF58A618A83E9000AC2BE0 /* GoogleSyncViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoogleSyncViewController.m; sourceTree = "<group>"; };
+		98FB50A718A7FCC800C916BC /* LifeListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LifeListViewController.h; sourceTree = "<group>"; };
+		98FB50A818A7FCC800C916BC /* LifeListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LifeListViewController.m; sourceTree = "<group>"; };
+		98FB50AE18A8044200C916BC /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../../Documents/FacebookSDK/FacebookSDK.framework; sourceTree = "<group>"; };
+		98FB50B018A80D0900C916BC /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		98FB50B118A80D0900C916BC /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +83,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9874FD7F18A74CEC006F64D3 /* QuartzCore.framework in Frameworks */,
+				98FB50AF18A8044200C916BC /* FacebookSDK.framework in Frameworks */,
 				98C7496F18A745B1000A4CAF /* CoreGraphics.framework in Frameworks */,
 				98C7497118A745B1000A4CAF /* UIKit.framework in Frameworks */,
 				98C7496D18A745B1000A4CAF /* Foundation.framework in Frameworks */,
@@ -82,6 +107,7 @@
 		98C7496018A745B1000A4CAF = {
 			isa = PBXGroup;
 			children = (
+				98C749A118A7495B000A4CAF /* SWRevealViewController */,
 				98C7497218A745B1000A4CAF /* Lifemax */,
 				98C7499118A745B1000A4CAF /* LifemaxTests */,
 				98C7496B18A745B1000A4CAF /* Frameworks */,
@@ -101,6 +127,9 @@
 		98C7496B18A745B1000A4CAF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				98FB50AE18A8044200C916BC /* FacebookSDK.framework */,
+				9874FD8018A74D04006F64D3 /* MapKit.framework */,
+				9874FD7E18A74CEC006F64D3 /* QuartzCore.framework */,
 				98C7496C18A745B1000A4CAF /* Foundation.framework */,
 				98C7496E18A745B1000A4CAF /* CoreGraphics.framework */,
 				98C7497018A745B1000A4CAF /* UIKit.framework */,
@@ -114,9 +143,13 @@
 			children = (
 				98C7497B18A745B1000A4CAF /* AppDelegate.h */,
 				98C7497C18A745B1000A4CAF /* AppDelegate.m */,
+				98DF58A118A8204700AC2BE0 /* Views */,
+				98FB50AA18A7FCDF00C916BC /* ViewControllers */,
 				98C7497E18A745B1000A4CAF /* Main.storyboard */,
 				98C7498118A745B1000A4CAF /* ViewController.h */,
 				98C7498218A745B1000A4CAF /* ViewController.m */,
+				98C749A518A74AFB000A4CAF /* MenuViewController.h */,
+				98C749A618A74AFB000A4CAF /* MenuViewController.m */,
 				98C7498418A745B1000A4CAF /* Images.xcassets */,
 				98C7497318A745B1000A4CAF /* Supporting Files */,
 			);
@@ -150,6 +183,37 @@
 				98C7499418A745B1000A4CAF /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		98C749A118A7495B000A4CAF /* SWRevealViewController */ = {
+			isa = PBXGroup;
+			children = (
+				98C749A218A7495B000A4CAF /* SWRevealViewController.h */,
+				98C749A318A7495B000A4CAF /* SWRevealViewController.m */,
+			);
+			path = SWRevealViewController;
+			sourceTree = "<group>";
+		};
+		98DF58A118A8204700AC2BE0 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				98DF58A218A8207E00AC2BE0 /* LifeListFilter.h */,
+				98DF58A318A8207E00AC2BE0 /* LifeListFilter.m */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		98FB50AA18A7FCDF00C916BC /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				98FB50A718A7FCC800C916BC /* LifeListViewController.h */,
+				98FB50A818A7FCC800C916BC /* LifeListViewController.m */,
+				98FB50B018A80D0900C916BC /* LoginViewController.h */,
+				98FB50B118A80D0900C916BC /* LoginViewController.m */,
+				98DF58A518A83E9000AC2BE0 /* GoogleSyncViewController.h */,
+				98DF58A618A83E9000AC2BE0 /* GoogleSyncViewController.m */,
+			);
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -249,9 +313,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				98FB50A918A7FCC800C916BC /* LifeListViewController.m in Sources */,
 				98C7498318A745B1000A4CAF /* ViewController.m in Sources */,
 				98C7497D18A745B1000A4CAF /* AppDelegate.m in Sources */,
+				98DF58A718A83E9000AC2BE0 /* GoogleSyncViewController.m in Sources */,
 				98C7497918A745B1000A4CAF /* main.m in Sources */,
+				98FB50B218A80D0900C916BC /* LoginViewController.m in Sources */,
+				98DF58A418A8207E00AC2BE0 /* LifeListFilter.m in Sources */,
+				98C749A418A7495B000A4CAF /* SWRevealViewController.m in Sources */,
+				98C749A918A74AFB000A4CAF /* MenuViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -378,6 +448,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/mrosales/Documents/FacebookSDK,
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Lifemax/Lifemax-Prefix.pch";
 				INFOPLIST_FILE = "Lifemax/Lifemax-Info.plist";
@@ -391,6 +465,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/mrosales/Documents/FacebookSDK,
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Lifemax/Lifemax-Prefix.pch";
 				INFOPLIST_FILE = "Lifemax/Lifemax-Info.plist";
@@ -460,6 +538,7 @@
 				98C7499D18A745B1000A4CAF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		98C7499E18A745B1000A4CAF /* Build configuration list for PBXNativeTarget "LifemaxTests" */ = {
 			isa = XCConfigurationList;
@@ -468,6 +547,7 @@
 				98C749A018A745B1000A4CAF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
