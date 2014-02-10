@@ -45,6 +45,13 @@
     }
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    self.clearsSelectionOnViewWillAppear = NO;
+}
+
 
 #pragma mark - Table view data source
 

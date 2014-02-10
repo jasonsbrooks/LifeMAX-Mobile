@@ -32,10 +32,18 @@
     [super viewDidLoad];
     self.filterExpanded = NO;
     
-    self.filterTitles = @[@"Life List", @"#raging", @"#school", @"#friends", @"#fitness", @"#nutrition", @"#spirit", @"#culture", @"#personal", @"#entertainment", @"#work", @"#travel", @"#bucketlist", @"#firsttime"];
+    self.filterTitles = @[@"all", @"#raging", @"#school", @"#friends", @"#fitness", @"#nutrition", @"#spirit", @"#culture", @"#personal", @"#entertainment", @"#work", @"#travel", @"#bucketlist", @"#firsttime"];
+    [self.tableFilterView setTitle:self.filterTitles[0]];
     
-    [self.tableFilterView addGestureRecognizer: [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleFilter)]];
-        
+    //FILTER FOR ITEM 0!
+    //
+    //
+    //
+    //
+    
+    [self.tableFilterView.tapgr addTarget:self action:@selector(toggleFilter)];
+//    [self.tableFilterView addGestureRecognizer: [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleFilter)]];
+    
     SWRevealViewController *revealController = [self revealViewController];
     
     
@@ -50,16 +58,18 @@
 
 - (void)toggleFilter
 {
-    NSLog(@"Expand Filter!");
-    
     [self.tableView beginUpdates];
     [self.tableView setTableHeaderView:self.tableFilterView];
     
     [UIView animateWithDuration:.5f animations:^{
-        if (self.filterExpanded)
+        if (self.filterExpanded) {
             [self.tableFilterView collapseView];
-        else
-            [self.tableFilterView expandView];
+            [self.tableView setScrollEnabled:YES];
+        }
+        else {
+            [self.tableFilterView expandViewToFill:self.tableView];
+            [self.tableView setScrollEnabled:NO];
+        }
         [self.tableView setTableHeaderView:self.tableFilterView];
     }];
     [self.tableView endUpdates];
@@ -75,6 +85,9 @@
 
 #pragma mark - LifeList Filter Delegate
 -(void)filter:(LifeListFilter *)filter didSelectRow:(NSInteger)row {
+    //DO THE FILTERING HERE!
+    
+    [self toggleFilter];
     NSLog(@"Selected Row : %d", row);
 }
 

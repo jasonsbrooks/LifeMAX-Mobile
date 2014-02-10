@@ -8,9 +8,10 @@
 
 #import "LifeListFilter.h"
 
-@interface LifeListFilter () <UIPickerViewDataSource, UIPickerViewDelegate>
+@interface LifeListFilter () <UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic) IBOutlet UILabel *titleLabel;
-@property (nonatomic) IBOutlet UIPickerView *picker;
+@property (nonatomic) IBOutlet UITableView *tableView;
+@property (nonatomic) IBOutlet UIView *topContainerView;
 @end
 
 @implementation LifeListFilter
@@ -25,51 +26,62 @@
 }
 
 -(void)awakeFromNib {
+    [super awakeFromNib];
+    [self.tableView setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self collapseView];
 }
 
-- (void) expandView {
-    
-    CGFloat endTopLabel = self.titleLabel.frame.origin.y + self.titleLabel.bounds.size.height;
-    
-    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, endTopLabel + self.picker.bounds.size.height );
-    self.picker.frame = CGRectMake(self.picker.frame.origin.x, endTopLabel, self.picker.frame.size.width, self.picker.frame.size.height);
-    self.picker.alpha = 1;
-    
-    NSLog(@"Frame is : (%f, %f) %f x %f)", self.picker.frame.origin.x, self.picker.frame.origin.y,
-          self.picker.frame.size.width, self.picker.frame.size.height);
+-(void)setTitle:(NSString *)title
+{
+    self.titleLabel.text = title;
+}
+
+
+
+- (void) expandViewToFill : (UIView *)superview{
+    CGFloat tableHeight = superview.bounds.origin.y + superview.bounds.size.height;
+
+    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, tableHeight );
+    self.tableView.alpha = 1;
 }
 
 - (void) collapseView{
     self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, 44);
-    self.picker.alpha = 0;
+    self.tableView.alpha = 0;
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
+
+#pragma mark - Table view Delegate
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    self.titleLabel.text = [self.delegate filter:self titleForRow:indexPath.row];
+    [self.delegate filter:self didSelectRow:indexPath.row];
+    
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Drawing code
+    static NSString *CellIdentifier = @"goal_cell";
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+    
+    cell.textLabel.text = [self.delegate filter:self titleForRow:indexPath.row];
+    
+    // Configure the cell...
+    
+    UIView * selectedBackgroundView = [[UIView alloc] initWithFrame:cell.bounds];
+    [selectedBackgroundView setBackgroundColor:[UIColor colorWithRed:44.0/255 green:62.0/255 blue:80.0/255 alpha:0.7]]; // set color here
+    
+    [cell setSelectedBackgroundView:selectedBackgroundView];
+    
+    return cell;
 }
-*/
 
--(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
-    self.titleLabel.text = [self.delegate filter:self titleForRow:row];
-    [self.delegate filter:self didSelectRow:row];
-}
-
--(NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
-{
-    return [self.delegate numberOfRowsInFilter:self];
-}
-
--(NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
+#pragma mark - Table view datasource
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
 
--(NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
-    return [self.delegate filter:self titleForRow:row];
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return [self.delegate numberOfRowsInFilter:self];
 }
-
 @end

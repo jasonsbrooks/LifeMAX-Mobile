@@ -54,6 +54,8 @@
                                                            }];
     
     [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:52/255.0 green:152/255.0 blue:219/255.0 alpha:1]];
+    [[UINavigationBar appearance] setTintColor:[UIColor colorWithRed:236/255.0 green:240/255.0 blue:241/255.0 alpha:1]];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
 	self.viewController = revealController;
 	
@@ -123,7 +125,7 @@
     
 }
 
-#define LogDelegates 1
+#define LogDelegates 0
 
 #if LogDelegates
 - (NSString*)stringFromFrontViewPosition:(FrontViewPosition)position

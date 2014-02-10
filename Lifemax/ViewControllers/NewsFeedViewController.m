@@ -1,19 +1,19 @@
 //
-//  GoogleSyncViewController.m
+//  NewsFeedViewController.m
 //  Lifemax
 //
 //  Created by Micah Rosales on 2/9/14.
 //  Copyright (c) 2014 YUCG. All rights reserved.
 //
 
-#import "GoogleSyncViewController.h"
+#import "NewsFeedViewController.h"
+#import "FeedUserTaskCell.h"
 #import "SWRevealViewController.h"
+@interface NewsFeedViewController ()
 
-@interface GoogleSyncViewController ()
-@property BOOL signedIn;
 @end
 
-@implementation GoogleSyncViewController
+@implementation NewsFeedViewController
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -28,7 +28,7 @@
 {
     [super viewDidLoad];
     
-    self.signedIn = YES;
+    self.title = NSLocalizedString(@"News Feed", nil);
     
     SWRevealViewController *revealController = [self revealViewController];
     
@@ -41,8 +41,11 @@
     
     self.navigationItem.leftBarButtonItem = revealButtonItem;
 
-    
-
+    // Uncomment the following line to preserve selection between presentations.
+    // self.clearsSelectionOnViewWillAppear = NO;
+ 
+    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
+    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 - (void)didReceiveMemoryWarning
@@ -56,75 +59,49 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    return self.signedIn ? 2 : 1;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    if(self.signedIn) {
-        if (section == 0)
-            return 1;
-    }
-    return 3;
-}
-
--(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if (self.signedIn && section == 0) return @"Logged in as";
-    
-    return @"";
+    return 2;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
+
     
-    
-    if(self.signedIn) {
-        if(indexPath.section == 0)
-            CellIdentifier = @"userinfo";
-        else if(indexPath.row == 0)
-            CellIdentifier = @"logout";
-        else if(indexPath.row == 1)
-            CellIdentifier = @"sync";
-        else if(indexPath.row == 2)
-            CellIdentifier = @"import";
-    } else {
-        if (indexPath.row == 0)
-            CellIdentifier = @"login";
-        else if (indexPath.row == 1)
-            CellIdentifier = @"sync-disabled";
-        else if(indexPath.row == 2)
-            CellIdentifier = @"import-disabled";
+    if(indexPath.row == 0) {
+        CellIdentifier = @"user_action";
+        FeedUserTaskCell *feedCell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+        NSMutableAttributedString *atrTitle = [[NSMutableAttributedString alloc]initWithString:@"Blake Hofmeister "
+                                                                                    attributes:@{NSFontAttributeName:
+                                                                                                     [UIFont boldSystemFontOfSize:[UIFont systemFontSize]]}];
+        NSDictionary * attributes = @{NSFontAttributeName:
+                                          [UIFont systemFontOfSize:[UIFont systemFontSize]]};
+        NSAttributedString * subString = [[NSAttributedString alloc] initWithString:@"completed a todo." attributes:attributes];
+        [atrTitle appendAttributedString:subString];
+        
+        [feedCell setAttributedAction:atrTitle];
+        [feedCell setTimestamp:@"2 hours ago"];
+        [feedCell setTitle:@"Hike East Rock"];
+        [feedCell setSubtitle:@"#fitness"];
+
+        
+        [feedCell setImageFromURL:@"http://24.media.tumblr.com/800a171468afdc299c6bb2b63ae56f0b/tumblr_mlnut5i5VP1r0cgg3o1_1280.jpg"];
+        return feedCell;
     }
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-    
+    else {
+        CellIdentifier = @"max_suggests";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+        
+        return cell;
+    }
     
     // Configure the cell...
     
-    return cell;
-}
-
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(self.signedIn){
-        if(indexPath.section == 1) {
-            if(indexPath.row == 0) {
-                self.signedIn = !self.signedIn;
-            } else {
-                //sync!
-            }
-        }
-    }
-    else if(indexPath.section == 0) {
-        if(indexPath.row == 0) {
-            self.signedIn = !self.signedIn;
-        } else {
-            //sync!
-        }
-    }
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [tableView reloadData];
 }
 
 /*

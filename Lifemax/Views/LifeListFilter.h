@@ -13,8 +13,12 @@
 @interface LifeListFilter : UIView
 
 @property (nonatomic, weak) IBOutlet id <LifeListFilterDelegate> delegate;
-- (void) expandView;
+- (void) expandViewToFill : (UIView *)superview;
 - (void) collapseView;
+@property (nonatomic, weak) IBOutlet UITapGestureRecognizer *tapgr;
+
+-(void)setTitle:(NSString *)title;
+
 
 @end
 
