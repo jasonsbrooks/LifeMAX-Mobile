@@ -7,6 +7,7 @@
 //
 
 #import "CameraCheckbox.h"
+//#import "UIImageView+AFNetworking.h"
 
 @interface CameraCheckbox ()
 @property (nonatomic, strong) UIImageView *backgroundImageView;
@@ -128,7 +129,7 @@
     
 }
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    NSLog(@"Touches Began!");
+//    NSLog(@"Touches Began!");
     [self.cameraCheckboxImageView setHighlighted:YES];
 }
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -139,13 +140,25 @@
 }
 -(void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    NSLog(@"Touches Canceled");
+//    NSLog(@"Touches Canceled");
     [self.cameraCheckboxImageView setHighlighted:NO];
 }
 
 - (void)tap:(UITapGestureRecognizer *)tapgr
 {
-    NSLog(@"Tap Detected!");
+//    NSLog(@"Tap Detected!");
+}
+
+- (void) addTapTarget:(id) target action:(SEL)action {
+    [self.tapgr addTarget:target action:action];
+}
+
+- (void) setBackgroundImage:(UIImage *) image {
+    [self.backgroundImageView setImage:image];
+}
+
+- (void) setBackgroundImageFromUrl:(NSString *)imageUrl {
+//    [self.backgroundImageView setImageWithURL:[NSURL URLWithString:imageUrl]];
 }
 
 /*

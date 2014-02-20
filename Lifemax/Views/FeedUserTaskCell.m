@@ -8,7 +8,7 @@
 
 #import "FeedUserTaskCell.h"
 //#import "UIImageView+URLDownload.h"
-#import "UIImageView+AFNetworking.h"
+//#import "UIImageView+AFNetworking.h"
 
 @interface FeedUserTaskCell ()
 @property (nonatomic, strong) IBOutlet UILabel *actionLabel;
@@ -59,7 +59,7 @@
 }
 -(void)setImageFromURL:(NSString *)imageURL {
     
-    [self.taskImageView setImageWithURL:[NSURL URLWithString:imageURL] placeholderImage:[UIImage imageNamed:@"todo-camera.png"]];
+//    [self.taskImageView setImageWithURL:[NSURL URLWithString:imageURL] placeholderImage:[UIImage imageNamed:@"image_placeholder"]];
 }
 
 @end

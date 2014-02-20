@@ -15,6 +15,10 @@
 @property (nonatomic, readwrite) IBOutlet NSString *date;
 @property (nonatomic, readwrite) IBOutlet NSString *time;
 
-@property (nonatomic, readwrite) IBOutlet UIImage *image;
+
+- (void) setTaskImage:(UIImage *)image;
+- (void) setTaskImageFromUrl : (NSString *)imageUrl;
+- (void) setCheckboxTarget:(id) target action:(SEL) action;
+
 
 @end

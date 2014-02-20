@@ -33,7 +33,6 @@
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:storyboardName bundle:[NSBundle mainBundle]];
     
     
-	
 	LifeListViewController *frontViewController = [storyboard instantiateViewControllerWithIdentifier:@"LifeListViewController"];
 	MenuViewController *rearViewController = [storyboard instantiateViewControllerWithIdentifier:@"MenuViewController"];
 	

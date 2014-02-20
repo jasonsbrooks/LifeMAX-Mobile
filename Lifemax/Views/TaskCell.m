@@ -7,14 +7,17 @@
 //
 
 #import "TaskCell.h"
-
+#import "CameraCheckbox.h"
 @interface TaskCell ()
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
 @property (nonatomic, weak) IBOutlet UILabel *subtitleLabel;
 @property (nonatomic, weak) IBOutlet UILabel *dateLabel;
 @property (nonatomic, weak) IBOutlet UILabel *timeLabel;
 
-@property (nonatomic, weak) IBOutlet UIButton *checkbox;
+@property (nonatomic, weak) IBOutlet CameraCheckbox *checkbox;
+
+@property (nonatomic, weak) id checkboxTarget;
+@property (nonatomic) SEL checkboxAction;
 
 @end
 
@@ -27,8 +30,29 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         // Initialization code
+        [self configure];
     }
     return self;
+}
+
+-(void)awakeFromNib {
+    [super awakeFromNib];
+    [self configure];
+}
+
+- (void) configure {
+    [self.checkbox addTapTarget:self action:@selector(checkboxTapped)];
+}
+
+- (void) checkboxTapped {
+    if(self.checkboxAction && self.checkboxTarget) {
+        [self.checkboxTarget performSelector:self.checkboxAction withObject:self afterDelay:0];
+    }
+}
+
+- (void) setCheckboxTarget:(id) target action:(SEL) action {
+    self.checkboxTarget = target;
+    self.checkboxAction = action;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
@@ -67,11 +91,12 @@
     self.timeLabel.text = time;
 }
 
--(UIImage *)image {
-    return [self.checkbox backgroundImageForState:UIControlStateNormal];
+
+- (void) setTaskImage:(UIImage *)image {
+    [self.checkbox setBackgroundImage:image];
 }
--(void)setImage:(UIImage *)image {
-    [self.checkbox setBackgroundImage:image forState:UIControlStateNormal];
+- (void) setTaskImageFromUrl : (NSString *)imageUrl {
+    [self.checkbox setBackgroundImageFromUrl:imageUrl];
 }
 
 

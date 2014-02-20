@@ -10,4 +10,9 @@
 
 @interface CameraCheckbox : UIView
 
+- (void) addTapTarget:(id) target action:(SEL)action ;
+
+- (void) setBackgroundImage:(UIImage *) image;
+- (void) setBackgroundImageFromUrl:(NSString *)imageUrl;
+
 @end
