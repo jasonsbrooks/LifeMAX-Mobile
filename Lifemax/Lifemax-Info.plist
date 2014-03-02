@@ -25,14 +25,14 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fb546083052126628</string>
+				<string>fb563126443760291</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>FacebookAppID</key>
-	<string>546083052126628</string>
+	<string>563126443760291</string>
 	<key>FacebookDisplayName</key>
 	<string>Lifemax</string>
 	<key>LSRequiresIPhoneOS</key>

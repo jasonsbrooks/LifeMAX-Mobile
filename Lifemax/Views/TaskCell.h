@@ -10,10 +10,10 @@
 
 @interface TaskCell : UITableViewCell
 
-@property (nonatomic, strong) IBOutlet NSString *title;
-@property (nonatomic, readwrite) IBOutlet NSString *subtitle;
-@property (nonatomic, readwrite) IBOutlet NSString *date;
-@property (nonatomic, readwrite) IBOutlet NSString *time;
+@property (nonatomic, strong)  NSString *title;
+@property (nonatomic, readwrite)  NSString *subtitle;
+@property (nonatomic, readwrite)  NSString *date;
+@property (nonatomic, readwrite)  NSString *time;
 
 
 - (void) setTaskImage:(UIImage *)image;

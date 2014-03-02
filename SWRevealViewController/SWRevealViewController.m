@@ -562,6 +562,10 @@ static NSString * const SWSegueRightIdentifier = @"sw_right";
     [self _setFrontViewPosition:initialPosition withDuration:0.0];
 }
 
+-(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return YES;
+}
+
 
 - (void)viewDidAppear:(BOOL)animated
 {
@@ -903,6 +907,7 @@ static NSString * const SWSegueRightIdentifier = @"sw_right";
     // allow gesture only within the bounds defined by the draggableBorderWidth property
     return draggableBorderAllowing ;
 }
+
 
 
 #pragma mark - Gesture Based Reveal

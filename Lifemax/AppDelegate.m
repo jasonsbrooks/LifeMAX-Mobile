@@ -11,20 +11,32 @@
 #import "MenuViewController.h"
 #import "LifeListViewController.h"
 #import <FacebookSDK/FacebookSDK.h>
-@interface AppDelegate () <SWRevealViewControllerDelegate>
 
+#import "RKTest.h"
+
+#import "NSString+MD5.h"
+
+#import "LMRestKitManager.h"
+#import "LifemaxHeaders.h"
+
+@interface AppDelegate () <SWRevealViewControllerDelegate>
+@property BOOL dismissing;
 @end
 
 @implementation AppDelegate
 
 @synthesize window = _window;
-@synthesize viewController = _viewController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    self.dismissing = NO;
     [FBLoginView class];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dismissLoginController) name:@"FACEBOOK_DID_LOGIN_NOTIFICATION" object:nil];
+    
+    RKLogConfigureByName("RestKit", RKLogLevelCritical);
+    //    RKLogConfigureByName("RestKit/ObjectMapping", RKLogLevelTrace);
+    RKLogConfigureByName("RestKit/Network", RKLogLevelCritical);
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(facebookLoginSuccess) name:@"FACEBOOK_DID_LOGIN_NOTIFICATION" object:nil];
     
 	UIWindow *window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 	self.window = window;
@@ -42,6 +54,7 @@
 	SWRevealViewController *revealController = [[SWRevealViewController alloc] initWithRearViewController:rearNavigationController frontViewController:frontNavigationController];
     revealController.delegate = self;
     
+    self.revealViewController = revealController;
     
     //revealController.bounceBackOnOverdraw=NO;
     //revealController.stableDragOnOverdraw=YES;
@@ -56,12 +69,21 @@
     [[UINavigationBar appearance] setTintColor:[UIColor colorWithRed:236/255.0 green:240/255.0 blue:241/255.0 alpha:1]];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
-	self.viewController = revealController;
 	
-	self.window.rootViewController = self.viewController;
+	self.window.rootViewController = self.revealViewController;
 	[self.window makeKeyAndVisible];
+    
+    
+    [[LMRestKitManager sharedManager] initializeMappings];
+
+    
 	return YES;
 }
+
+- (void)initCoreData {
+    
+}
+
 
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
@@ -70,7 +92,7 @@
     
     // Call FBAppCall's handleOpenURL:sourceApplication to handle Facebook app responses
     BOOL wasHandled = [FBAppCall handleOpenURL:url sourceApplication:sourceApplication];
-    if(wasHandled) [self dismissLoginController];
+    if(wasHandled && !self.dismissing) [self dismissLoginController];
     // You can add your app-specific url handling code here if needed
     
     return wasHandled;
@@ -100,14 +122,14 @@
             loggedIn = YES;
         } else {
             loggedIn = NO;
-
+            
         }
     }
     
     if(!loggedIn)
-        [self presentLoginController];
+        [self performSelector:@selector(presentLoginController) withObject:nil afterDelay:.2];
     else
-        [self dismissLoginController];
+        [self facebookLoginSuccess];
 }
 
 -(void) presentLoginController {
@@ -118,13 +140,135 @@
     [self.window.rootViewController presentViewController:loginController animated:YES completion:nil];
 }
 
--(void)dismissLoginController {
-    if(self.window.rootViewController.presentedViewController)
-       [self.window.rootViewController dismissViewControllerAnimated:YES completion:nil];
+- (void)facebookLoginSuccess {
+    NSString *token = [[[FBSession activeSession] accessTokenData] accessToken];
+    NSLog(@"Facebook Login Success!");
+    
+    [self triggerLMLoginWithToken:token];
+    
+    if (self.revealViewController.presentedViewController && !self.dismissing) {
+        self.dismissing = YES;
+        [self dismissLoginController];
+    }
+}
+
+- (void)triggerLMLoginWithToken:(NSString *)fbAccessToken {
+    
+    [[RKTest sharedManager] getPath:@"/api/login" parameters:@{ @"userToken": fbAccessToken} success:^(AFHTTPRequestOperation *operation, id jsonResponse) {
+        [self saveLifemaxLogin:jsonResponse];
+        NSLog(@"Lifemax Login Success!");
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+
+        if ([operation.responseString isEqualToString:@"Error: User does not exist!"] ) {
+            [[RKTest sharedManager] postPath:@"/api/register" parameters:@{@"shortToken" : fbAccessToken} success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                NSLog(@"Register success!");
+                NSLog(@"REgister Response: %@", responseObject);
+                [self triggerLMLoginWithToken:fbAccessToken];
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                NSLog(@"Lifemax failed to register an acount: %@", [error localizedDescription]);
+                NSLog(@"Register Response: %@", operation.responseString);
+            }];
+        } else {
+            NSLog(@"[LM-Login] Error : %@", [error localizedDescription]);
+            NSLog(@"[LM-Login] Response : %@", operation.responseString);
+        }
+    }];
+}
+
+- (void) saveLifemaxLogin:(id)loginResponse {
+    NSUserDefaults *stdDefaults = [NSUserDefaults standardUserDefaults];
+    [stdDefaults setObject:loginResponse forKey:LIFEMAX_LOGIN_INFORMATION_KEY];
+    [stdDefaults synchronize];
+    
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:LIFEMAX_LOGGED_IN object:loginResponse];
+    
+    NSString *tok = [loginResponse objectForKey:@"authToken"];
+    NSString *tasksPath = [NSString stringWithFormat:@"/api/user/%@/tasks", [loginResponse objectForKey:@"id"]];
+//    NSString *deleteTasksPath = [NSString stringWithFormat:@"/api/user/%@/deletetasks", [loginResponse objectForKey:@"id"]];
+    
+    NSDictionary *postparams = @{
+                                 @"description": @"code lifemax app",
+                                 @"endtime": @"2014-02-24T02:00:00Z",
+                                 @"hashToken": [tok md5],
+                                 @"hashtag": @"#raging",
+                                 @"location": @"zoo",
+                                 @"name": @"CodeCodeCode",
+                                 @"pictureurl": @"",
+                                 @"recurrence": @"RRULE:FREQ=WEEKLY;UNTIL=20140701T100000-07:00",
+                                 @"starttime": @"2014-02-23T19:25:00Z"
+                                 };
+    
+    BOOL post = NO;
+    
+    if(post) {
+        [[RKTest sharedManager] postPath:tasksPath parameters:postparams success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            NSLog(@"Post success: %@", responseObject);
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"Data : %@", [[NSString alloc]initWithData:[operation responseData] encoding:NSUTF8StringEncoding]);
+        }];
+
+    } else {
+        
+//        [[LMRestKitManager sharedManager] fetchTasksForDefaultUser];
+
+        /*
+        [[RKTest sharedManager] getPath:tasksPath parameters:params success:^(AFHTTPRequestOperation *operation, id jsonResponse) {
+            NSDictionary *task = [jsonResponse lastObject];
+            
+            
+            if(task) {
+                NSDictionary *extendedProps = task[@"extendedProperties"][@"shared"];
+                
+                NSLog(@"TaskDescription: %@", [task objectForKey:@"description"]);
+                NSLog(@"Task ID: %@", [task objectForKey:@"id"]);
+                NSLog(@"Task Summary: %@", [task objectForKey:@"summary"]);
+                NSLog(@"Extended Props: %@", extendedProps);
+                NSLog(@"Starts : %@", task[@"start"][@"dateTime"]);
+                NSLog(@"ends : %@", task[@"end"][@"dateTime"]);
+                NSLog(@"Updated : %@", task[@"updated"]);
+            }
+
+            
+         
+             NSDictionary * task1 = [jsonResponse lastObject];
+             NSLog(@"Fetch Headers : %@", [operation.request allHTTPHeaderFields]);
+             if (task1) {
+             [[RKTest sharedManager] postPath:deleteTasksPath parameters:@{@"hashToken" : [tok md5], @"eventId" : task1[@"id"]} success:^(AFHTTPRequestOperation *operation, id responseObject) {
+             NSLog(@"Delete Successful! : %@", responseObject);
+             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+             NSLog(@"Delete Headers : %@", [operation.request allHTTPHeaderFields]);
+             NSLog(@"Delete Response: %@", operation.responseString);
+             }];
+             }
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"Error : %@", operation.responseString);
+            NSLog(@"Operation path: %@ ", operation.request.URL);
+        }];
+    */
+    }
+    
+    
+    
+    
+
+     
+    
+    
+    
     
 }
 
-#define LogDelegates 0
+-(void)dismissLoginController {
+    if(self.window.rootViewController.presentedViewController)
+        [self.window.rootViewController dismissViewControllerAnimated:YES completion:^{
+            self.dismissing = NO;
+        }];
+    
+}
+
+#define LogDelegates 1
 
 #if LogDelegates
 - (NSString*)stringFromFrontViewPosition:(FrontViewPosition)position
@@ -182,7 +326,7 @@
 }
 
 #endif
-							
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -191,7 +335,7 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
+    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 }
 
