@@ -13,4 +13,7 @@
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) SWRevealViewController *revealViewController;
 
+- (void) disablePanning:(id) sender;
+- (void) enablePanning:(id) sender;
+
 @end

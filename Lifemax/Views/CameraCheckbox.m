@@ -13,6 +13,8 @@
 @property (nonatomic, strong) UIImageView *backgroundImageView;
 @property (nonatomic, strong) UIImageView *cameraCheckboxImageView;
 @property (nonatomic, strong) UITapGestureRecognizer *tapgr;
+@property (nonatomic, weak) id target;
+@property (nonatomic) SEL action;
 
 @end
 
@@ -147,10 +149,16 @@
 - (void)tap:(UITapGestureRecognizer *)tapgr
 {
 //    NSLog(@"Tap Detected!");
+    if(self.target && self.action) {
+        [self.target performSelector:self.action withObject:nil afterDelay:0];
+    }
 }
 
 - (void) addTapTarget:(id) target action:(SEL)action {
-    [self.tapgr addTarget:target action:action];
+//    [self.tapgr addTarget:target action:action];
+    NSLog(@"Added target: %@, action", target);
+    self.target = target;
+    self.action = action;
 }
 
 - (void) setBackgroundImage:(UIImage *) image {

@@ -59,6 +59,11 @@ static void RKTwitterShowAlertWithError(NSError *error)
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.locale = [NSLocale currentLocale];
+    dateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
+    dateFormatter.dateFormat = @"yyyy-MM-dd'T'hh:mm:ssZ";
     [self configureFRC];
 
     self.filterExpanded = NO;
@@ -66,12 +71,8 @@ static void RKTwitterShowAlertWithError(NSError *error)
     self.filterTitles = [@[@"all"] arrayByAddingObjectsFromArray:LIFEMAX_HASHTAGS];
     
     [self.tableFilterView setTitle:self.filterTitles[0]];
+
     
-    //FILTER FOR ITEM 0!
-    //
-    //
-    //
-    //
     
     [self.tableFilterView.tapgr addTarget:self action:@selector(toggleFilter)];
 //    [self.tableFilterView addGestureRecognizer: [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleFilter)]];
@@ -89,17 +90,19 @@ static void RKTwitterShowAlertWithError(NSError *error)
 
     self.navigationItem.leftBarButtonItem = revealButtonItem;
     
-//    [self.tableView setEditing:YES animated:YES];
-    [self.navigationItem setRightBarButtonItem:self.editButtonItem];
-    
+    self.refreshControl = [[UIRefreshControl alloc]init];
+    [self.refreshControl addTarget:self action:@selector(refresh:) forControlEvents:UIControlEventValueChanged];
+    [self filterForHashtag:nil];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self performFetch];
+    [self loadData];
 }
 
 - (void) configureFRC {
-    // Set debug logging level. Set to 'RKLogLevelTrace' to see JSON payload
-    RKLogConfigureByName("RestKit/Network", RKLogLevelError);
-    RKLogConfigureByName("RestKit/ObjectMapping", RKLogLevelError);
-
-    // Setup View and Table View
     
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Task"];
     NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"start" ascending:NO];
@@ -119,40 +122,44 @@ static void RKTwitterShowAlertWithError(NSError *error)
     [self.fetchedResultsController setDelegate:self];
     BOOL fetchSuccessful = [self.fetchedResultsController performFetch:&error];
     
-//    NSAssert([[self.fetchedResultsController fetchedObjects] count], @"Seeding didn't work...");
     if (! fetchSuccessful) {
         RKTwitterShowAlertWithError(error);
     }
-    
-
 }
 
 
 - (void) loadData {
     //NSFetchedResultsController should automatically refresh
-//    [[LMRestKitManager sharedManager] 
-//    [[LMRestKitManager sharedManager] fetchTasksForDefaultUser];
+    //just trigger the manager to fetch from the server
+    [[LMRestKitManager sharedManager] fetchTasksForDefaultUser];
 }
+
+- (void) performFetch {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        BOOL fetchSuccessful = [self.fetchedResultsController performFetch:nil];
+        
+        if(fetchSuccessful)
+            [self.tableView reloadData];
+        else
+            NSLog(@"ERROR FETCHING!");
+    });
+}
+
 
 - (IBAction)refresh:(id)sender
 {
     // Load the object model via RestKit
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        BOOL fetchSuccessful = [self.fetchedResultsController performFetch:nil];
-        NSLog(@"Fetched %d Objects Manually!",[[self.fetchedResultsController fetchedObjects] count] );
-        NSLog(@"FRC CONFIG - %d sections", [self.fetchedResultsController.sections count]);
+    if (self.refreshControl.refreshing) {
         
-        for (Task *obj in [self.fetchedResultsController fetchedObjects]) {
-            NSLog(@"Task %@: %@", obj.task_id,obj.name);
-        }
-        
-        
-        [self.tableView reloadData];
-    });
-    
-
-//    [self loadData];
+        //prefetch the cached data, then load from server
+        [self performFetch];
+        [self loadData];
+        //end the spinner after a shory timeout
+        [self.refreshControl performSelector:@selector(endRefreshing) withObject:nil afterDelay:.4];
+    }
+    else {
+      [self.refreshControl endRefreshing];
+    }
 }
 
 
@@ -184,12 +191,23 @@ static void RKTwitterShowAlertWithError(NSError *error)
     // Dispose of any resources that can be recreated.
 }
 
+-(void) filterForHashtag:(NSString *)hashtag {
+    NSPredicate *predicate = nil;
+    if (hashtag) {
+        predicate = [NSPredicate predicateWithFormat:@"hashtag = %@", hashtag];
+    }
+    self.fetchedResultsController.fetchRequest.predicate = predicate;
+    [self performFetch];
+}
+
 #pragma mark - LifeList Filter Delegate
 -(void)filter:(LifeListFilter *)filter didSelectRow:(NSInteger)row {
-    //DO THE FILTERING HERE!
-    
+    if(row > 0)
+        [self filterForHashtag:[self filter:filter titleForRow:row]];
+    else
+        [self filterForHashtag:nil];
+
     [self toggleFilter];
-    NSLog(@"Selected Row : %d", row);
 }
 
 -(NSInteger)numberOfRowsInFilter:(LifeListFilter *)filter {
@@ -221,7 +239,6 @@ static void RKTwitterShowAlertWithError(NSError *error)
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     id<NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController.sections objectAtIndex:section];
-    NSLog(@"%d rows in section %d", [sectionInfo numberOfObjects], section);
     return [sectionInfo numberOfObjects];
 
 }
@@ -230,12 +247,10 @@ static void RKTwitterShowAlertWithError(NSError *error)
 {
     static NSString *CellIdentifier = @"taskCell";
     
-    
-    NSLog(@"Cell for row at indexPath %d - %d", indexPath.section, indexPath.row);
-    
     TaskCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     Task *task = [self.fetchedResultsController objectAtIndexPath:indexPath];
 
+    [cell setCheckboxTarget:self action:@selector(checkboxTapped:)];
     cell.title = task.name ? task.name : @"Task Name";
     cell.subtitle = task.hashtag;
     
@@ -254,22 +269,16 @@ static void RKTwitterShowAlertWithError(NSError *error)
     else
         cell.time = nil;
     
-    NSLog(@"Cell for task: %@", task);
-    
-    // Configure the cell...
-    
     return cell;
 }
 
 #pragma mark NSFetchedResultsControllerDelegate methods
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     [self.tableView beginUpdates];
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     switch(type) {
         case NSFetchedResultsChangeInsert:
             [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -281,15 +290,14 @@ static void RKTwitterShowAlertWithError(NSError *error)
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath*)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath*)newIndexPath {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     UITableView* tableView = self.tableView;
     switch(type) {
         case NSFetchedResultsChangeInsert:
-            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
             
         case NSFetchedResultsChangeDelete:
-            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
             
         case NSFetchedResultsChangeUpdate:
@@ -304,7 +312,6 @@ static void RKTwitterShowAlertWithError(NSError *error)
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     [self.tableView endUpdates];
 }
 
@@ -324,29 +331,12 @@ static void RKTwitterShowAlertWithError(NSError *error)
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+//        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        Task *t = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        [[LMRestKitManager sharedManager] deleteTask:t];
+        
     }
 }
-
-
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
- {
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
-
 
  #pragma mark - Navigation
  
@@ -359,7 +349,13 @@ static void RKTwitterShowAlertWithError(NSError *error)
      editController.task = [self.fetchedResultsController objectAtIndexPath:[self.tableView indexPathForSelectedRow]];
      
  }
- 
+
+#pragma mark - Checkbox target method
+
+- (void) checkboxTapped:(id)sender {
+    NSIndexPath *indexpath = [self.tableView indexPathForCell:sender];
+    NSLog(@"CheckboxTapped: %@",indexpath );
+}
 
 
 

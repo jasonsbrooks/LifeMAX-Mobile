@@ -54,6 +54,7 @@
 	SWRevealViewController *revealController = [[SWRevealViewController alloc] initWithRearViewController:rearNavigationController frontViewController:frontNavigationController];
     revealController.delegate = self;
     
+    
     self.revealViewController = revealController;
     
     //revealController.bounceBackOnOverdraw=NO;
@@ -80,8 +81,11 @@
 	return YES;
 }
 
-- (void)initCoreData {
-    
+- (void) disablePanning:(id) sender {
+    self.revealViewController.panGestureRecognizer.enabled = NO;
+}
+- (void) enablePanning:(id) sender {
+    self.revealViewController.panGestureRecognizer.enabled = YES;
 }
 
 
@@ -268,7 +272,7 @@
     
 }
 
-#define LogDelegates 1
+#define LogDelegates 0
 
 #if LogDelegates
 - (NSString*)stringFromFrontViewPosition:(FrontViewPosition)position

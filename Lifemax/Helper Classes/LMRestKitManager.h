@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+@class Task;
 @interface LMRestKitManager : NSObject
 
 - (void) fetchTasksForUser:(NSString *)userid hashtoken:(NSString *)hashtoken;
@@ -15,5 +15,7 @@
 + (LMRestKitManager *)sharedManager;
 
 -(void)fetchTasksForDefaultUser;
+- (BOOL)deleteTask:(Task *) task;
+- (void) newTaskForValues:(NSDictionary *)values;
 
 @end

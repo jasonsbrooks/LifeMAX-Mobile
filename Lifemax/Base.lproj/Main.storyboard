@@ -192,6 +192,7 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="checkbox" destination="10u-CB-zQ2" id="u7c-Sg-sz3"/>
                                     <outlet property="dateLabel" destination="Qgq-jb-Ede" id="Hz4-p6-8Tk"/>
                                     <outlet property="subtitleLabel" destination="knD-Va-a8L" id="Sv3-JB-k5f"/>
                                     <outlet property="timeLabel" destination="YZW-XS-Nuf" id="1rd-jR-MyY"/>
@@ -1162,7 +1163,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <view key="tableFooterView" contentMode="scaleToFill" id="wzu-71-KfL">
-                            <rect key="frame" x="0.0" y="141" width="320" height="200"/>
+                            <rect key="frame" x="0.0" y="141" width="320" height="248"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <pageControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="tS7-b6-ZHU">
@@ -1178,6 +1179,18 @@
                                         <outlet property="delegate" destination="eJq-Mf-uvR" id="Zdz-Ud-g8N"/>
                                     </connections>
                                 </scrollView>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vf2-rO-Akx">
+                                    <rect key="frame" x="98" y="208" width="124" height="40"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="19"/>
+                                    <state key="normal" title="Delete Task">
+                                        <color key="titleColor" red="0.90588235289999997" green="0.29803921570000003" blue="0.23529411759999999" alpha="1" colorSpace="deviceRGB"/>
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="deletePressed:" destination="eJq-Mf-uvR" eventType="touchUpInside" id="PH4-LU-y2z"/>
+                                    </connections>
+                                </button>
                             </subviews>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         </view>
@@ -1213,6 +1226,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" id="ODO-Qd-0zC"/>
                     <connections>
+                        <outlet property="deleteButton" destination="Vf2-rO-Akx" id="I88-Tx-TS3"/>
                         <outlet property="hashtagScrollView" destination="zRn-qN-pWP" id="gMl-lI-68V"/>
                         <outlet property="pagingControl" destination="tS7-b6-ZHU" id="VLE-AS-QFm"/>
                         <outlet property="scrollViewContainer" destination="wzu-71-KfL" id="Iyv-2B-9ba"/>

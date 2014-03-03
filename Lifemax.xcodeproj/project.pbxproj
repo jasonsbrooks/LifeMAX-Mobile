@@ -22,6 +22,7 @@
 		989CE3F118B9364F0079ECA7 /* HashtagSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = 989CE3F018B9364F0079ECA7 /* HashtagSelector.m */; };
 		989CE3F318B93AE00079ECA7 /* HashtagSelector.xib in Resources */ = {isa = PBXBuildFile; fileRef = 989CE3F218B93AE00079ECA7 /* HashtagSelector.xib */; };
 		989CE3F618B94C490079ECA7 /* EditFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 989CE3F518B94C490079ECA7 /* EditFieldCell.m */; };
+		98A269A218C40C6E0053D20B /* UIAlertView+NSCookbook.m in Sources */ = {isa = PBXBuildFile; fileRef = 98A269A118C40C6E0053D20B /* UIAlertView+NSCookbook.m */; };
 		98B62E7D18B5E8D500872BDE /* RKTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 98B62E7C18B5E8D500872BDE /* RKTest.m */; };
 		98C7496D18A745B1000A4CAF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98C7496C18A745B1000A4CAF /* Foundation.framework */; };
 		98C7496F18A745B1000A4CAF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98C7496E18A745B1000A4CAF /* CoreGraphics.framework */; };
@@ -30,7 +31,6 @@
 		98C7497918A745B1000A4CAF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 98C7497818A745B1000A4CAF /* main.m */; };
 		98C7497D18A745B1000A4CAF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 98C7497C18A745B1000A4CAF /* AppDelegate.m */; };
 		98C7498018A745B1000A4CAF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98C7497E18A745B1000A4CAF /* Main.storyboard */; };
-		98C7498318A745B1000A4CAF /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98C7498218A745B1000A4CAF /* ViewController.m */; };
 		98C7498518A745B1000A4CAF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98C7498418A745B1000A4CAF /* Images.xcassets */; };
 		98C7498C18A745B1000A4CAF /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98C7498B18A745B1000A4CAF /* XCTest.framework */; };
 		98C7498D18A745B1000A4CAF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98C7496C18A745B1000A4CAF /* Foundation.framework */; };
@@ -89,6 +89,8 @@
 		989CE3F218B93AE00079ECA7 /* HashtagSelector.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HashtagSelector.xib; sourceTree = "<group>"; };
 		989CE3F418B94C490079ECA7 /* EditFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditFieldCell.h; sourceTree = "<group>"; };
 		989CE3F518B94C490079ECA7 /* EditFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditFieldCell.m; sourceTree = "<group>"; };
+		98A269A018C40C6E0053D20B /* UIAlertView+NSCookbook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+NSCookbook.h"; sourceTree = "<group>"; };
+		98A269A118C40C6E0053D20B /* UIAlertView+NSCookbook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+NSCookbook.m"; sourceTree = "<group>"; };
 		98B62E7B18B5E8D500872BDE /* RKTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RKTest.h; sourceTree = "<group>"; };
 		98B62E7C18B5E8D500872BDE /* RKTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RKTest.m; sourceTree = "<group>"; };
 		98C7496918A745B1000A4CAF /* Lifemax.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lifemax.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -102,8 +104,6 @@
 		98C7497B18A745B1000A4CAF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		98C7497C18A745B1000A4CAF /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		98C7497F18A745B1000A4CAF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		98C7498118A745B1000A4CAF /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		98C7498218A745B1000A4CAF /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		98C7498418A745B1000A4CAF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		98C7498A18A745B1000A4CAF /* LifemaxTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LifemaxTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		98C7498B18A745B1000A4CAF /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -254,11 +254,11 @@
 				98B62E8118B5EB4200872BDE /* Model Objects */,
 				98DF58A118A8204700AC2BE0 /* Views */,
 				98FB50AA18A7FCDF00C916BC /* ViewControllers */,
+				98A269A018C40C6E0053D20B /* UIAlertView+NSCookbook.h */,
+				98A269A118C40C6E0053D20B /* UIAlertView+NSCookbook.m */,
 				98C7497E18A745B1000A4CAF /* Main.storyboard */,
 				981B73C318B42A290040D4A0 /* GoogleOAuth.h */,
 				981B73C418B42A290040D4A0 /* GoogleOAuth.m */,
-				98C7498118A745B1000A4CAF /* ViewController.h */,
-				98C7498218A745B1000A4CAF /* ViewController.m */,
 				98C749A518A74AFB000A4CAF /* MenuViewController.h */,
 				98C749A618A74AFB000A4CAF /* MenuViewController.m */,
 				987A6E1618A8CC5000693E10 /* organized-papers.JPG */,
@@ -493,9 +493,9 @@
 				98D951BB18A877F700333D4D /* CameraCheckbox.m in Sources */,
 				98D951C718A8902A00333D4D /* NewsFeedViewController.m in Sources */,
 				98FB50A918A7FCC800C916BC /* LifeListViewController.m in Sources */,
-				98C7498318A745B1000A4CAF /* ViewController.m in Sources */,
 				98DF58AB18A85BAF00AC2BE0 /* TaskCell.m in Sources */,
 				98C7497D18A745B1000A4CAF /* AppDelegate.m in Sources */,
+				98A269A218C40C6E0053D20B /* UIAlertView+NSCookbook.m in Sources */,
 				98DC9FC118B28A0A004747B5 /* SettingsViewController.m in Sources */,
 				989CE3F118B9364F0079ECA7 /* HashtagSelector.m in Sources */,
 				983A92FC18B7BD6C00B02E2C /* NSString+MD5.m in Sources */,
