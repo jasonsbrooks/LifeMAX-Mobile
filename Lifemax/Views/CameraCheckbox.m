@@ -7,7 +7,7 @@
 //
 
 #import "CameraCheckbox.h"
-//#import "UIImageView+AFNetworking.h"
+#import "UIImageView+AFNetworking.h"
 
 @interface CameraCheckbox ()
 @property (nonatomic, strong) UIImageView *backgroundImageView;
@@ -38,10 +38,6 @@
 }
 -(void) configure {
     if (!self.backgroundImageView){
-//        self.backgroundImageView = [[UIButton alloc] initWithFrame:self.bounds];
-//        [self.backgroundImageView addTarget:self action:@selector(tap:) forControlEvents:UIControlEventTouchUpInside];
-//        self.backgroundImageView.adjustsImageWhenHighlighted = YES;
-//        self.backgroundImageView.showsTouchWhenHighlighted = YES;
         self.backgroundImageView = [[UIImageView alloc]initWithFrame:self.bounds];
         self.backgroundImageView.layer.cornerRadius = 5;
         self.backgroundImageView.layer.masksToBounds = YES;
@@ -123,12 +119,6 @@
                                                     multiplier:1
                                                       constant:0]];
     
-    
-    
-    
-
-
-    
 }
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
 //    NSLog(@"Touches Began!");
@@ -155,8 +145,6 @@
 }
 
 - (void) addTapTarget:(id) target action:(SEL)action {
-//    [self.tapgr addTarget:target action:action];
-    NSLog(@"Added target: %@, action", target);
     self.target = target;
     self.action = action;
 }
@@ -166,16 +154,17 @@
 }
 
 - (void) setBackgroundImageFromUrl:(NSString *)imageUrl {
-//    [self.backgroundImageView setImageWithURL:[NSURL URLWithString:imageUrl]];
-}
+    if(imageUrl && imageUrl.length > 0){
+        [self.backgroundImageView setImageWithURL:[NSURL URLWithString:imageUrl]];
+        [self.cameraCheckboxImageView setImage:[UIImage imageNamed:@"todo-check"]];
+        [self.cameraCheckboxImageView setHighlightedImage:[UIImage imageNamed:@"todo-check-dark"]];
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
+        [self.cameraCheckboxImageView setContentMode:UIViewContentModeScaleAspectFit];
+    } else {
+        [self.cameraCheckboxImageView setImage:[UIImage imageNamed:@"todo-camera"]];
+        [self.cameraCheckboxImageView setHighlightedImage:[UIImage imageNamed:@"todo-camera-dark"]];
+
+    }
 }
-*/
 
 @end

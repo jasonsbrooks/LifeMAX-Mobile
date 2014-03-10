@@ -26,7 +26,7 @@ static void RKTwitterShowAlertWithError(NSError *error)
     [alert show];
 }
 
-@interface LifeListViewController () <LifeListFilterDelegate, NSFetchedResultsControllerDelegate>
+@interface LifeListViewController () <LifeListFilterDelegate, NSFetchedResultsControllerDelegate, EditTaskDelegate>
 @property (strong, nonatomic) IBOutlet LifeListFilter *tableFilterView;
 @property BOOL filterExpanded;
 @property NSArray *filterTitles;
@@ -268,6 +268,8 @@ static void RKTwitterShowAlertWithError(NSError *error)
         cell.time = [self.formatter stringFromDate:task.start];
     else
         cell.time = nil;
+    if(task.pictureurl)
+        [cell setTaskImageFromUrl:task.pictureurl];
     
     return cell;
 }
@@ -347,7 +349,7 @@ static void RKTwitterShowAlertWithError(NSError *error)
  // Pass the selected object to the new view controller.
      EditTaskViewController *editController = [segue destinationViewController];
      editController.task = [self.fetchedResultsController objectAtIndexPath:[self.tableView indexPathForSelectedRow]];
-     
+     editController.delegate = self;
  }
 
 #pragma mark - Checkbox target method
@@ -355,6 +357,26 @@ static void RKTwitterShowAlertWithError(NSError *error)
 - (void) checkboxTapped:(id)sender {
     NSIndexPath *indexpath = [self.tableView indexPathForCell:sender];
     NSLog(@"CheckboxTapped: %@",indexpath );
+    
+//    [
+}
+
+-(void)editor:(EditTaskViewController *)editor didEditTaskFields:(NSDictionary *)values forTask:(Task *)task {
+//    if(self.values && [self didInputChange]){
+//        NSLog(@"New Task!");
+//        [[LMRestKitManager sharedManager] newTaskForValues:self.values];
+//        if(self.task)
+//            [[LMRestKitManager sharedManager] deleteTask:self.task];
+//    }
+    
+    NSLog(@"Editor Did make changes!: %@", values);
+    
+    [[LMRestKitManager sharedManager] newTaskForValues:values];
+    if(task)
+        [[LMRestKitManager sharedManager] deleteTask:task];
+    
+    [[LMRestKitManager sharedManager] fetchTasksForDefaultUser];
+
 }
 
 

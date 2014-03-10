@@ -8,7 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
+@class EditTaskViewController;
 @class Task;
+
+@protocol EditTaskDelegate <NSObject>
+
+-(void)editor:(EditTaskViewController *)editor didEditTaskFields:(NSDictionary *)values forTask:(Task *)task;
+@end
+
 @interface EditTaskViewController : UITableViewController
 @property (nonatomic, retain) Task *task;
+@property (nonatomic, weak) id<EditTaskDelegate> delegate;
+
 @end

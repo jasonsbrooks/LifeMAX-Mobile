@@ -36,12 +36,12 @@
 }
 
 -(void)loginViewShowingLoggedInUser:(FBLoginView *)loginView {
-    NSLog(@"DID LOG IN");
+    NSLog(@"Showing Logged in User!");
     [[NSNotificationCenter defaultCenter] postNotificationName:@"FACEBOOK_DID_LOGIN_NOTIFICATION" object:nil];
 }
 
 -(void)loginViewShowingLoggedOutUser:(FBLoginView *)loginView {
-    NSLog(@"DID LOG OUT");
+    NSLog(@"Showing logged out user!");
 
 }
 

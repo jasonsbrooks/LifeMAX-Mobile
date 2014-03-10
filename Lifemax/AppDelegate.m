@@ -96,7 +96,7 @@
     
     // Call FBAppCall's handleOpenURL:sourceApplication to handle Facebook app responses
     BOOL wasHandled = [FBAppCall handleOpenURL:url sourceApplication:sourceApplication];
-    if(wasHandled && !self.dismissing) [self dismissLoginController];
+    if(wasHandled && !self.dismissing) [self checkLogin];
     // You can add your app-specific url handling code here if needed
     
     return wasHandled;
@@ -108,7 +108,7 @@
 
 -(void)applicationWillEnterForeground:(UIApplication *)application
 {
-    [self checkLogin];
+//    [self checkLogin];
 }
 
 -(void)checkLogin
@@ -131,7 +131,10 @@
     }
     
     if(!loggedIn)
+    {
+        NSLog(@"Check Login, Not Logged in : %@", self.window.rootViewController);
         [self performSelector:@selector(presentLoginController) withObject:nil afterDelay:.2];
+    }
     else
         [self facebookLoginSuccess];
 }
@@ -160,6 +163,7 @@
     
     [[RKTest sharedManager] getPath:@"/api/login" parameters:@{ @"userToken": fbAccessToken} success:^(AFHTTPRequestOperation *operation, id jsonResponse) {
         [self saveLifemaxLogin:jsonResponse];
+        [[LMRestKitManager sharedManager] fetchTasksForDefaultUser];
         NSLog(@"Lifemax Login Success!");
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
 

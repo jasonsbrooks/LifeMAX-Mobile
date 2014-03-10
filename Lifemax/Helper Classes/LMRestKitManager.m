@@ -87,7 +87,6 @@
         BOOL matchTask = [pathMatcherTask matchesPath:[URL relativePath] tokenizeQueryStrings:NO parsedArguments:nil];
         
         if (matchTask) {
-            NSLog(@"Pattern matched left.json!");
             NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Task"];
             return fetchRequest;
         }
@@ -119,13 +118,10 @@
     NSString *path = [NSString stringWithFormat:@"/api/user/%@/tasks", userid];
 
     [[RKObjectManager sharedManager] getObjectsAtPath:path parameters:@{@"hashToken" : hashtoken} success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        NSLog(@"OP Path : %@", [[operation.HTTPRequestOperation  request] URL]);
-        NSArray *objs =  [mappingResult array];
-        for (NSManagedObject *obj in objs) {
-            NSLog(@"Mapped :%@", obj);
-        }
+        
+        
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-        NSLog(@"Map Failure: %@", [error localizedDescription]);
+        NSLog(@"Map Failure: %@", operation.HTTPRequestOperation.responseString);
     }];
 }
 
@@ -136,7 +132,7 @@
         NSError *error = nil;
         [[RKObjectManager sharedManager].managedObjectStore.mainQueueManagedObjectContext save:&error];
         
-        NSLog(@"Delete Successful!: %@",  [error localizedDescription]);
+        NSLog(@"Delete Successful!");
     });
 }
 
@@ -183,37 +179,24 @@
 */
 - (void) newTaskForValues:(NSDictionary *)values {
     if(values) {
-        /*
-        NSManagedObjectContext *childMoc = [[NSManagedObjectContext alloc]initWithConcurrencyType:NSMainQueueConcurrencyType];
-        childMoc.parentContext = [RKObjectManager sharedManager].managedObjectStore.mainQueueManagedObjectContext;
-        
-        Task *task = [NSEntityDescription insertNewObjectForEntityForName:@"Task" inManagedObjectContext:childMoc];
-                      
-        
-        if([[values allKeys] containsObject:@"name"])
-            task.name = values[@"name"];
-        if([[values allKeys] containsObject:@"task_description"])
-            task.task_description = values[@"task_description"];
-        if([[values allKeys] containsObject:@"start"])
-            task.start = values[@"start"];
-        if([[values allKeys] containsObject:@"hashtag"])
-            task.hashtag = values[@"hashtag"];
-        
-        task.end = [NSDate date];
-        task.location= @"buttery";
-        task.pictureurl = @"";
-        */
         
         NSDateFormatter *dateFormatter = [NSDateFormatter new];
         dateFormatter.dateFormat = @"yyyy-MM-dd'T'hh:mm:ssZ";
         dateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
 
+        NSString *name = [values objectForKey:@"name"];
+        name = name ? name : @"new task";
+        
+        NSString *hashtag = [values objectForKey:@"hashtag"];
+        hashtag = hashtag ? hashtag : @"#personal";
         
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-        [dict setObject:@"buttery" forKey:@"location"];
+        [dict setObject:@"" forKey:@"location"];
         [dict setObject:@"" forKey:@"pictureurl"];
-        [dict setObject:[values objectForKey:@"name"] forKey:@"name"];
-        [dict setObject:[values objectForKey:@"hashtag"] forKey:@"hashtag"];
+        
+        [dict setObject:name forKey:@"name"];
+        
+        [dict setObject:hashtag forKey:@"hashtag"];
 
         
         [dict setObject:[dateFormatter stringFromDate:[NSDate date]] forKey:@"starttime"];

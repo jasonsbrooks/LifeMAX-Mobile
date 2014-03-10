@@ -28,7 +28,8 @@
 @property (nonatomic, strong) NSDateFormatter *formatter;
 
 @property (nonatomic, strong) NSMutableDictionary *values;
-
+@property BOOL madeEdits;
+@property BOOL deleted;
 
 @property BOOL pagingControlUsed;
 @end
@@ -53,10 +54,12 @@
     self.deleteButton.enabled = NO;
     self.deleteButton.alpha = 0;
     self.navigationItem.leftBarButtonItem  = self.navigationItem.backBarButtonItem;
+    /*
     self.navigationItem.rightBarButtonItem =[[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
                                                                                          target:self
                                                                                          action:@selector(editPressed)];
-}
+     */
+ }
 
 -(NSMutableDictionary *)values {
     if(!_values)
@@ -92,13 +95,11 @@
     NSInteger hashtagIndex = [self.hashtags indexOfObject:self.task.hashtag];
     NSInteger numsections = self.hashtags.count / 8 + MIN((self.hashtags.count % 8), 1);
     NSIndexPath *taskIndexPath = [NSIndexPath indexPathForRow: hashtagIndex % numsections inSection: hashtagIndex / numsections];
-    NSLog(@"select task index : %@", taskIndexPath);
     
     for (HashtagSelector *selector in self.hashtagScrollView.subviews) {
         NSInteger selectorIndex = selector.tag - 10;
         if (selectorIndex >= 0){
             [selector selectTag:-1];
-            NSLog(@"Configuring view :%d, %d", taskIndexPath.section, taskIndexPath.row);
             if(selectorIndex == taskIndexPath.section) {
                 [selector selectTag:taskIndexPath.row];
             }
@@ -123,14 +124,18 @@
     [((AppDelegate *)([UIApplication sharedApplication].delegate)) disablePanning:self];
 }
 
+
+
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
     NSArray *viewControllers = [self.navigationController viewControllers];
     
-    if ([viewControllers indexOfObject:self] == NSNotFound) {
+    if ([viewControllers indexOfObject:self] == NSNotFound && !self.deleted) {
         // View is disappearing because it was popped from the stack
         NSLog(@"View controller was popped - Save time");
+        if([self didInputChange] && self.madeEdits)
+            [self.delegate editor:self didEditTaskFields:self.values forTask:self.task];
     }
     [((AppDelegate *)([UIApplication sharedApplication].delegate)) enablePanning:self];
 
@@ -139,9 +144,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.deleted = NO;
+    self.madeEdits = NO;
     self.title = NSLocalizedString(@"Edit Task", nil);
     
-    [self disableTaskEditing];
+//    [self disableTaskEditing];
     
 
     //configure default hashtags -> should probably go in a constant somewhere
@@ -152,17 +159,13 @@
 }
 
 -(void)editPressed {
-    [self enableTaskEditing];
+//    [self enableTaskEditing];
 }
 
 - (void)donePressed {
-    [self disableTaskEditing];
-    if(self.values){
-        [[LMRestKitManager sharedManager] newTaskForValues:self.values];
-        if(self.task)
-            [[LMRestKitManager sharedManager] deleteTask:self.task];
-    }
-    
+//    [self disableTaskEditing];
+
+    [self exit];
 }
 
 - (IBAction)deletePressed:(id)sender {
@@ -175,6 +178,7 @@
        
         if(self.task){
             [[LMRestKitManager sharedManager] deleteTask:self.task];
+            self.deleted = YES;
             [self exit];
         }
         
@@ -276,18 +280,19 @@
 
 -(void)textFieldDidBeginEditing:(UITextField *)textField {
     self.activeTextField = textField;
-    self.hashtagScrollView.alpha = 0;
-    [self enableTaskEditing];
+//    [self enableTaskEditing];
     [UIView animateWithDuration:.5 animations:^{
-        self.hashtagScrollView.alpha = 0;
+        self.hashtagScrollView.alpha = .5;
     } completion:^(BOOL finished) {
-        self.hashtagScrollView.hidden = YES;
+//        self.hashtagScrollView = YES;
     }];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     if([textField.inputView isKindOfClass:[UIDatePicker class]])
         return NO;
+    
+    self.madeEdits = YES;
     return YES;
 }
 
@@ -299,7 +304,6 @@
         self.hashtagScrollView.alpha = 1;
     } completion:^(BOOL finished) {
     }];
-    NSLog(@"Index : %d", textField.tag);
     
     NSString *key = nil;
     if(textField.tag == 0) key = @"name";
@@ -334,6 +338,8 @@
         }
     }
     
+    self.madeEdits = YES;
+    
     [self.values setObject:hashtag forKey:@"hashtag"];
 }
 
@@ -366,6 +372,8 @@
     [dateFormatter setDoesRelativeDateFormatting:YES];
     
     [self.values setObject:sender.date forKey:@"start"];
+    self.madeEdits = YES;
+
     self.activeTextField.text = [dateFormatter stringFromDate:[sender date]];
 }
 
@@ -387,6 +395,7 @@
             return YES;
         }
     }
+    
     return NO;
 }
 - (void) exit {
