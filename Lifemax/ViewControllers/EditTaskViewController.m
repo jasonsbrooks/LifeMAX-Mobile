@@ -9,6 +9,7 @@
 #import "EditTaskViewController.h"
 #import "HashtagSelector.h"
 #import "EditFieldCell.h"
+#import "EditDescriptionCell.h"
 #import "LifemaxHeaders.h"
 #import "Task.h"
 #import "AppDelegate.h"
@@ -16,18 +17,25 @@
 #import <RestKit/RestKit.h>
 #import "LMRestKitManager.h"
 
-@interface EditTaskViewController () <UIAlertViewDelegate, UIScrollViewDelegate, UITextFieldDelegate, HashtagSelectorDelegate>
+#define DESCRIPTION_PLACEHOLDER_TEXT @"description"
+#define CELL_HEIGHT 55
+
+@interface EditTaskViewController () <UIAlertViewDelegate, UIScrollViewDelegate, UITextFieldDelegate, UITextViewDelegate, HashtagSelectorDelegate>
 @property (nonatomic, strong) IBOutlet UIScrollView *hashtagScrollView;
 @property (nonatomic, strong) IBOutlet UIView *scrollViewContainer;
 @property (nonatomic, strong) IBOutlet UIButton *deleteButton;
 
-@property (nonatomic, weak) UITextField *activeTextField;
+@property (nonatomic, weak) id activeTextField;
 
 @property (nonatomic, strong) NSArray *hashtags;
 @property (nonatomic, strong) IBOutlet UIPageControl *pagingControl;
 @property (nonatomic, strong) NSDateFormatter *formatter;
 
 @property (nonatomic, strong) NSMutableDictionary *values;
+
+@property CGFloat descriptionRowHeight;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *heightConstraint;
+
 @property BOOL madeEdits;
 @property BOOL deleted;
 
@@ -122,6 +130,7 @@
     [super viewWillAppear:animated];
 //    self.navigationItem.rightBarButtonItem = self.editButtonItem;
     [((AppDelegate *)([UIApplication sharedApplication].delegate)) disablePanning:self];
+    
 }
 
 
@@ -141,6 +150,13 @@
 
 }
 
+-(void)awakeFromNib {
+    [super awakeFromNib];
+    
+//    self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
+//    self.tableView.tableFooterView.translatesAutoresizingMaskIntoConstraints = NO;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -150,12 +166,19 @@
     
 //    [self disableTaskEditing];
     
+//    [self.tableView.tableFooterView viewWithTag:1].translatesAutoresizingMaskIntoConstraints = NO;
 
     //configure default hashtags -> should probably go in a constant somewhere
     self.hashtags = LIFEMAX_HASHTAGS;
     
     [self configureHashtagSelector];
     
+}
+
+-(void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    [self fixHashtagSelectorContentSize];
 }
 
 -(void)editPressed {
@@ -183,6 +206,12 @@
         }
         
     }];
+}
+
+- (void)fixHashtagSelectorContentSize {
+    NSInteger viewsNeeded = self.hashtags.count / 8 + MIN((self.hashtags.count % 8), 1);
+    
+    [self.hashtagScrollView setContentSize:CGSizeMake(viewsNeeded * self.hashtagScrollView.bounds.size.width, self.hashtagScrollView.bounds.size.height)];
 }
 
 - (void)configureHashtagSelector
@@ -266,7 +295,7 @@
 
 - (IBAction)changePage:(id)sender
 {
-    int page = self.pagingControl.currentPage;
+    NSInteger page = self.pagingControl.currentPage;
     
     // update the scroll view to the appropriate page
     CGRect frame = self.hashtagScrollView.frame;
@@ -374,7 +403,7 @@
     [self.values setObject:sender.date forKey:@"start"];
     self.madeEdits = YES;
 
-    self.activeTextField.text = [dateFormatter stringFromDate:[sender date]];
+    [self.activeTextField setText: [dateFormatter stringFromDate:[sender date]]];
 }
 
 - (BOOL) didInputChange {
@@ -401,6 +430,8 @@
 - (void) exit {
     [self.navigationController popViewControllerAnimated:YES];
 }
+
+
 
 - (void)confirmCancel
 {
@@ -449,43 +480,157 @@
     return 3;
 }
 
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if(indexPath.row == 1 && self.descriptionRowHeight > 0) return self.descriptionRowHeight;
+    return CELL_HEIGHT;
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"editFieldCell";
-    EditFieldCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-    cell.textField.delegate = self;
-    cell.textField.inputView = nil;
-    cell.textField.text = nil;
-    NSInteger row = indexPath.row;
-    cell.textField.tag = row;
-
-    if(row == 0) {
-        cell.textField.placeholder = @"task";
-        if(self.task){
-            cell.textField.text = self.task.name;
-        }
-    } else if(row == 1) {
-        cell.textField.placeholder = @"description";
-        if(self.task){
-            cell.textField.text = self.task.task_description;
-        }
-    } else if(row == 2) {
-        cell.textField.placeholder = @"date";
-        if(self.task){
-            [self.formatter setDateStyle:NSDateFormatterMediumStyle];
-            [self.formatter setDoesRelativeDateFormatting:YES];
-            NSString *str = [self.formatter stringFromDate:self.task.start];
-            cell.textField.text = str;
-        }
-        UIDatePicker * dp = [[UIDatePicker alloc]init];
-        [dp addTarget:self action:@selector(dateValueChanged:) forControlEvents:UIControlEventValueChanged];
-        dp.minimumDate = [NSDate date];
-        dp.datePickerMode = UIDatePickerModeDate;
-        cell.textField.inputView = dp;
-    }
-    // Configure the cell...
     
-    return cell;
+    if(indexPath.row != 1) {
+        CellIdentifier = @"editFieldCell";
+        EditFieldCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+        cell.textField.delegate = self;
+        cell.textField.inputView = nil;
+        cell.textField.text = nil;
+        NSInteger row = indexPath.row;
+        cell.textField.tag = row;
+        
+        if(row == 0) {
+            cell.textField.placeholder = @"task";
+            if(self.task){
+                cell.textField.text = self.task.name;
+            }
+        } else if(row == 2) {
+            cell.textField.placeholder = @"date";
+            if(self.task){
+                [self.formatter setDateStyle:NSDateFormatterMediumStyle];
+                [self.formatter setDoesRelativeDateFormatting:YES];
+                NSString *str = [self.formatter stringFromDate:self.task.start];
+                cell.textField.text = str;
+            }
+            UIDatePicker * dp = [[UIDatePicker alloc]init];
+            [dp addTarget:self action:@selector(dateValueChanged:) forControlEvents:UIControlEventValueChanged];
+            dp.minimumDate = [NSDate date];
+            dp.datePickerMode = UIDatePickerModeDate;
+            cell.textField.inputView = dp;
+        }
+        // Configure the cell...
+        
+        return cell;
+
+    } else {
+        CellIdentifier = @"editDescriptionCell";
+        EditDescriptionCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+        cell.contentView.translatesAutoresizingMaskIntoConstraints = NO;
+        cell.textView.translatesAutoresizingMaskIntoConstraints = NO;
+        cell.textView.delegate = self;
+        cell.textView.inputView = nil;
+        cell.textView.text = nil;
+        NSInteger row = indexPath.row;
+        cell.textView.tag = row;
+        cell.textView.scrollEnabled = NO;
+        cell.textView.textColor = [UIColor lightGrayColor];
+        cell.textView.text = @"description";
+        if(self.task.task_description){
+            cell.textView.textColor = [UIColor darkTextColor];
+            cell.textView.text = self.task.task_description;
+            [cell.textView sizeThatFits:cell.textView.contentSize];
+            
+            
+            [self textView:cell.textView shouldChangeTextInRange: NSMakeRange(0, self.task.task_description.length) replacementText:self.task.task_description];
+        }
+        return cell;
+    }
+}
+
+#pragma mark - UITextViewDelegate
+- (void)textViewDidBeginEditing:(UITextView *)textView
+{
+    //so we can stop editing when something else is clicked
+    self.activeTextField = textView;
+
+    [self resizeTextView:textView];
+    
+    //placeholder text hack
+    if ([textView.text isEqualToString:DESCRIPTION_PLACEHOLDER_TEXT]) {
+        textView.text = @"";
+        textView.textColor = [UIColor blackColor]; //optional
+    }
+    [textView becomeFirstResponder];
+}
+
+- (void)resizeTextView:(UITextView *)textView {
+    [self.tableView beginUpdates];
+    
+    [textView sizeThatFits:textView.contentSize];
+    CGFloat newHeight = textView.contentSize.height + textView.contentInset.top;
+    newHeight = MAX(newHeight, CELL_HEIGHT);
+    self.descriptionRowHeight = newHeight;
+
+    CGRect footerFrame = self.tableView.tableFooterView.frame;
+    footerFrame.size.height = [self footerHeight];
+    self.tableView.tableFooterView.frame = footerFrame;
+//    [self fixHashtagSelectorContentSize];
+    [self.tableView endUpdates];
+}
+
+- (CGFloat) footerHeight {
+    CGFloat selectorSize = 238;
+    CGFloat contentsize = self.tableView.contentSize.height - self.tableView.tableFooterView.frame.size.height;
+    if (contentsize < self.tableView.bounds.size.height) {
+        return self.tableView.bounds.size.height - contentsize;
+    } else return selectorSize;
+}
+
+
+
+-(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    
+    [self resizeTextView:textView];
+    
+    NSLog(@"Hashtag selector content width: %f", self.hashtagScrollView.contentSize.width);
+    
+    return YES;
+}
+
+-(void)textViewDidChange:(UITextView *)textView {
+    self.madeEdits = YES;
+}
+
+-(BOOL)textViewShouldEndEditing:(UITextView *)textView {
+    [textView resignFirstResponder];
+    return YES;
+}
+
+-(void)textViewDidEndEditing:(UITextView *)textView {
+    self.activeTextField = nil;
+    
+    self.hashtagScrollView.hidden = NO;
+    [UIView animateWithDuration:.5 animations:^{
+        self.hashtagScrollView.alpha = 1;
+    } completion:^(BOOL finished) {
+    }];
+    
+    NSString *key = nil;
+    if (textView.tag == 1) key = @"task_description";
+    
+    if(textView.tag < 2 && key) [self.values setObject:textView.text forKey:key];
+
+
+    //placeholder text hack
+    if ([textView.text isEqualToString:@""]) {
+        textView.text = DESCRIPTION_PLACEHOLDER_TEXT;
+        textView.textColor = [UIColor lightGrayColor]; //optional
+    }
+    [textView resignFirstResponder];
 }
 
 

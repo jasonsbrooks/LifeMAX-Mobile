@@ -15,7 +15,8 @@
 #import <RestKit/RestKit.h>
 #import "Task.h"
 #import "EditTaskViewController.h"
-
+#import "RKTest.h"
+#import "NSString+MD5.h"
 
 static void RKTwitterShowAlertWithError(NSError *error)
 {
@@ -26,7 +27,7 @@ static void RKTwitterShowAlertWithError(NSError *error)
     [alert show];
 }
 
-@interface LifeListViewController () <LifeListFilterDelegate, NSFetchedResultsControllerDelegate, EditTaskDelegate>
+@interface LifeListViewController () <LifeListFilterDelegate, NSFetchedResultsControllerDelegate, EditTaskDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 @property (strong, nonatomic) IBOutlet LifeListFilter *tableFilterView;
 @property BOOL filterExpanded;
 @property NSArray *filterTitles;
@@ -34,7 +35,7 @@ static void RKTwitterShowAlertWithError(NSError *error)
 @property (strong, nonatomic) NSDateFormatter *formatter;
 
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
-
+@property (nonatomic, strong) NSIndexPath *selectedIndexPath;
 @end
 
 @implementation LifeListViewController
@@ -356,9 +357,22 @@ static void RKTwitterShowAlertWithError(NSError *error)
 
 - (void) checkboxTapped:(id)sender {
     NSIndexPath *indexpath = [self.tableView indexPathForCell:sender];
-    NSLog(@"CheckboxTapped: %@",indexpath );
+//    NSLog(@"CheckboxTapped: %@",indexpath );
+    self.selectedIndexPath = indexpath;
     
-//    [
+    [self takePhoto];
+    
+}
+
+- (IBAction)takePhoto {
+    
+    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+    picker.delegate = self;
+    picker.allowsEditing = YES;
+    picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+    
+    [self presentViewController:picker animated:YES completion:NULL];
+    
 }
 
 -(void)editor:(EditTaskViewController *)editor didEditTaskFields:(NSDictionary *)values forTask:(Task *)task {
@@ -380,6 +394,57 @@ static void RKTwitterShowAlertWithError(NSError *error)
 }
 
 
+-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    NSLog(@"Got an image picker: %@", info);
+    
+    UIImage *pickedImageEdited = [info objectForKey:UIImagePickerControllerEditedImage];
+    
+//    TaskCell *cell = [self.tableView cellForRowAtIndexPath:self.selectedIndexPath];
+    
+//    [cell setTaskImageFromUrl: task.pictureurl];
+    
+    NSDictionary *loginInfo = [[NSUserDefaults standardUserDefaults] objectForKey:LIFEMAX_LOGIN_INFORMATION_KEY];
+    
+    if(loginInfo) {
+        NSString *userid = loginInfo[@"id"];
+        
+        NSString *authToken = loginInfo[@"authToken"];
+        
+        if (!authToken) return;
+        
+        NSString *hashToken = [authToken md5];
+        
+        NSLog(@"ID is: %@", userid);
+        NSString *path = [NSString stringWithFormat:@"/api/user/%@/photoupload", userid];
+        
+        NSDictionary *dict = @{@"hashToken": hashToken};
+        
+        [[RKTest sharedManager] postPath:path parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            NSLog(@"Response Str: %@", operation.responseString);
+            NSLog(@"Result object: %@", responseObject);
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"Failure error: %@", [error localizedDescription]);
+            NSLog(@"Failure Response Str: %@", operation.responseString);
+        }];
+        
+//        [RKTest sharedManager] 
+        
+
+    }
+    
+    
+   
+    
+    //do your stuff
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+    }];
+}
+
+-(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    NSLog(@"Canceled image chooser");
+
+}
 
 
 @end

@@ -63,7 +63,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if(section == 0) return 3;
-    else if(section == 1) return 4;
+    else if(section == 1) return 1;
     return 0;
 }
 
@@ -74,14 +74,12 @@
     static NSString *CellIdentifier = @"Cell";
 
     if(indexPath.section == 0) {
-        if(indexPath.row == 0) CellIdentifier = @"today";
-        else if(indexPath.row == 1) CellIdentifier = @"tomorrow";
-        else CellIdentifier = @"lifelist";
-    } else {
         if(indexPath.row == 0) CellIdentifier = @"feed";
-        else if(indexPath.row == 1) CellIdentifier = @"story";
-        else if(indexPath.row == 2) CellIdentifier = @"sync";
-        else CellIdentifier = @"settings";
+        else if(indexPath.row == 1) CellIdentifier = @"lifelist";
+        else CellIdentifier = @"story";
+    } else {
+        if(indexPath.row == 0) CellIdentifier = @"settings";
+        
     }
 
 
@@ -103,7 +101,7 @@
 }
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if(section == 0) return @"Lists";
+    if(section == 0) return @"Tasks";
     else if(section == 1) return @"Menu";
     return @"";
 }

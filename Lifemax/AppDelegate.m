@@ -37,6 +37,7 @@
     RKLogConfigureByName("RestKit/Network", RKLogLevelCritical);
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(facebookLoginSuccess) name:@"FACEBOOK_DID_LOGIN_NOTIFICATION" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(triggerLogout:) name:LIFEMAX_TRIGGER_LOGOUT object:nil];
     
 	UIWindow *window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 	self.window = window;
@@ -183,6 +184,11 @@
     }];
 }
 
+-(void)triggerLogout:(id)sender {
+    [FBSession.activeSession closeAndClearTokenInformation ];
+    [self checkLogin];
+}
+
 - (void) saveLifemaxLogin:(id)loginResponse {
     NSUserDefaults *stdDefaults = [NSUserDefaults standardUserDefaults];
     [stdDefaults setObject:loginResponse forKey:LIFEMAX_LOGIN_INFORMATION_KEY];
@@ -217,6 +223,8 @@
         }];
 
     } else {
+        
+        [[LMRestKitManager sharedManager] fetchFeedTasksForUser:[loginResponse objectForKey:@"id"] hashtag:nil maxResults:50 hashtoken:[tok md5]];
         
 //        [[LMRestKitManager sharedManager] fetchTasksForDefaultUser];
 

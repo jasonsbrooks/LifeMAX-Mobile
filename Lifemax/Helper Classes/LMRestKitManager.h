@@ -17,5 +17,5 @@
 -(void)fetchTasksForDefaultUser;
 - (BOOL)deleteTask:(Task *) task;
 - (void) newTaskForValues:(NSDictionary *)values;
-
+- (void) fetchFeedTasksForUser:(NSString *)userid hashtag:(NSString *)hashtag maxResults:(NSInteger)maxResults hashtoken:(NSString *)hashtoken ;
 @end

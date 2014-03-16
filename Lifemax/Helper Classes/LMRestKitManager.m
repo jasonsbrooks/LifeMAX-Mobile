@@ -72,6 +72,9 @@
     
     [objectManager addResponseDescriptor:responseDescriptor];
     
+    RKResponseDescriptor *feedResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:taskMapping method:RKRequestMethodGET pathPattern:@"/api/user/:userid/newsfeed" keyPath:@"posts" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
+    [objectManager addResponseDescriptor:feedResponseDescriptor];
+    
     RKResponseDescriptor *postTask = [RKResponseDescriptor responseDescriptorWithMapping:[taskMapping inverseMapping]
                                                                                   method:RKRequestMethodPOST
                                                                              pathPattern:@"/api/user/:userid/tasks"
@@ -101,6 +104,9 @@
     //    NSString *seedPath = [[NSBundle mainBundle] pathForResource:@"RKSeedDatabase" ofType:@"sqlite"];
     NSError *error;
     NSPersistentStore *persistentStore = [managedObjectStore addSQLitePersistentStoreAtPath:storePath fromSeedDatabaseAtPath:nil withConfiguration:nil options:nil error:&error];
+    if (!persistentStore) {
+        NSLog(@"Could not create persistent store");
+    }
     NSAssert(persistentStore, @"Failed to add persistent store with error: %@", error);
     
     // Create the managed object contexts
@@ -123,6 +129,25 @@
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
         NSLog(@"Map Failure: %@", operation.HTTPRequestOperation.responseString);
     }];
+}
+
+- (void) fetchFeedTasksForUser:(NSString *)userid hashtag:(NSString *)hashtag maxResults:(NSInteger)maxResults hashtoken:(NSString *)hashtoken {
+    
+    NSString *path = [NSString stringWithFormat:@"/api/user/%@/newsfeed", userid];
+    
+    [[RKObjectManager sharedManager] getObjectsAtPath:path parameters:@{@"hashToken" : hashtoken} success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+        
+        NSLog(@"Mapping Result: %@", mappingResult);
+        NSLog(@"server Respnse: %@", operation.HTTPRequestOperation.responseString);
+        
+    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+        NSLog(@"Operation: %@", [operation HTTPRequestOperation]);
+        NSLog(@"Map Failure: %@", operation.HTTPRequestOperation.responseString);
+    }];
+}
+
+- (void) uploadPhoto:(UIImage *)image {
+
 }
 
 -(void) deleteTaskFromLocalStore:(Task *)task {
