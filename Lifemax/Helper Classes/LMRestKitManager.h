@@ -20,5 +20,9 @@
 - (void) fetchFeedTasksForUser:(NSString *)userid hashtag:(NSString *)hashtag maxResults:(NSInteger)maxResults hashtoken:(NSString *)hashtoken ;
 
 - (void) updateTask:(Task *)task withValues:(NSDictionary *)values;
+- (NSString *) defaultUserAuthToken;
+- (NSString *) defaultUserId;
+- (void) uploadPhoto:(UIImage *)image forTask: (Task *)task;
+
 
 @end

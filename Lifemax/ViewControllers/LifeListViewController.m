@@ -285,6 +285,8 @@ static void RKTwitterShowAlertWithError(NSError *error)
         cell.time = [self.formatter stringFromDate:task.start];
     else
         cell.time = nil;
+    
+    NSLog(@"Displaying Cell: %@", task.pictureurl);
     if(task.pictureurl)
         [cell setTaskImageFromUrl:task.pictureurl];
     
@@ -392,13 +394,6 @@ static void RKTwitterShowAlertWithError(NSError *error)
 }
 
 -(void)editor:(EditTaskViewController *)editor didEditTaskFields:(NSDictionary *)values forTask:(Task *)task {
-//    if(self.values && [self didInputChange]){
-//        NSLog(@"New Task!");
-//        [[LMRestKitManager sharedManager] newTaskForValues:self.values];
-//        if(self.task)
-//            [[LMRestKitManager sharedManager] deleteTask:self.task];
-//    }
-    
     NSLog(@"Editor Did make changes!: %@", values);
     
     
@@ -421,43 +416,10 @@ static void RKTwitterShowAlertWithError(NSError *error)
     NSLog(@"Got an image picker: %@", info);
     
     UIImage *pickedImageEdited = [info objectForKey:UIImagePickerControllerEditedImage];
+    Task *task = [self.fetchedResultsController objectAtIndexPath:self.selectedIndexPath];
+    [[LMRestKitManager sharedManager] uploadPhoto:pickedImageEdited forTask:task];
     
-//    TaskCell *cell = [self.tableView cellForRowAtIndexPath:self.selectedIndexPath];
-    
-//    [cell setTaskImageFromUrl: task.pictureurl];
-    
-    NSDictionary *loginInfo = [[NSUserDefaults standardUserDefaults] objectForKey:LIFEMAX_LOGIN_INFORMATION_KEY];
-    
-    if(loginInfo) {
-        NSString *userid = loginInfo[@"id"];
-        
-        NSString *authToken = loginInfo[@"authToken"];
-        
-        if (!authToken) return;
-        
-        NSString *hashToken = [authToken md5];
-        
-        NSLog(@"ID is: %@", userid);
-        NSString *path = [NSString stringWithFormat:@"/api/user/%@/photoupload", userid];
-        
-        NSDictionary *params = @{@"hashToken": hashToken};
-        
-        [[RKTest sharedManager] postPath:path parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
-            NSLog(@"Response Str: %@", operation.responseString);
-            NSLog(@"Result object: %@", responseObject);
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"Failure error: %@", [error localizedDescription]);
-            NSLog(@"Failure Response Str: %@", operation.responseString);
-        }];
-        
-//        [RKTest sharedManager] 
-        
 
-    }
-    
-    
-   
-    
     //do your stuff
     [self dismissViewControllerAnimated:YES completion:^{
         
@@ -466,7 +428,9 @@ static void RKTwitterShowAlertWithError(NSError *error)
 
 -(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
     NSLog(@"Canceled image chooser");
-
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+    }];
 }
 
 

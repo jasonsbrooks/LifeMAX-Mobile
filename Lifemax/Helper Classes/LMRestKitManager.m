@@ -13,6 +13,7 @@
 #import "Task.h"
 #import "User.h"
 #import "RKTest.h"
+
 @implementation LMRestKitManager
 
 - (void)initializeMappings {
@@ -74,6 +75,14 @@
                                                                                        statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
     
     [objectManager addResponseDescriptor:responseDescriptor];
+    
+    RKResponseDescriptor *updateTaskResponse = [RKResponseDescriptor responseDescriptorWithMapping:taskMapping
+                                                                                            method:RKRequestMethodPOST
+                                                                                       pathPattern:@"/api/user/:userid/updatetask"
+                                                                                           keyPath:nil
+                                                                                       statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
+    
+    [objectManager addResponseDescriptor:updateTaskResponse];
     
     RKResponseDescriptor *feedResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:taskMapping
                                                                                                 method:RKRequestMethodGET
@@ -173,8 +182,53 @@
     }];
 }
 
-- (void) uploadPhoto:(UIImage *)image {
+- (void) uploadPhoto:(UIImage *)image forTask:(Task *)task {
 
+    NSData *jpegData = UIImageJPEGRepresentation(image, .6);
+    
+    
+    NSString *path = [NSString stringWithFormat:@"/api/user/%@/photoupload", [self defaultUserId]];
+    
+    AFHTTPClient *httpClient = [[AFHTTPClient alloc] initWithBaseURL:[NSURL URLWithString:LIFEMAX_ROOT_URL]];
+    NSMutableURLRequest *request = [httpClient multipartFormRequestWithMethod:@"POST" path:path parameters:@{@"hashToken" : [[self defaultUserAuthToken] md5] } constructingBodyWithBlock:^(id <AFMultipartFormData>formData) {
+        [formData appendPartWithFileData:jpegData
+                                    name:@"file"
+                                fileName:task.hashtag mimeType:@"image/jpeg"];
+    }];
+    
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    
+    __weak id ws = self;
+    
+    NSDictionary *response = @{@"success": @(1), @"imageurl": @"http://twistedsifter.files.wordpress.com/2013/03/lightning-rainbow-perfect-timing.jpg"};
+    
+    
+    LMRestKitManager *ss = ws;
+    
+    if (response[@"success"] && [response[@"success"] boolValue]) {
+        NSString *imgurl = response[@"imageurl"];
+        [ss updateTask:task withValues:@{@"pictureurl" : imgurl}];
+    }
+    
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"upload photo success: %@", operation.responseString);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Upload photo failed : %@", operation.responseString);
+    
+        
+        
+    }];
+    // if you want progress updates as it's uploading, uncomment the following:
+    //
+    
+    [operation setUploadProgressBlock:^(NSUInteger bytesWritten,
+    long long totalBytesWritten,
+    long long totalBytesExpectedToWrite) {
+             NSLog(@"Sent %lld of %lld bytes", totalBytesWritten, totalBytesExpectedToWrite);
+    }];
+    
+        
+//    [httpClient enqueueHTTPRequestOperation:operation];
 }
 
 -(void) deleteTaskFromLocalStore:(Task *)task {
@@ -242,7 +296,8 @@
         task.start = values[@"start"];
     if(values[@"completion"])
         task.completion = values[@"completion"];
-    
+    if(values[@"pictureurl"])
+        task.pictureurl = values[@"pictureurl"];
     
     NSString *postPath = [NSString stringWithFormat:@"/api/user/%@/updatetask", [self defaultUserId]];
     
@@ -250,14 +305,14 @@
                                            path:postPath
                                      parameters:@{ @"hashToken" : [[self defaultUserAuthToken] md5] }
                                         success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-                                            NSLog(@"Post success response: %@", operation.HTTPRequestOperation.responseString);
-                                            NSLog(@"Post Success: %@", [mappingResult array]);
+                                            NSLog(@"Post success response");
                                             
                                         }
                                         failure:^(RKObjectRequestOperation *operation, NSError *error) {
-                                            NSLog(@"Post Failed: %@", operation.HTTPRequestOperation.responseString);
-                                            NSLog(@"Post URL : %@", operation.HTTPRequestOperation.request.URL);
-                                            NSLog(@"Post Request: %@,", [[NSString alloc]initWithData:operation.HTTPRequestOperation.request.HTTPBody encoding:NSUTF8StringEncoding] );
+                                            NSLog(@"Update Failed: %@", operation.HTTPRequestOperation.responseString);
+                                            NSLog(@"Update Error : %@", [error localizedDescription]);
+                                            NSLog(@"Update URL : %@", operation.HTTPRequestOperation.request.URL);
+                                            NSLog(@"Update Request: %@", [[NSString alloc]initWithData:operation.HTTPRequestOperation.request.HTTPBody encoding:NSUTF8StringEncoding] );
                                         }];
     [task.managedObjectContext save:nil];
 }
