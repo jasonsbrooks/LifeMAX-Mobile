@@ -79,7 +79,7 @@ static void RKTwitterShowAlertWithError(NSError *error)
     //    [self.tableFilterView addGestureRecognizer: [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleFilter)]];
     
     SWRevealViewController *revealController = [self revealViewController];
-    
+    self.navigationController.navigationBar.translucent = NO;
     
 //    [revealController panGestureRecognizer];
     [revealController tapGestureRecognizer];
@@ -247,6 +247,9 @@ static void RKTwitterShowAlertWithError(NSError *error)
     
 }
 
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 300;
+}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -260,9 +263,11 @@ static void RKTwitterShowAlertWithError(NSError *error)
     NSMutableAttributedString *atrTitle = [[NSMutableAttributedString alloc]initWithString:task.user.user_name
                                                                                 attributes:@{NSFontAttributeName:
                                                                                                  [UIFont boldSystemFontOfSize:[UIFont systemFontSize]]}];
+    NSString *actionstring = [NSString stringWithFormat:@" %@ a goal", [task.completion boolValue] ? @"completed" : @"added" ];
+    
     NSDictionary * attributes = @{NSFontAttributeName:
                                       [UIFont systemFontOfSize:[UIFont systemFontSize]]};
-    NSAttributedString * subString = [[NSAttributedString alloc] initWithString:@" completed a todo." attributes:attributes];
+    NSAttributedString * subString = [[NSAttributedString alloc] initWithString:actionstring attributes:attributes];
     [atrTitle appendAttributedString:subString];
     
     [feedCell setAttributedAction:atrTitle];

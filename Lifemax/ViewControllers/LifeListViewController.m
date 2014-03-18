@@ -90,6 +90,8 @@ static void RKTwitterShowAlertWithError(NSError *error)
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refresh:) name:LIFEMAX_INITIALIZED_CD_KEY object:nil];
 
     self.navigationItem.leftBarButtonItem = revealButtonItem;
+
+    self.navigationController.navigationBar.translucent = NO;
     
     self.refreshControl = [[UIRefreshControl alloc]init];
     [self.refreshControl addTarget:self action:@selector(refresh:) forControlEvents:UIControlEventValueChanged];

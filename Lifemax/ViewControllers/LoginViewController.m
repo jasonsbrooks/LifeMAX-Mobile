@@ -8,6 +8,7 @@
 
 #import "LoginViewController.h"
 #import <FacebookSDK/FacebookSDK.h>
+#import "LifemaxHeaders.h"
 @interface LoginViewController () <FBLoginViewDelegate>
 
 @end
@@ -26,7 +27,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+    self.view.backgroundColor = LIFEMAX_ROOT_COLOR;
 }
 
 - (void)didReceiveMemoryWarning

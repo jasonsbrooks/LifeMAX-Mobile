@@ -19,7 +19,6 @@
 		9874FD7F18A74CEC006F64D3 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9874FD7E18A74CEC006F64D3 /* QuartzCore.framework */; };
 		9876A6CC18BC580100021A06 /* LMRestKitManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9876A6CB18BC580100021A06 /* LMRestKitManager.m */; };
 		9876A6CF18BC596400021A06 /* LifemaxCoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9876A6CD18BC596400021A06 /* LifemaxCoreData.xcdatamodeld */; };
-		987A6E1718A8CC5000693E10 /* organized-papers.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 987A6E1618A8CC5000693E10 /* organized-papers.JPG */; };
 		989CE3E618B926660079ECA7 /* LMHelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 989CE3E518B926660079ECA7 /* LMHelpViewController.m */; };
 		989CE3EE18B92B020079ECA7 /* EditTaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 989CE3ED18B92B020079ECA7 /* EditTaskViewController.m */; };
 		989CE3F118B9364F0079ECA7 /* HashtagSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = 989CE3F018B9364F0079ECA7 /* HashtagSelector.m */; };
@@ -88,7 +87,6 @@
 		9876A6CA18BC580100021A06 /* LMRestKitManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMRestKitManager.h; sourceTree = "<group>"; };
 		9876A6CB18BC580100021A06 /* LMRestKitManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMRestKitManager.m; sourceTree = "<group>"; };
 		9876A6CE18BC596400021A06 /* LifemaxCoreData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = LifemaxCoreData.xcdatamodel; sourceTree = "<group>"; };
-		987A6E1618A8CC5000693E10 /* organized-papers.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "organized-papers.JPG"; sourceTree = "<group>"; };
 		989CE3E418B926660079ECA7 /* LMHelpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMHelpViewController.h; sourceTree = "<group>"; };
 		989CE3E518B926660079ECA7 /* LMHelpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMHelpViewController.m; sourceTree = "<group>"; };
 		989CE3EC18B92B020079ECA7 /* EditTaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditTaskViewController.h; sourceTree = "<group>"; };
@@ -275,7 +273,6 @@
 				981B73C418B42A290040D4A0 /* GoogleOAuth.m */,
 				98C749A518A74AFB000A4CAF /* MenuViewController.h */,
 				98C749A618A74AFB000A4CAF /* MenuViewController.m */,
-				987A6E1618A8CC5000693E10 /* organized-papers.JPG */,
 				98C7498418A745B1000A4CAF /* Images.xcassets */,
 				9876A6CD18BC596400021A06 /* LifemaxCoreData.xcdatamodeld */,
 				98C7497318A745B1000A4CAF /* Supporting Files */,
@@ -385,6 +382,7 @@
 				98C7496618A745B1000A4CAF /* Frameworks */,
 				98C7496718A745B1000A4CAF /* Resources */,
 				6B75DBF7E10E4F7AB82FC3C1 /* Copy Pods Resources */,
+				98EF8A3118D8452D000ECC3A /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -458,7 +456,6 @@
 				9847F3A318D410500091A578 /* about_lifemax.html in Resources */,
 				98C7498518A745B1000A4CAF /* Images.xcassets in Resources */,
 				98C7497718A745B1000A4CAF /* InfoPlist.strings in Resources */,
-				987A6E1718A8CC5000693E10 /* organized-papers.JPG in Resources */,
 				98C7498018A745B1000A4CAF /* Main.storyboard in Resources */,
 				989CE3F318B93AE00079ECA7 /* HashtagSelector.xib in Resources */,
 			);
@@ -489,6 +486,19 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		98EF8A3118D8452D000ECC3A /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# xcode-build-bump.sh\n# @desc Auto-increment the build number every time the project is run.\n# @usage\n# 1. Select: your Target in Xcode\n# 2. Select: Build Phases Tab\n# 3. Select: Add Build Phase -> Add Run Script\n# 4. Paste code below in to new \"Run Script\" section\n# 5. Drag the \"Run Script\" below \"Link Binaries With Libraries\"\n# 6. Insure that your starting build number is set to a whole integer and not a float (e.g. 1, not 1.0)\n\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n";
 		};
 		F1FD69D9756D41EB96440E76 /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -663,7 +673,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1D474FF43FB44D7DBDF8170B /* Pods.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "Lifemax Icon";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -683,7 +693,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1D474FF43FB44D7DBDF8170B /* Pods.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "Lifemax Icon";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";

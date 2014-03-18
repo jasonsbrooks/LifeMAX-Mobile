@@ -8,6 +8,8 @@
 
 #import "HashtagSelector.h"
 
+#import "LifemaxHeaders.h"
+
 @interface HashtagSelector ()
 @property (nonatomic, strong) UIView *shadowView;
 @end
@@ -26,7 +28,7 @@
 -(UIView *)shadowView {
     if (!_shadowView) {
         _shadowView = [[UIView alloc] initWithFrame:CGRectZero];
-        _shadowView.backgroundColor = [UIColor colorWithWhite:.5 alpha:.3];
+        _shadowView.backgroundColor = LIFEMAX_MEDIUM_GRAY_COLOR;
         _shadowView.layer.masksToBounds = YES;
         [self addSubview:_shadowView];
         [self sendSubviewToBack:_shadowView];
@@ -37,6 +39,10 @@
 
 - (void) reloadTagNames {
     for (UIButton *button in self.subviews) {
+        button.layer.cornerRadius = button.bounds.size.height / 2;
+        button.layer.masksToBounds = YES;
+        button.layer.borderWidth = 2;
+        button.layer.borderColor = LIFEMAX_MEDIUM_GRAY_COLOR.CGColor;
         NSString *title = [self.delegate hashtagSelector:self titleForButtonIndex:button.tag - HASHTAG_BUTTON_INDEX_OFFSET];
         [button setTitle:title forState:UIControlStateNormal];
     }

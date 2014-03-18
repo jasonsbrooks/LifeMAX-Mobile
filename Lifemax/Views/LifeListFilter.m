@@ -56,6 +56,8 @@
     self.titleLabel.text = [self.delegate filter:self titleForRow:indexPath.row];
     [self.delegate filter:self didSelectRow:indexPath.row];
     
+    [self.tableView reloadData];
+    
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -64,16 +66,23 @@
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
-    cell.textLabel.text = [self.delegate filter:self titleForRow:indexPath.row];
+    NSString *title = [self.delegate filter:self titleForRow:indexPath.row];
     
+    UILabel *label = (UILabel *)[cell.contentView viewWithTag:10];
+    label.text = title;
+    
+    UIView *imageview = [cell.contentView viewWithTag:11];
+    imageview.hidden = (![self.titleLabel.text isEqualToString: title]);
     // Configure the cell...
     
-    UIView * selectedBackgroundView = [[UIView alloc] initWithFrame:cell.bounds];
-    [selectedBackgroundView setBackgroundColor:[UIColor colorWithRed:44.0/255 green:62.0/255 blue:80.0/255 alpha:0.7]]; // set color here
-    
-    [cell setSelectedBackgroundView:selectedBackgroundView];
     
     return cell;
+}
+
+-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    UILabel *label = (UILabel *)[cell.contentView viewWithTag:10];
+    UIView *imageview = [cell.contentView viewWithTag:11];
+    imageview.hidden = (![self.titleLabel.text isEqualToString: label.text]);
 }
 
 #pragma mark - Table view datasource

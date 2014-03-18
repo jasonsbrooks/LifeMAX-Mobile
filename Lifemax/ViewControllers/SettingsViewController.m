@@ -40,6 +40,7 @@
                                                                          style:UIBarButtonItemStyleBordered target:revealController action:@selector(revealToggle:)];
     
     self.navigationItem.leftBarButtonItem = revealButtonItem;
+    self.navigationController.navigationBar.translucent = NO;
     
 }
 

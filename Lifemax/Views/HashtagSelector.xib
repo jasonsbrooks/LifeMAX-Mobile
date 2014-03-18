@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="4514" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -10,80 +10,130 @@
             <rect key="frame" x="0.0" y="0.0" width="280" height="200"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <button opaque="NO" tag="21" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aNZ-lp-ZCs">
-                    <rect key="frame" x="0.0" y="66" width="140" height="30"/>
+                <button opaque="NO" tag="21" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aNZ-lp-ZCs">
+                    <rect key="frame" x="6" y="49" width="124" height="37"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                    <state key="normal" title="#personal"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <state key="normal" title="#personal">
+                        <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                    </state>
                     <connections>
                         <action selector="tagSelected:" destination="Jee-W4-1Cj" eventType="touchUpInside" id="1I1-r5-pt8"/>
                     </connections>
                 </button>
-                <button opaque="NO" tag="20" contentMode="center" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MlG-4c-gwd">
-                    <rect key="frame" x="0.0" y="28" width="140" height="30"/>
+                <button opaque="NO" tag="20" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MlG-4c-gwd">
+                    <rect key="frame" x="6" y="5" width="124" height="36"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                    <state key="normal" title="#personal"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <state key="normal" title="#personal">
+                        <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                    </state>
                     <connections>
                         <action selector="tagSelected:" destination="Jee-W4-1Cj" eventType="touchUpInside" id="jjM-W9-YPS"/>
                     </connections>
                 </button>
-                <button opaque="NO" tag="22" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MLS-Et-oeg">
-                    <rect key="frame" x="0.0" y="104" width="140" height="30"/>
+                <button opaque="NO" tag="22" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MLS-Et-oeg">
+                    <rect key="frame" x="6" y="94" width="124" height="36"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                    <state key="normal" title="#personal"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <state key="normal" title="#personal">
+                        <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                    </state>
                     <connections>
                         <action selector="tagSelected:" destination="Jee-W4-1Cj" eventType="touchUpInside" id="agE-NQ-QFD"/>
                     </connections>
                 </button>
-                <button opaque="NO" tag="23" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TFc-uO-1vs">
-                    <rect key="frame" x="0.0" y="142" width="140" height="30"/>
+                <button opaque="NO" tag="23" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TFc-uO-1vs">
+                    <rect key="frame" x="6" y="138" width="124" height="36"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                    <state key="normal" title="#personal"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <state key="normal" title="#personal">
+                        <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                    </state>
                     <connections>
                         <action selector="tagSelected:" destination="Jee-W4-1Cj" eventType="touchUpInside" id="Djn-B3-agX"/>
                     </connections>
                 </button>
-                <button opaque="NO" tag="24" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="09f-QB-N9L">
-                    <rect key="frame" x="140" y="28" width="140" height="30"/>
+                <button opaque="NO" tag="24" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="09f-QB-N9L">
+                    <rect key="frame" x="150" y="5" width="124" height="36"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                    <state key="normal" title="#personal"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <state key="normal" title="#personal">
+                        <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                    </state>
                     <connections>
                         <action selector="tagSelected:" destination="Jee-W4-1Cj" eventType="touchUpInside" id="33U-jc-zRu"/>
                     </connections>
                 </button>
-                <button opaque="NO" tag="25" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fWY-lf-DH0">
-                    <rect key="frame" x="140" y="66" width="140" height="30"/>
+                <button opaque="NO" tag="25" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fWY-lf-DH0">
+                    <rect key="frame" x="150" y="50" width="124" height="36"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                    <state key="normal" title="#personal"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <state key="normal" title="#personal">
+                        <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                    </state>
                     <connections>
                         <action selector="tagSelected:" destination="Jee-W4-1Cj" eventType="touchUpInside" id="cli-tH-KyM"/>
                     </connections>
                 </button>
-                <button opaque="NO" tag="26" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YcT-NN-ZDz">
-                    <rect key="frame" x="140" y="104" width="140" height="30"/>
+                <button opaque="NO" tag="26" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YcT-NN-ZDz">
+                    <rect key="frame" x="150" y="94" width="124" height="36"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                    <state key="normal" title="#personal"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <state key="normal" title="#personal">
+                        <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                    </state>
                     <connections>
                         <action selector="tagSelected:" destination="Jee-W4-1Cj" eventType="touchUpInside" id="tVE-U2-fXU"/>
                     </connections>
                 </button>
-                <button opaque="NO" tag="27" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rtK-CQ-yJ4">
-                    <rect key="frame" x="140" y="142" width="140" height="30"/>
+                <button opaque="NO" tag="27" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rtK-CQ-yJ4">
+                    <rect key="frame" x="150" y="138" width="124" height="36"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                    <state key="normal" title="#personal"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <state key="normal" title="#personal">
+                        <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                    </state>
                     <connections>
                         <action selector="tagSelected:" destination="Jee-W4-1Cj" eventType="touchUpInside" id="bZu-4F-y8D"/>
                     </connections>
                 </button>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="MLS-Et-oeg" firstAttribute="width" secondItem="fWY-lf-DH0" secondAttribute="width" id="0uR-WS-3XD"/>
+                <constraint firstItem="MLS-Et-oeg" firstAttribute="trailing" secondItem="MlG-4c-gwd" secondAttribute="trailing" id="1PQ-ea-BXv"/>
+                <constraint firstItem="MLS-Et-oeg" firstAttribute="width" secondItem="YcT-NN-ZDz" secondAttribute="width" id="1Ww-C5-T3Q"/>
+                <constraint firstItem="MlG-4c-gwd" firstAttribute="centerY" secondItem="09f-QB-N9L" secondAttribute="centerY" id="5iN-Qv-5Wg"/>
+                <constraint firstItem="MLS-Et-oeg" firstAttribute="height" secondItem="YcT-NN-ZDz" secondAttribute="height" id="6C9-OR-Oxe"/>
+                <constraint firstItem="YcT-NN-ZDz" firstAttribute="centerY" secondItem="MLS-Et-oeg" secondAttribute="centerY" id="9fy-Ng-K8y"/>
+                <constraint firstItem="MlG-4c-gwd" firstAttribute="top" secondItem="Jee-W4-1Cj" secondAttribute="top" constant="5" id="Czq-3d-Rxg"/>
+                <constraint firstItem="MLS-Et-oeg" firstAttribute="width" secondItem="TFc-uO-1vs" secondAttribute="width" id="ENo-gO-K9P"/>
+                <constraint firstItem="MLS-Et-oeg" firstAttribute="height" secondItem="fWY-lf-DH0" secondAttribute="height" id="WE4-Gh-VIV"/>
+                <constraint firstItem="MLS-Et-oeg" firstAttribute="height" secondItem="aNZ-lp-ZCs" secondAttribute="height" id="X52-qu-wOa"/>
+                <constraint firstItem="YcT-NN-ZDz" firstAttribute="leading" secondItem="rtK-CQ-yJ4" secondAttribute="leading" id="XhN-YK-YIM"/>
+                <constraint firstAttribute="trailing" secondItem="09f-QB-N9L" secondAttribute="trailing" constant="6" id="XxC-rN-sVn"/>
+                <constraint firstItem="MLS-Et-oeg" firstAttribute="width" secondItem="MlG-4c-gwd" secondAttribute="width" id="YCk-Xi-CXb"/>
+                <constraint firstItem="MLS-Et-oeg" firstAttribute="trailing" secondItem="TFc-uO-1vs" secondAttribute="trailing" id="YDG-QV-Qs6"/>
+                <constraint firstItem="MLS-Et-oeg" firstAttribute="width" secondItem="rtK-CQ-yJ4" secondAttribute="width" id="Zij-AB-Vrs"/>
+                <constraint firstItem="YcT-NN-ZDz" firstAttribute="leading" secondItem="09f-QB-N9L" secondAttribute="leading" id="ax8-c0-MXd"/>
+                <constraint firstItem="MLS-Et-oeg" firstAttribute="height" secondItem="MlG-4c-gwd" secondAttribute="height" id="bZd-q9-K8A"/>
+                <constraint firstItem="09f-QB-N9L" firstAttribute="leading" secondItem="MlG-4c-gwd" secondAttribute="trailing" constant="20" id="cA1-tv-AwC"/>
+                <constraint firstItem="MLS-Et-oeg" firstAttribute="height" secondItem="TFc-uO-1vs" secondAttribute="height" id="dnP-4s-Ba3"/>
+                <constraint firstItem="MLS-Et-oeg" firstAttribute="width" secondItem="aNZ-lp-ZCs" secondAttribute="width" id="gQ2-ry-b6t"/>
+                <constraint firstItem="TFc-uO-1vs" firstAttribute="centerY" secondItem="rtK-CQ-yJ4" secondAttribute="centerY" id="jeR-6Y-BT3"/>
+                <constraint firstItem="MLS-Et-oeg" firstAttribute="top" secondItem="aNZ-lp-ZCs" secondAttribute="bottom" constant="8" id="jfJ-ry-uoL"/>
+                <constraint firstAttribute="bottom" secondItem="TFc-uO-1vs" secondAttribute="bottom" constant="26" id="kEB-Ug-5TH"/>
+                <constraint firstItem="aNZ-lp-ZCs" firstAttribute="top" secondItem="MlG-4c-gwd" secondAttribute="bottom" constant="8" id="lsx-b4-Kxm"/>
+                <constraint firstItem="MLS-Et-oeg" firstAttribute="height" secondItem="09f-QB-N9L" secondAttribute="height" id="lyg-0c-wIj"/>
+                <constraint firstItem="MLS-Et-oeg" firstAttribute="height" secondItem="rtK-CQ-yJ4" secondAttribute="height" id="m6v-Z7-SCa"/>
+                <constraint firstItem="MLS-Et-oeg" firstAttribute="trailing" secondItem="aNZ-lp-ZCs" secondAttribute="trailing" id="pgf-JR-rjs"/>
+                <constraint firstItem="YcT-NN-ZDz" firstAttribute="leading" secondItem="fWY-lf-DH0" secondAttribute="leading" id="qko-De-M95"/>
+                <constraint firstItem="aNZ-lp-ZCs" firstAttribute="centerY" secondItem="fWY-lf-DH0" secondAttribute="centerY" id="sWN-Cj-XJv"/>
+                <constraint firstItem="TFc-uO-1vs" firstAttribute="top" secondItem="MLS-Et-oeg" secondAttribute="bottom" constant="8" id="wNn-PV-XE1"/>
+                <constraint firstItem="MlG-4c-gwd" firstAttribute="leading" secondItem="Jee-W4-1Cj" secondAttribute="leading" constant="6" id="xS1-f3-Mge"/>
+                <constraint firstItem="MLS-Et-oeg" firstAttribute="width" secondItem="09f-QB-N9L" secondAttribute="width" id="ydR-hA-6to"/>
+            </constraints>
         </view>
     </objects>
 </document>

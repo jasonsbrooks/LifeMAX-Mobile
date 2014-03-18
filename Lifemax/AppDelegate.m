@@ -51,7 +51,10 @@
 	
 	UINavigationController *frontNavigationController = [[UINavigationController alloc] initWithRootViewController:frontViewController];
     UINavigationController *rearNavigationController = [[UINavigationController alloc] initWithRootViewController:rearViewController];
-	
+
+    frontNavigationController.navigationBar.translucent = NO;
+    rearNavigationController.navigationBar.translucent = NO;
+
 	SWRevealViewController *revealController = [[SWRevealViewController alloc] initWithRearViewController:rearNavigationController frontViewController:frontNavigationController];
     revealController.delegate = self;
     
@@ -67,11 +70,12 @@
                                                            NSFontAttributeName: [UIFont fontWithName:@"Georgia-Bold" size:0.0],
                                                            }];
     
-    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:52/255.0 green:152/255.0 blue:219/255.0 alpha:1]];
+    [[UINavigationBar appearance] setBarTintColor:LIFEMAX_ROOT_COLOR];
     [[UINavigationBar appearance] setTintColor:[UIColor colorWithRed:236/255.0 green:240/255.0 blue:241/255.0 alpha:1]];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
 	
+    
 	self.window.rootViewController = self.revealViewController;
 	[self.window makeKeyAndVisible];
     

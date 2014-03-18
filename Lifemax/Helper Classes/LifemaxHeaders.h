@@ -18,4 +18,10 @@
 #define LIFEMAX_LOGGED_IN @"com.yucg.lifemax.lifemax-did-login-to-server"
 #define LIFEMAX_TRIGGER_LOGOUT @"com.yucg.lifemax.lifemax-trigger-logout-op"
 
+
+#define LIFEMAX_ROOT_COLOR ([UIColor colorWithRed:44/255.0 green:54/255.0 blue:219/255.0 alpha:1])
+#define LIFEMAX_LIGHT_GRAY_COLOR ([UIColor colorWithRed:248/255.0 green:249/255.0 blue:250/255.0 alpha:1])
+#define LIFEMAX_MEDIUM_GRAY_COLOR ([UIColor colorWithRed:166/255.0 green:175/255.0 blue:191/255.0 alpha:1])
+
+
 #endif
