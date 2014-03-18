@@ -11,6 +11,7 @@
 #import "LifemaxHeaders.h"
 #import "NSString+MD5.h"
 #import "Task.h"
+#import "User.h"
 #import "RKTest.h"
 @implementation LMRestKitManager
 
@@ -25,6 +26,7 @@
     NSManagedObjectModel *managedObjectModel = [NSManagedObjectModel mergedModelFromBundles:nil];
     RKManagedObjectStore *managedObjectStore = [[RKManagedObjectStore alloc] initWithManagedObjectModel:managedObjectModel];
     objectManager.managedObjectStore = managedObjectStore;
+    objectManager.requestSerializationMIMEType = RKMIMETypeJSON;
     
     // Setup our object mappings
     /**
@@ -35,25 +37,26 @@
     RKEntityMapping *userMapping = [RKEntityMapping mappingForEntityForName:@"User" inManagedObjectStore:managedObjectStore];
     userMapping.identificationAttributes = @[ @"user_id" ];
     [userMapping addAttributeMappingsFromDictionary:@{
-                                                      @"self": @"user_id",
+                                                      @"id": @"user_id",
+                                                      @"name" : @"user_name"
                                                       }];
     // If source and destination key path are the same, we can simply add a string to the array
-    //    [userMapping addAttributeMappingsFromArray:@[ @"name" ]];
     
     RKEntityMapping *taskMapping = [RKEntityMapping mappingForEntityForName:@"Task" inManagedObjectStore:managedObjectStore];
     taskMapping.identificationAttributes = @[ @"task_id" ];
     [taskMapping addAttributeMappingsFromDictionary:@{
-                                                      @"summary" : @"name",
+                                                      @"name" : @"name",
                                                       @"description" :@"task_description",
                                                       @"location": @"location",
                                                       @"id": @"task_id",
-                                                      @"start.dateTime" :@"start",
-                                                      @"end.dateTime" : @"end",
+                                                      @"start" :@"start",
+                                                      @"end" : @"end",
                                                       @"updated": @"updated",
-                                                      @"extendedProperties.shared.pictureurl" :@"pictureurl",
-                                                      @"extendedProperties.shared.hashtag" : @"hashtag",
+                                                      @"pictureurl" :@"pictureurl",
+                                                      @"hashtag" : @"hashtag",
+                                                      @"completion" : @"completion"
                                                       }];
-    [taskMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"organizer" toKeyPath:@"user" withMapping:userMapping]];
+    [taskMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"user" toKeyPath:@"user" withMapping:userMapping]];
     
     
     // Update date format so that we can parse Twitter dates properly
@@ -67,20 +70,26 @@
     RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:taskMapping
                                                                                             method:RKRequestMethodGET
                                                                                        pathPattern:@"/api/user/:userid/tasks"
-                                                                                           keyPath:nil
+                                                                                           keyPath:@"items"
                                                                                        statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
     
     [objectManager addResponseDescriptor:responseDescriptor];
     
-    RKResponseDescriptor *feedResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:taskMapping method:RKRequestMethodGET pathPattern:@"/api/user/:userid/newsfeed" keyPath:@"posts" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
+    RKResponseDescriptor *feedResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:taskMapping
+                                                                                                method:RKRequestMethodGET
+                                                                                           pathPattern:@"/api/user/:userid/newsfeed"
+                                                                                               keyPath:@"items"
+                                                                                           statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
+    
     [objectManager addResponseDescriptor:feedResponseDescriptor];
     
-    RKResponseDescriptor *postTask = [RKResponseDescriptor responseDescriptorWithMapping:[taskMapping inverseMapping]
-                                                                                  method:RKRequestMethodPOST
-                                                                             pathPattern:@"/api/user/:userid/tasks"
-                                                                                 keyPath:nil
-                                                                             statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
-    [objectManager addResponseDescriptor:postTask];
+    
+    RKRequestDescriptor *postTask = [RKRequestDescriptor requestDescriptorWithMapping:[taskMapping inverseMapping]
+                                                                            objectClass:[Task class]
+                                                                            rootKeyPath:nil
+                                                                                 method:RKRequestMethodPOST];
+    [objectManager addRequestDescriptor:postTask];
+    
     
     
     // To perform local orphaned object cleanup
@@ -124,6 +133,12 @@
     NSString *path = [NSString stringWithFormat:@"/api/user/%@/tasks", userid];
 
     [[RKObjectManager sharedManager] getObjectsAtPath:path parameters:@{@"hashToken" : hashtoken} success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+        /*
+        NSLog(@"[FETCH-TASKS] Response: %@", operation.HTTPRequestOperation.responseString);
+        for(Task *task in [mappingResult array]) {
+            NSLog(@"[FETCHED-TASK]: %@", task);
+        }*/
+        
         
         
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
@@ -137,8 +152,20 @@
     
     [[RKObjectManager sharedManager] getObjectsAtPath:path parameters:@{@"hashToken" : hashtoken} success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         
-        NSLog(@"Mapping Result: %@", mappingResult);
-        NSLog(@"server Respnse: %@", operation.HTTPRequestOperation.responseString);
+        /*
+        NSLog(@"[FEED-FETCH-TASKS] Response: %@", operation.HTTPRequestOperation.responseString);
+         for(id obj in [mappingResult array]) {
+             if ([obj isKindOfClass:[Task class]]){
+                 Task * task = obj;
+                 NSLog(@"[FEED-FETCHED-TASK]: %@\nUser:%@", task, task.user.user_id);
+             }
+             else {
+                 NSLog(@"Not a task : %@", obj);
+             }
+         }
+         
+        */
+         
         
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
         NSLog(@"Operation: %@", [operation HTTPRequestOperation]);
@@ -162,7 +189,7 @@
 }
 
 - (BOOL)deleteTask:(Task *) task {
-    NSString *task_id = task.task_id;
+    NSNumber *task_id = task.task_id;
 
     
     NSUserDefaults *stdDefaults = [NSUserDefaults standardUserDefaults];
@@ -174,14 +201,15 @@
     
     NSString *tok = [loginInfo objectForKey:@"authToken"];
     
-    [[RKTest sharedManager] postPath:deleteTasksPath parameters:@{@"hashToken" : [tok md5], @"eventId" : task_id} success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [[RKTest sharedManager] postPath:deleteTasksPath parameters:@{@"hashToken" : [tok md5], @"taskId" : task_id} success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
         [self deleteTaskFromLocalStore:task];
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-//        NSLog(@"Delete Headers : %@", [operation.request allHTTPHeaderFields]);
         if(operation.response.statusCode == 200) {
             [self deleteTaskFromLocalStore:task];
+            NSLog(@"Delete Response: %@", operation.responseString);
+
         } else {
             NSLog(@"Delete Response: %@", operation.responseString);
 
@@ -202,6 +230,49 @@
     return YES;
 }
 */
+
+- (void) updateTask:(Task *)task withValues:(NSDictionary *)values {
+    if(values[@"name"])
+        task.name = values[@"name"];
+    if(values[@"description"])
+        task.task_description = values[@"description"];
+    if(values[@"hashtag"])
+        task.hashtag = values[@"hashtag"];
+    if(values[@"start"])
+        task.start = values[@"start"];
+    if(values[@"completion"])
+        task.completion = values[@"completion"];
+    
+    
+    NSString *postPath = [NSString stringWithFormat:@"/api/user/%@/updatetask", [self defaultUserId]];
+    
+    [[RKObjectManager sharedManager] postObject:task
+                                           path:postPath
+                                     parameters:@{ @"hashToken" : [[self defaultUserAuthToken] md5] }
+                                        success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                            NSLog(@"Post success response: %@", operation.HTTPRequestOperation.responseString);
+                                            NSLog(@"Post Success: %@", [mappingResult array]);
+                                            
+                                        }
+                                        failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                            NSLog(@"Post Failed: %@", operation.HTTPRequestOperation.responseString);
+                                            NSLog(@"Post URL : %@", operation.HTTPRequestOperation.request.URL);
+                                            NSLog(@"Post Request: %@,", [[NSString alloc]initWithData:operation.HTTPRequestOperation.request.HTTPBody encoding:NSUTF8StringEncoding] );
+                                        }];
+    [task.managedObjectContext save:nil];
+}
+
+- (NSDictionary *)loginInfo {
+    return [[NSUserDefaults standardUserDefaults] objectForKey:LIFEMAX_LOGIN_INFORMATION_KEY];
+}
+- (NSString *) defaultUserAuthToken {
+    return [self loginInfo][@"authToken"];
+}
+- (NSString *) defaultUserId {
+    return [self loginInfo][@"id"];
+}
+
+
 - (void) newTaskForValues:(NSDictionary *)values {
     if(values) {
         
@@ -215,6 +286,9 @@
         NSString *hashtag = [values objectForKey:@"hashtag"];
         hashtag = hashtag ? hashtag : @"#personal";
         
+        NSString *description = [values objectForKey:@"task_description"];
+        description = description ? description : @"";
+        
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
         [dict setObject:@"" forKey:@"location"];
         [dict setObject:@"" forKey:@"pictureurl"];
@@ -226,7 +300,7 @@
         
         [dict setObject:[dateFormatter stringFromDate:[NSDate date]] forKey:@"starttime"];
         [dict setObject:[dateFormatter stringFromDate:[NSDate dateWithTimeInterval:100 sinceDate:[NSDate date]]] forKey:@"endtime"];
-        [dict setObject:[values objectForKey:@"task_description"] forKey:@"description"];
+        [dict setObject:description forKey:@"description"];
         
         NSDictionary *loginInfo = [[NSUserDefaults standardUserDefaults] objectForKey:LIFEMAX_LOGIN_INFORMATION_KEY];
         
@@ -239,7 +313,7 @@
         
         [dict setObject:[tok md5] forKey:@"hashToken"];
         
-        NSLog(@"params: %@", dict);
+//        NSLog(@"params: %@", dict);
         
         
         [[RKTest sharedManager] postPath:path parameters:dict success:^(AFHTTPRequestOperation *operation, id responseObject) {

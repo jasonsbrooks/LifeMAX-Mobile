@@ -8,9 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
-
+#import "User.h"
 
 @interface Task : NSManagedObject
+
 
 @property (nonatomic, retain) NSDate * end;
 @property (nonatomic, retain) NSString * hashtag;
@@ -19,8 +20,9 @@
 @property (nonatomic, retain) NSString * pictureurl;
 @property (nonatomic, retain) NSDate * start;
 @property (nonatomic, retain) NSString * task_description;
-@property (nonatomic, retain) NSString * task_id;
+@property (nonatomic, retain) NSNumber * task_id;
 @property (nonatomic, retain) NSDate * updated;
-@property (nonatomic, retain) NSManagedObject *user;
+@property (nonatomic, retain) User *user;
+@property (nonatomic, retain) NSNumber *completion;
 
 @end

@@ -8,7 +8,7 @@
 
 #import "FeedUserTaskCell.h"
 //#import "UIImageView+URLDownload.h"
-//#import "UIImageView+AFNetworking.h"
+#import "UIImageView+AFNetworking.h"
 
 @interface FeedUserTaskCell ()
 @property (nonatomic, strong) IBOutlet UILabel *actionLabel;
@@ -58,8 +58,8 @@
     self.timestampLabel.text = timestamp;
 }
 -(void)setImageFromURL:(NSString *)imageURL {
-    
-//    [self.taskImageView setImageWithURL:[NSURL URLWithString:imageURL] placeholderImage:[UIImage imageNamed:@"image_placeholder"]];
+//    [self.taskImageView setimage]
+    [self.taskImageView setImageWithURL:[NSURL URLWithString:imageURL] placeholderImage:[UIImage imageNamed:@"image_placeholder"]];
 }
 
 @end

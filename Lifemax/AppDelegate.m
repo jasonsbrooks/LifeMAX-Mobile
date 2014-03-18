@@ -167,9 +167,8 @@
         [[LMRestKitManager sharedManager] fetchTasksForDefaultUser];
         NSLog(@"Lifemax Login Success!");
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-
         if ([operation.responseString isEqualToString:@"Error: User does not exist!"] ) {
-            [[RKTest sharedManager] postPath:@"/api/register" parameters:@{@"shortToken" : fbAccessToken} success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            [[RKTest sharedManager] postPath:@"/api/register" parameters:@{@"shortToken" : fbAccessToken, @"privacy" : @(0) } success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 NSLog(@"Register success!");
                 NSLog(@"REgister Response: %@", responseObject);
                 [self triggerLMLoginWithToken:fbAccessToken];
@@ -180,6 +179,7 @@
         } else {
             NSLog(@"[LM-Login] Error : %@", [error localizedDescription]);
             NSLog(@"[LM-Login] Response : %@", operation.responseString);
+            NSLog(@"[LM-Login] Request : %@", operation.request.URL);
         }
     }];
 }

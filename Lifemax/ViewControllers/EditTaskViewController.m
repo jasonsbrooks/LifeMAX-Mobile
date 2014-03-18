@@ -44,31 +44,6 @@
 
 @implementation EditTaskViewController
 
-- (void)enableTaskEditing{
-    //replace the back button with a cancel one that requires confirmation
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
-                                                                                         target:self
-                                                                                         action:@selector(confirmCancel)];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                                                                          target:self
-                                                                                          action:@selector(donePressed)];
-    
-    self.deleteButton.enabled = YES;
-    self.deleteButton.alpha = 1;
-}
-
-- (void) disableTaskEditing {
-    [self.activeTextField endEditing:YES];
-    self.deleteButton.enabled = NO;
-    self.deleteButton.alpha = 0;
-    self.navigationItem.leftBarButtonItem  = self.navigationItem.backBarButtonItem;
-    /*
-    self.navigationItem.rightBarButtonItem =[[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
-                                                                                         target:self
-                                                                                         action:@selector(editPressed)];
-     */
- }
-
 -(NSMutableDictionary *)values {
     if(!_values)
         _values = [[NSMutableDictionary alloc]init];
@@ -99,6 +74,13 @@
     }
 }
 
+-(void)initializeWithTaskValues :(Task *)task {
+    if(task.name) self.values[@"name"] = task.name;
+    if(task.task_description) self.values[@"description"] = task.task_description;
+    if(task.hashtag) self.values[@"hashtag"] = task.hashtag;
+    if(task.start) self.values[@"start"] = task.start;
+}
+
 - (void) selectActiveTag {
     NSInteger hashtagIndex = [self.hashtags indexOfObject:self.task.hashtag];
     NSInteger numsections = self.hashtags.count / 8 + MIN((self.hashtags.count % 8), 1);
@@ -120,7 +102,8 @@
    
     self.values[@"name"] = self.task.name ? self.task.name : @"";
     self.values[@"task_description"] = self.task.task_description ? self.task.task_description : @"";
-    self.values[@"start"] = self.task.start ? self.task.start : [NSDate date];
+    if(self.task.start)
+        self.values[@"start"] = self.task.start;
     self.values[@"hashtag"] = self.task.hashtag ? self.task.hashtag : @"";
     
     [self selectActiveTag];
@@ -138,23 +121,11 @@
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
-    NSArray *viewControllers = [self.navigationController viewControllers];
-    
-    if ([viewControllers indexOfObject:self] == NSNotFound && !self.deleted) {
-        // View is disappearing because it was popped from the stack
-        NSLog(@"View controller was popped - Save time");
-        if([self didInputChange] && self.madeEdits)
-            [self.delegate editor:self didEditTaskFields:self.values forTask:self.task];
-    }
     [((AppDelegate *)([UIApplication sharedApplication].delegate)) enablePanning:self];
-
 }
 
 -(void)awakeFromNib {
     [super awakeFromNib];
-    
-//    self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
-//    self.tableView.tableFooterView.translatesAutoresizingMaskIntoConstraints = NO;
 }
 
 - (void)viewDidLoad
@@ -164,15 +135,54 @@
     self.madeEdits = NO;
     self.title = NSLocalizedString(@"Edit Task", nil);
     
-//    [self disableTaskEditing];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save", nil) style:UIBarButtonItemStyleBordered target:self action:@selector(savePressed:)];
     
-//    [self.tableView.tableFooterView viewWithTag:1].translatesAutoresizingMaskIntoConstraints = NO;
-
-    //configure default hashtags -> should probably go in a constant somewhere
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cancel", nil) style:UIBarButtonItemStyleBordered target:self action:@selector(cancelPressed:)];
+    
+    //configure default hashtags
     self.hashtags = LIFEMAX_HASHTAGS;
     
     [self configureHashtagSelector];
     
+}
+
+- (BOOL) validateInput
+{
+    if(self.values && [self.values objectForKey:@"name"] && [[self.values objectForKey:@"name"] length] > 0) {
+        return YES;
+    }
+
+    return NO;
+}
+
+- (void) savePressed:(id)sender {
+    [self.activeTextField endEditing:YES];
+    BOOL validated = [self validateInput];
+    if(validated) {
+        [self.delegate editor:self didEditTaskFields:self.values forTask:self.task];
+        [self exit];
+    }
+    else if ([self didInputChange]){
+        UIAlertView *warn = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"Incomplete", nil)
+                                                      message:NSLocalizedString(@"A task must have a title", nil)
+                                                     delegate:nil
+                                            cancelButtonTitle:@"OK"
+                                            otherButtonTitles:nil];
+        [warn show];
+    } else [self exit];
+}
+
+- (void) cancelPressed: (id) sender {
+    UIAlertView *cancelAlert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"Cancel", nil)
+                                                         message:@"Are you sure?\nYour changes will be lost."
+                                                        delegate:nil cancelButtonTitle:NSLocalizedString(@"Cancel", nil) otherButtonTitles:NSLocalizedString(@"Discard", nil), nil];
+    if([self didInputChange]) {
+        [cancelAlert showWithCompletion:^(UIAlertView *alertView, NSInteger buttonIndex) {
+            if(buttonIndex)
+                [self exit];
+        }];
+    } else [self exit];
+
 }
 
 -(void)viewDidAppear:(BOOL)animated {
@@ -181,15 +191,6 @@
     [self fixHashtagSelectorContentSize];
 }
 
--(void)editPressed {
-//    [self enableTaskEditing];
-}
-
-- (void)donePressed {
-//    [self disableTaskEditing];
-
-    [self exit];
-}
 
 - (IBAction)deletePressed:(id)sender {
     UIAlertView *cancelAlert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"Delete", nil)
@@ -250,13 +251,6 @@
             [selector selectTag:0];
         }
         
-        for (HashtagSelector *selector in self.hashtagScrollView.subviews) {
-            NSInteger selectorIndex = self.hashtagScrollView.tag - 10;
-            if (selectorIndex >= 0){
-                NSLog(@"Configuring view :%d", selectorIndex);
-                
-            }
-        }
         
     }
     
@@ -312,9 +306,7 @@
 //    [self enableTaskEditing];
     [UIView animateWithDuration:.5 animations:^{
         self.hashtagScrollView.alpha = .5;
-    } completion:^(BOOL finished) {
-//        self.hashtagScrollView = YES;
-    }];
+    } completion:nil];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
@@ -381,19 +373,7 @@
     return nil;
 }
 
-- (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex)
-    {
-        // The didn't press "no", so pop that view!
-        if(self.task) {
-            [self updateViewForTask];
-        } else {
-            [self exit];
-        }
-        [self disableTaskEditing];
-    }
-}
+
 
 - (IBAction) dateValueChanged:(UIDatePicker *)sender{
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
@@ -409,54 +389,30 @@
 - (BOOL) didInputChange {
     if([[self.values allKeys] containsObject:@"hashtag"]) {
         if ([self.values objectForKey:@"hashtag"] != self.task.hashtag) {
+            NSLog(@"Hashtag is not equal : %@ != %@", self.values[@"hashtag"], self.task.hashtag);
             return YES;
         }
     } if([[self.values allKeys] containsObject:@"name"]) {
         if ([self.values objectForKey:@"name"] != self.task.name) {
+            NSLog(@"name is not equal : %@ != %@", self.values[@"name"], self.task.name);
             return YES;
         }
     } if([[self.values allKeys] containsObject:@"task_description"]) {
         if ([self.values objectForKey:@"task_description"] != self.task.task_description) {
+            NSLog(@"Description is not equal : %@ != %@", self.values[@"description"], self.task.task_description);
             return YES;
         }
     } if([[self.values allKeys] containsObject:@"start"]) {
         if ([self.values objectForKey:@"start"] != self.task.start) {
+            NSLog(@"Start is not equal : %@ != %@", self.values[@"start"], self.task.start);
             return YES;
         }
     }
-    
+    NSLog(@"INPUT HAS NOT CHANGED.");
     return NO;
 }
 - (void) exit {
     [self.navigationController popViewControllerAnimated:YES];
-}
-
-
-
-- (void)confirmCancel
-{
-    // Do whatever confirmation logic you want here, the example is a simple alert view
-    
-    [self.activeTextField endEditing:YES];
-    
-
-    
-    BOOL inputChanged = [self didInputChange];
-    if (!inputChanged) {
-        if(self.task) {
-            [self updateViewForTask];
-        } else {
-            [self exit];
-        }
-        return;
-    }
-    
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning"
-                                                    message:@"Are you sure you want to cancel?"
-                                                   delegate:self
-                                          cancelButtonTitle:@"No"
-                                          otherButtonTitles:@"Yes", nil];
-    [alert show];
 }
 
 
@@ -505,15 +461,15 @@
         
         if(row == 0) {
             cell.textField.placeholder = @"task";
-            if(self.task){
-                cell.textField.text = self.task.name;
+            if(self.values[@"name"]){
+                cell.textField.text = self.values[@"name"];
             }
         } else if(row == 2) {
             cell.textField.placeholder = @"date";
-            if(self.task){
+            if(self.values[@"date"]){
                 [self.formatter setDateStyle:NSDateFormatterMediumStyle];
                 [self.formatter setDoesRelativeDateFormatting:YES];
-                NSString *str = [self.formatter stringFromDate:self.task.start];
+                NSString *str = [self.formatter stringFromDate:self.values[@"date"]];
                 cell.textField.text = str;
             }
             UIDatePicker * dp = [[UIDatePicker alloc]init];
@@ -538,14 +494,15 @@
         cell.textView.tag = row;
         cell.textView.scrollEnabled = NO;
         cell.textView.textColor = [UIColor lightGrayColor];
-        cell.textView.text = @"description";
-        if(self.task.task_description){
+        cell.textView.text = DESCRIPTION_PLACEHOLDER_TEXT;
+        NSString *desc = self.values[@"description"];
+        if(desc && desc > 0){
             cell.textView.textColor = [UIColor darkTextColor];
-            cell.textView.text = self.task.task_description;
+            cell.textView.text = desc;
             [cell.textView sizeThatFits:cell.textView.contentSize];
             
             
-            [self textView:cell.textView shouldChangeTextInRange: NSMakeRange(0, self.task.task_description.length) replacementText:self.task.task_description];
+            [self textView:cell.textView shouldChangeTextInRange: NSMakeRange(0, desc.length) replacementText:self.values[@"description"]];
         }
         return cell;
     }
@@ -578,7 +535,6 @@
     CGRect footerFrame = self.tableView.tableFooterView.frame;
     footerFrame.size.height = [self footerHeight];
     self.tableView.tableFooterView.frame = footerFrame;
-//    [self fixHashtagSelectorContentSize];
     [self.tableView endUpdates];
 }
 
@@ -589,8 +545,6 @@
         return self.tableView.bounds.size.height - contentsize;
     } else return selectorSize;
 }
-
-
 
 -(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
     

@@ -26,6 +26,7 @@
 		989CE3F318B93AE00079ECA7 /* HashtagSelector.xib in Resources */ = {isa = PBXBuildFile; fileRef = 989CE3F218B93AE00079ECA7 /* HashtagSelector.xib */; };
 		989CE3F618B94C490079ECA7 /* EditFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 989CE3F518B94C490079ECA7 /* EditFieldCell.m */; };
 		98A269A218C40C6E0053D20B /* UIAlertView+NSCookbook.m in Sources */ = {isa = PBXBuildFile; fileRef = 98A269A118C40C6E0053D20B /* UIAlertView+NSCookbook.m */; };
+		98B4F0FA18D78CF2002943D9 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 98B4F0F918D78CF2002943D9 /* User.m */; };
 		98B62E7D18B5E8D500872BDE /* RKTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 98B62E7C18B5E8D500872BDE /* RKTest.m */; };
 		98C7496D18A745B1000A4CAF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98C7496C18A745B1000A4CAF /* Foundation.framework */; };
 		98C7496F18A745B1000A4CAF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98C7496E18A745B1000A4CAF /* CoreGraphics.framework */; };
@@ -99,6 +100,8 @@
 		989CE3F518B94C490079ECA7 /* EditFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditFieldCell.m; sourceTree = "<group>"; };
 		98A269A018C40C6E0053D20B /* UIAlertView+NSCookbook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+NSCookbook.h"; sourceTree = "<group>"; };
 		98A269A118C40C6E0053D20B /* UIAlertView+NSCookbook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+NSCookbook.m"; sourceTree = "<group>"; };
+		98B4F0F818D78CF2002943D9 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
+		98B4F0F918D78CF2002943D9 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		98B62E7B18B5E8D500872BDE /* RKTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RKTest.h; sourceTree = "<group>"; };
 		98B62E7C18B5E8D500872BDE /* RKTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RKTest.m; sourceTree = "<group>"; };
 		98C7496918A745B1000A4CAF /* Lifemax.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lifemax.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -205,11 +208,15 @@
 			name = Auxilliary;
 			sourceTree = "<group>";
 		};
-		98B62E8118B5EB4200872BDE /* Model Objects */ = {
+		98B4F0FB18D78E32002943D9 /* Model Objects */ = {
 			isa = PBXGroup;
 			children = (
+				98D2A8E918C0498300FF5AD3 /* Task.h */,
+				98D2A8EA18C0498300FF5AD3 /* Task.m */,
+				98B4F0F818D78CF2002943D9 /* User.h */,
+				98B4F0F918D78CF2002943D9 /* User.m */,
 			);
-			path = "Model Objects";
+			name = "Model Objects";
 			sourceTree = "<group>";
 		};
 		98C7496018A745B1000A4CAF = {
@@ -252,14 +259,12 @@
 		98C7497218A745B1000A4CAF /* Lifemax */ = {
 			isa = PBXGroup;
 			children = (
-				98D2A8E918C0498300FF5AD3 /* Task.h */,
-				98D2A8EA18C0498300FF5AD3 /* Task.m */,
 				98C7497B18A745B1000A4CAF /* AppDelegate.h */,
 				98C7497C18A745B1000A4CAF /* AppDelegate.m */,
 				98B62E7B18B5E8D500872BDE /* RKTest.h */,
 				98B62E7C18B5E8D500872BDE /* RKTest.m */,
+				98B4F0FB18D78E32002943D9 /* Model Objects */,
 				983A92F918B7BD2900B02E2C /* Helper Classes */,
-				98B62E8118B5EB4200872BDE /* Model Objects */,
 				98DF58A118A8204700AC2BE0 /* Views */,
 				98FB50AA18A7FCDF00C916BC /* ViewControllers */,
 				98A269A018C40C6E0053D20B /* UIAlertView+NSCookbook.h */,
@@ -414,7 +419,7 @@
 		98C7496118A745B1000A4CAF /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = YUCG;
 				TargetAttributes = {
 					98C7496818A745B1000A4CAF = {
@@ -515,6 +520,7 @@
 				98C7497D18A745B1000A4CAF /* AppDelegate.m in Sources */,
 				98A269A218C40C6E0053D20B /* UIAlertView+NSCookbook.m in Sources */,
 				98DC9FC118B28A0A004747B5 /* SettingsViewController.m in Sources */,
+				98B4F0FA18D78CF2002943D9 /* User.m in Sources */,
 				989CE3F118B9364F0079ECA7 /* HashtagSelector.m in Sources */,
 				983A92FC18B7BD6C00B02E2C /* NSString+MD5.m in Sources */,
 				98DF58A718A83E9000AC2BE0 /* GoogleSyncViewController.m in Sources */,
@@ -587,7 +593,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -626,7 +631,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -698,7 +702,6 @@
 		98C7499F18A745B1000A4CAF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Lifemax.app/Lifemax";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
@@ -721,7 +724,6 @@
 		98C749A018A745B1000A4CAF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Lifemax.app/Lifemax";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",

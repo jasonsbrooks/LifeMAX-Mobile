@@ -18,8 +18,11 @@
 @dynamic pictureurl;
 @dynamic start;
 @dynamic task_description;
-@dynamic task_id;
+//@dynamic task_id;
 @dynamic updated;
 @dynamic user;
+@dynamic completion;
+
+@synthesize task_id;
 
 @end

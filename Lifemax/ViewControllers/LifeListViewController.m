@@ -81,7 +81,7 @@ static void RKTwitterShowAlertWithError(NSError *error)
     SWRevealViewController *revealController = [self revealViewController];
     
     
-    [revealController panGestureRecognizer];
+//    [revealController panGestureRecognizer];
     [revealController tapGestureRecognizer];
     
     UIBarButtonItem *revealButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"reveal-icon.png"]
@@ -93,7 +93,7 @@ static void RKTwitterShowAlertWithError(NSError *error)
     
     self.refreshControl = [[UIRefreshControl alloc]init];
     [self.refreshControl addTarget:self action:@selector(refresh:) forControlEvents:UIControlEventValueChanged];
-    [self filterForHashtag:nil];
+//    [self filterForHashtag:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -105,8 +105,14 @@ static void RKTwitterShowAlertWithError(NSError *error)
 
 - (void) configureFRC {
     
+    id user_id = [[[NSUserDefaults standardUserDefaults] objectForKey:LIFEMAX_LOGIN_INFORMATION_KEY] objectForKey:@"id"];
+    
+    NSFetchRequest *userFetch = [NSFetchRequest fetchRequestWithEntityName:@"User"];
+    userFetch.predicate = [NSPredicate predicateWithFormat:@"user_id = %@", user_id];
+    
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Task"];
-    NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"start" ascending:NO];
+    NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"task_id" ascending:NO];
+    
     fetchRequest.sortDescriptors = @[descriptor];
     NSError *error = nil;
     
@@ -115,6 +121,14 @@ static void RKTwitterShowAlertWithError(NSError *error)
     if (!ctx) {
         return;
     }
+    
+    User *user = [[ctx executeFetchRequest:userFetch error:&error] lastObject];
+    
+    if (!user) return;
+    
+    fetchRequest.predicate = [NSPredicate predicateWithFormat:@"user = %@", user];
+    
+    
     // Setup fetched results
     self.fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
                                                                         managedObjectContext:ctx
@@ -385,12 +399,19 @@ static void RKTwitterShowAlertWithError(NSError *error)
     
     NSLog(@"Editor Did make changes!: %@", values);
     
+    
     [[LMRestKitManager sharedManager] newTaskForValues:values];
     if(task)
         [[LMRestKitManager sharedManager] deleteTask:task];
     
     [[LMRestKitManager sharedManager] fetchTasksForDefaultUser];
 
+    /*
+    if(task)
+        [[LMRestKitManager sharedManager] updateTask:task withValues:values];
+    else
+        [[LMRestKitManager sharedManager] newTaskForValues:values];
+     */
 }
 
 
@@ -417,9 +438,9 @@ static void RKTwitterShowAlertWithError(NSError *error)
         NSLog(@"ID is: %@", userid);
         NSString *path = [NSString stringWithFormat:@"/api/user/%@/photoupload", userid];
         
-        NSDictionary *dict = @{@"hashToken": hashToken};
+        NSDictionary *params = @{@"hashToken": hashToken};
         
-        [[RKTest sharedManager] postPath:path parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [[RKTest sharedManager] postPath:path parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
             NSLog(@"Response Str: %@", operation.responseString);
             NSLog(@"Result object: %@", responseObject);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
