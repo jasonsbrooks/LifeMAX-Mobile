@@ -31,9 +31,7 @@
     if(!self)
         return nil;
     
-    
     [self registerHTTPOperationClass:[AFJSONRequestOperation class]];
-    
     
     [self setDefaultHeader:@"Accept" value:@"application/json"];
     [self setParameterEncoding:AFJSONParameterEncoding];

@@ -20,4 +20,7 @@
 @property (nonatomic, retain) Task *task;
 @property (nonatomic, weak) id<EditTaskDelegate> delegate;
 
+-(void)initializeWithTaskValues :(Task *)task;
+
+
 @end

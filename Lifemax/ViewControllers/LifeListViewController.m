@@ -396,19 +396,11 @@ static void RKTwitterShowAlertWithError(NSError *error)
 -(void)editor:(EditTaskViewController *)editor didEditTaskFields:(NSDictionary *)values forTask:(Task *)task {
     NSLog(@"Editor Did make changes!: %@", values);
     
-    
-    [[LMRestKitManager sharedManager] newTaskForValues:values];
-    if(task)
-        [[LMRestKitManager sharedManager] deleteTask:task];
-    
-    [[LMRestKitManager sharedManager] fetchTasksForDefaultUser];
-
-    /*
     if(task)
         [[LMRestKitManager sharedManager] updateTask:task withValues:values];
     else
         [[LMRestKitManager sharedManager] newTaskForValues:values];
-     */
+    
 }
 
 

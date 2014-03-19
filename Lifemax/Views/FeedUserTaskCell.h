@@ -18,4 +18,6 @@
 - (void) setSubtitle: (NSString *) subtitle;
 
 -(UIImageView *)taskImageView;
+@property (nonatomic, strong) IBOutlet UIButton *addButton;
+
 @end

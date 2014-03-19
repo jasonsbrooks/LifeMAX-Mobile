@@ -204,6 +204,7 @@ static void RKTwitterShowAlertWithError(NSError *error)
     [self performFetch];
 }
 
+
 #pragma mark - LifeList Filter Delegate
 -(void)filter:(LifeListFilter *)filter didSelectRow:(NSInteger)row {
     if(row > 0)
@@ -229,6 +230,21 @@ static void RKTwitterShowAlertWithError(NSError *error)
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+-(void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
+    
+    
+}
+
+
+- (IBAction)addbuttonPressed:(id)sender {
+    NSIndexPath *selectedPath = [NSIndexPath indexPathForRow:[sender tag] inSection:0];
+    
+    self.selectedIndexPath = selectedPath;
+    
+    [self performSegueWithIdentifier:@"edit_task" sender:self];
+    
 }
 
 #pragma mark - Table view data source
@@ -258,8 +274,13 @@ static void RKTwitterShowAlertWithError(NSError *error)
     Task *task = [self.fetchedResultsController objectAtIndexPath:indexPath];
     
     
+    
+    
     CellIdentifier = @"user_action";
     FeedUserTaskCell *feedCell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+    
+    [feedCell.addButton addTarget:self action:@selector(addbuttonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    
     NSMutableAttributedString *atrTitle = [[NSMutableAttributedString alloc]initWithString:task.user.user_name
                                                                                 attributes:@{NSFontAttributeName:
                                                                                                  [UIFont boldSystemFontOfSize:[UIFont systemFontSize]]}];
@@ -289,6 +310,9 @@ static void RKTwitterShowAlertWithError(NSError *error)
     NSInteger rnd = arc4random_uniform((u_int32_t)[imageUrls count]);
     
     NSString *randomObject = [imageUrls objectAtIndex:rnd];
+    
+    if (task.pictureurl && [task.pictureurl length] > 0)
+        randomObject = task.pictureurl;
     
     [feedCell setImageFromURL:randomObject];
     feedCell.taskImageView.contentMode = UIViewContentModeScaleAspectFill;
@@ -373,40 +397,16 @@ static void RKTwitterShowAlertWithError(NSError *error)
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
     EditTaskViewController *editController = [segue destinationViewController];
-    editController.task = [self.fetchedResultsController objectAtIndexPath:[self.tableView indexPathForSelectedRow]];
+//    editController.task = [self.fetchedResultsController objectAtIndexPath:[self.tableView indexPathForSelectedRow]];
+    [editController initializeWithTaskValues:[self.fetchedResultsController objectAtIndexPath:self.selectedIndexPath]];
     editController.delegate = self;
 }
 
-#pragma mark - Checkbox target method
+#pragma mark - Edit Task Delegate method
 
-- (void) checkboxTapped:(id)sender {
-    NSIndexPath *indexpath = [self.tableView indexPathForCell:sender];
-    //    NSLog(@"CheckboxTapped: %@",indexpath );
-    self.selectedIndexPath = indexpath;
-    
-    [self takePhoto];
-    
-}
-
-- (IBAction)takePhoto {
-    
-    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-    picker.delegate = self;
-    picker.allowsEditing = YES;
-    picker.sourceType = UIImagePickerControllerSourceTypeCamera;
-    
-    [self presentViewController:picker animated:YES completion:NULL];
-    
-}
 
 -(void)editor:(EditTaskViewController *)editor didEditTaskFields:(NSDictionary *)values forTask:(Task *)task {
-    //    if(self.values && [self didInputChange]){
-    //        NSLog(@"New Task!");
-    //        [[LMRestKitManager sharedManager] newTaskForValues:self.values];
-    //        if(self.task)
-    //            [[LMRestKitManager sharedManager] deleteTask:self.task];
-    //    }
-    
+
     NSLog(@"Editor Did make changes!: %@", values);
     
     [[LMRestKitManager sharedManager] newTaskForValues:values];
@@ -414,22 +414,6 @@ static void RKTwitterShowAlertWithError(NSError *error)
         [[LMRestKitManager sharedManager] deleteTask:task];
     
     [[LMRestKitManager sharedManager] fetchTasksForDefaultUser];
-    
-}
-
-
--(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    NSLog(@"Got an image picker: %@", info);
-    
-    
-    //do your stuff
-    [self dismissViewControllerAnimated:YES completion:^{
-        
-    }];
-}
-
--(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
-    NSLog(@"Canceled image chooser");
     
 }
 

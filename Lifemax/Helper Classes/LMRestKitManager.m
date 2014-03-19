@@ -189,46 +189,45 @@
     
     NSString *path = [NSString stringWithFormat:@"/api/user/%@/photoupload", [self defaultUserId]];
     
-    AFHTTPClient *httpClient = [[AFHTTPClient alloc] initWithBaseURL:[NSURL URLWithString:LIFEMAX_ROOT_URL]];
+    AFHTTPClient *httpClient = [RKTest sharedManager];
+    
     NSMutableURLRequest *request = [httpClient multipartFormRequestWithMethod:@"POST" path:path parameters:@{@"hashToken" : [[self defaultUserAuthToken] md5] } constructingBodyWithBlock:^(id <AFMultipartFormData>formData) {
         [formData appendPartWithFileData:jpegData
-                                    name:@"file"
-                                fileName:task.hashtag mimeType:@"image/jpeg"];
+                                    name:@"photo"
+                                fileName:@"uploadedImage.jpg" mimeType:@"image/jpeg"];
     }];
-    
-    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     
     __weak id ws = self;
+
     
-    NSDictionary *response = @{@"success": @(1), @"imageurl": @"http://twistedsifter.files.wordpress.com/2013/03/lightning-rainbow-perfect-timing.jpg"};
-    
-    
-    LMRestKitManager *ss = ws;
-    
-    if (response[@"success"] && [response[@"success"] boolValue]) {
-        NSString *imgurl = response[@"imageurl"];
-        [ss updateTask:task withValues:@{@"pictureurl" : imgurl}];
-    }
-    
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"upload photo success: %@", operation.responseString);
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Upload photo failed : %@", operation.responseString);
-    
+    AFJSONRequestOperation *jsonOp = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        NSLog(@"upload photo success: %@", JSON );
         
-        
+        LMRestKitManager *ss = ws;
+        if ([JSON objectForKey: @"success"] && [[JSON objectForKey: @"success"] boolValue]) {
+            NSString *imgurl = JSON[@"imageurl"];
+            NSLog(@"imgurl: %@", imgurl);
+            [ss updateTask:task withValues:@{@"pictureurl" : imgurl}];
+        }
+
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        NSLog(@"Upload photo failed : %d", response.statusCode);
     }];
-    // if you want progress updates as it's uploading, uncomment the following:
-    //
     
-    [operation setUploadProgressBlock:^(NSUInteger bytesWritten,
+    
+//    NSDictionary *response = @{@"success": @(1), @"imageurl": @"http://twistedsifter.files.wordpress.com/2013/03/lightning-rainbow-perfect-timing.jpg"};
+    
+
+    // if you want progress updates as it's uploading, uncomment the following:
+    
+    [jsonOp setUploadProgressBlock:^(NSUInteger bytesWritten,
     long long totalBytesWritten,
     long long totalBytesExpectedToWrite) {
              NSLog(@"Sent %lld of %lld bytes", totalBytesWritten, totalBytesExpectedToWrite);
     }];
     
         
-//    [httpClient enqueueHTTPRequestOperation:operation];
+    [httpClient enqueueHTTPRequestOperation:jsonOp];
 }
 
 -(void) deleteTaskFromLocalStore:(Task *)task {
@@ -368,9 +367,6 @@
         
         [dict setObject:[tok md5] forKey:@"hashToken"];
         
-//        NSLog(@"params: %@", dict);
-        
-        
         [[RKTest sharedManager] postPath:path parameters:dict success:^(AFHTTPRequestOperation *operation, id responseObject) {
             NSLog(@"Post success: %@", responseObject);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -384,9 +380,7 @@
 -(void)fetchTasksForDefaultUser {
     NSUserDefaults *stdDefaults = [NSUserDefaults standardUserDefaults];
     NSDictionary *loginInfo = [stdDefaults objectForKey:LIFEMAX_LOGIN_INFORMATION_KEY];
-    
     if (!loginInfo) return;
-    
     [self fetchTasksForUser:loginInfo[@"id"] hashtoken:[(loginInfo[@"authToken"]) md5]];
 }
 

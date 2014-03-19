@@ -261,7 +261,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="1" verticalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="Q5W-MG-R9u">
-                                            <rect key="frame" x="0.0" y="53" width="320" height="201"/>
+                                            <rect key="frame" x="0.0" y="53" width="320" height="236"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12 minutes ago" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gjv-XK-XPa">
@@ -289,35 +289,8 @@
                                             </attributedString>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iYJ-fd-1qY" userLabel="Add Button">
-                                            <rect key="frame" x="181" y="259" width="30" height="30"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <state key="normal" image="News Feed - Add Goal">
-                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                            </state>
-                                        </button>
-                                        <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mLt-sD-0VH" userLabel="Challenge Button">
-                                            <rect key="frame" x="110" y="259" width="30" height="30"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="30" id="7ND-K3-K2l"/>
-                                                <constraint firstAttribute="height" constant="30" id="UHh-86-Kd9"/>
-                                            </constraints>
-                                            <state key="normal" image="News Feed - Challenge">
-                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                            </state>
-                                        </button>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oSd-Vu-Gmu" userLabel="Divider">
-                                            <rect key="frame" x="160" y="264" width="1" height="20"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="20" id="iLq-ls-kWC"/>
-                                                <constraint firstAttribute="width" constant="1" id="rxP-VK-3tZ"/>
-                                            </constraints>
-                                        </view>
                                         <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nhf-NQ-V87" userLabel="Overlay View">
-                                            <rect key="frame" x="0.0" y="192" width="320" height="52"/>
+                                            <rect key="frame" x="0.0" y="227" width="320" height="52"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hike East Rock" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="28B-u0-NRS">
@@ -340,38 +313,43 @@
                                                     <color key="textColor" red="0.97254901960784312" green="0.97647058823529409" blue="0.98039215686274506" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="094-PL-7Ls" userLabel="Add Button">
+                                                    <rect key="frame" x="270" y="11" width="30" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="30" id="amV-hp-Rah"/>
+                                                        <constraint firstAttribute="width" secondItem="094-PL-7Ls" secondAttribute="height" multiplier="1:1" id="zvN-no-wEt"/>
+                                                    </constraints>
+                                                    <state key="normal" image="arrange-goals-add">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                </button>
                                             </subviews>
                                             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
                                             <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="094-PL-7Ls" secondAttribute="trailing" constant="20" id="7RT-Qh-bIS"/>
                                                 <constraint firstItem="28B-u0-NRS" firstAttribute="top" secondItem="nhf-NQ-V87" secondAttribute="top" constant="2" id="98t-Ax-DCc"/>
                                                 <constraint firstAttribute="trailing" secondItem="hbl-c9-azu" secondAttribute="trailing" constant="20" id="FFP-1o-C0z"/>
                                                 <constraint firstItem="hbl-c9-azu" firstAttribute="top" secondItem="28B-u0-NRS" secondAttribute="bottom" id="S7D-04-4j6"/>
                                                 <constraint firstAttribute="trailing" secondItem="28B-u0-NRS" secondAttribute="trailing" constant="20" id="TKh-SD-O2J"/>
                                                 <constraint firstAttribute="bottom" secondItem="hbl-c9-azu" secondAttribute="bottom" constant="2" id="aC7-ag-nK5"/>
+                                                <constraint firstAttribute="centerY" secondItem="094-PL-7Ls" secondAttribute="centerY" id="avE-ej-9UX"/>
                                                 <constraint firstItem="hbl-c9-azu" firstAttribute="leading" secondItem="nhf-NQ-V87" secondAttribute="leading" constant="20" id="lb9-m2-UHV"/>
                                                 <constraint firstItem="28B-u0-NRS" firstAttribute="leading" secondItem="nhf-NQ-V87" secondAttribute="leading" constant="20" id="zCl-4N-rN5"/>
                                             </constraints>
                                         </view>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="mLt-sD-0VH" firstAttribute="centerY" secondItem="oSd-Vu-Gmu" secondAttribute="centerY" id="498-QJ-f7h"/>
                                         <constraint firstItem="Gjv-XK-XPa" firstAttribute="top" secondItem="Atm-OJ-izu" secondAttribute="bottom" id="9OM-OG-6O6"/>
                                         <constraint firstItem="Q5W-MG-R9u" firstAttribute="leading" secondItem="c2x-DR-wmq" secondAttribute="leading" id="C1x-3j-Nc1"/>
-                                        <constraint firstItem="mLt-sD-0VH" firstAttribute="top" secondItem="Q5W-MG-R9u" secondAttribute="bottom" constant="5" id="CSq-TD-5eR"/>
                                         <constraint firstItem="Q5W-MG-R9u" firstAttribute="top" secondItem="Gjv-XK-XPa" secondAttribute="bottom" constant="10" id="JM5-Oc-8uJ"/>
-                                        <constraint firstItem="iYJ-fd-1qY" firstAttribute="width" secondItem="mLt-sD-0VH" secondAttribute="width" id="Km5-We-MX5"/>
                                         <constraint firstAttribute="trailing" secondItem="Q5W-MG-R9u" secondAttribute="trailing" id="Pow-YO-xSw"/>
-                                        <constraint firstAttribute="bottom" secondItem="mLt-sD-0VH" secondAttribute="bottom" constant="10" id="W8N-eu-2GT"/>
                                         <constraint firstItem="Atm-OJ-izu" firstAttribute="leading" secondItem="c2x-DR-wmq" secondAttribute="leading" constant="10" id="Yuf-Pz-524"/>
-                                        <constraint firstItem="oSd-Vu-Gmu" firstAttribute="leading" secondItem="mLt-sD-0VH" secondAttribute="trailing" constant="20" id="b0x-IV-LoK"/>
                                         <constraint firstItem="Atm-OJ-izu" firstAttribute="top" secondItem="c2x-DR-wmq" secondAttribute="top" constant="5" id="cog-os-T4v"/>
-                                        <constraint firstItem="iYJ-fd-1qY" firstAttribute="centerY" secondItem="mLt-sD-0VH" secondAttribute="centerY" id="e0q-p9-hDp"/>
-                                        <constraint firstAttribute="centerX" secondItem="oSd-Vu-Gmu" secondAttribute="centerX" id="eLZ-dT-oZR"/>
                                         <constraint firstAttribute="trailing" secondItem="nhf-NQ-V87" secondAttribute="trailing" id="eNK-rd-x0S"/>
                                         <constraint firstItem="nhf-NQ-V87" firstAttribute="leading" secondItem="c2x-DR-wmq" secondAttribute="leading" id="gbe-aY-gEg"/>
-                                        <constraint firstItem="iYJ-fd-1qY" firstAttribute="leading" secondItem="oSd-Vu-Gmu" secondAttribute="trailing" constant="20" id="hNI-7e-0jl"/>
                                         <constraint firstItem="Q5W-MG-R9u" firstAttribute="bottom" secondItem="nhf-NQ-V87" secondAttribute="bottom" constant="10" id="lxl-0V-175"/>
-                                        <constraint firstItem="iYJ-fd-1qY" firstAttribute="height" secondItem="mLt-sD-0VH" secondAttribute="height" id="mCI-9v-rlq"/>
+                                        <constraint firstAttribute="bottom" secondItem="Q5W-MG-R9u" secondAttribute="bottom" constant="10" id="scz-nl-hbL"/>
                                         <constraint firstItem="Atm-OJ-izu" firstAttribute="leading" secondItem="Gjv-XK-XPa" secondAttribute="leading" id="xB0-eJ-pKR"/>
                                         <constraint firstItem="Gjv-XK-XPa" firstAttribute="trailing" secondItem="Atm-OJ-izu" secondAttribute="trailing" id="xdd-LF-tGA"/>
                                         <constraint firstItem="Q5W-MG-R9u" firstAttribute="top" secondItem="c2x-DR-wmq" secondAttribute="top" constant="53" id="zgh-E4-xBo"/>
@@ -379,6 +357,7 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="actionLabel" destination="Atm-OJ-izu" id="n8J-Ck-vys"/>
+                                    <outlet property="addButton" destination="094-PL-7Ls" id="TAe-bv-duL"/>
                                     <outlet property="subtitleLabel" destination="hbl-c9-azu" id="cut-T2-Vbs"/>
                                     <outlet property="taskImageView" destination="Q5W-MG-R9u" id="I2I-2t-Z6e"/>
                                     <outlet property="timestampLabel" destination="Gjv-XK-XPa" id="wC1-xE-pZi"/>
@@ -1150,11 +1129,11 @@
     <resources>
         <image name="Max Launch" width="164" height="164"/>
         <image name="News Feed - Add Goal" width="17" height="17"/>
-        <image name="News Feed - Challenge" width="23" height="25"/>
         <image name="Sidebar - My Story" width="19" height="23"/>
         <image name="Sidebar - News Feed" width="23" height="19"/>
         <image name="Sidebar - Settings" width="26" height="26"/>
         <image name="Sidebar - Things I Want To Do" width="20" height="15"/>
+        <image name="arrange-goals-add" width="21" height="21"/>
         <image name="list-check" width="14" height="10"/>
         <image name="list-dropdown" width="9" height="17"/>
         <image name="max-suggests" width="45" height="45"/>
