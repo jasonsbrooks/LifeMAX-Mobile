@@ -51,7 +51,9 @@
                                                       @"id": @"task_id",
                                                       @"pictureurl" :@"pictureurl",
                                                       @"hashtag" : @"hashtag",
-                                                      @"completed" : @"completed"
+                                                      @"completed" : @"completed",
+                                                      @"private" : @"private",
+                                                      @"timecompleted" : @"timecompleted"
                                                       }];
     [taskMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"user" toKeyPath:@"user" withMapping:userMapping]];
     
@@ -198,7 +200,7 @@
         if ([JSON objectForKey: @"success"] && [[JSON objectForKey: @"success"] boolValue]) {
             NSString *imgurl = JSON[@"imageurl"];
             NSLog(@"imgurl: %@", imgurl);
-            [ss updateTask:task withValues:@{@"pictureurl" : imgurl}];
+            [ss updateTask:task withValues:@{@"pictureurl" : imgurl, @"completed" : @(1)}];
         }
 
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
@@ -282,6 +284,7 @@
     if(values[@"private"])
         task.private = values[@"private"];
 
+    NSLog(@"Uploading Task: %@", task);
     
     NSString *postPath = [NSString stringWithFormat:@"/api/user/%@/updatetask", [self defaultUserId]];
     
@@ -289,6 +292,8 @@
                                            path:postPath
                                      parameters:@{ @"hashToken" : [self defaultUserHashToken] }
                                         success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                            NSLog(@"Post Data: %@", [[NSString alloc] initWithData:operation.HTTPRequestOperation.request.HTTPBody encoding:NSUTF8StringEncoding]);
+                                            NSLog(@"Post response: %@", operation.HTTPRequestOperation.responseString);
                                             NSLog(@"Post success response: %@", mappingResult);
                                             
                                         }
