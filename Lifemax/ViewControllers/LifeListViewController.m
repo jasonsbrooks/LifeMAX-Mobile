@@ -18,15 +18,6 @@
 #import "RKTest.h"
 #import "NSString+MD5.h"
 
-static void RKTwitterShowAlertWithError(NSError *error)
-{
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                    message:[error localizedDescription]
-                                                   delegate:nil
-                                          cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [alert show];
-}
-
 @interface LifeListViewController () <LifeListFilterDelegate, NSFetchedResultsControllerDelegate, EditTaskDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 @property (strong, nonatomic) IBOutlet LifeListFilter *tableFilterView;
 @property BOOL filterExpanded;
@@ -107,7 +98,7 @@ static void RKTwitterShowAlertWithError(NSError *error)
 
 - (void) configureFRC {
     
-    id user_id = [[[NSUserDefaults standardUserDefaults] objectForKey:LIFEMAX_LOGIN_INFORMATION_KEY] objectForKey:@"id"];
+    id user_id = [[LMRestKitManager sharedManager] defaultUserId];;
     
     NSFetchRequest *userFetch = [NSFetchRequest fetchRequestWithEntityName:@"User"];
     userFetch.predicate = [NSPredicate predicateWithFormat:@"user_id = %@", user_id];
@@ -140,7 +131,7 @@ static void RKTwitterShowAlertWithError(NSError *error)
     BOOL fetchSuccessful = [self.fetchedResultsController performFetch:&error];
     
     if (! fetchSuccessful) {
-        RKTwitterShowAlertWithError(error);
+        NSLog(@"Prefetch did not work.");
     }
 }
 
@@ -153,12 +144,13 @@ static void RKTwitterShowAlertWithError(NSError *error)
 
 - (void) performFetch {
     dispatch_async(dispatch_get_main_queue(), ^{
-        BOOL fetchSuccessful = [self.fetchedResultsController performFetch:nil];
+        NSError *error = nil;
+        BOOL fetchSuccessful = [self.fetchedResultsController performFetch:&error];
         
         if(fetchSuccessful)
             [self.tableView reloadData];
         else
-            NSLog(@"ERROR FETCHING!");
+            NSLog(@"Core Data fetch error: %@", [error localizedDescription]);
     });
 }
 
@@ -266,19 +258,8 @@ static void RKTwitterShowAlertWithError(NSError *error)
     
     TaskCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     Task *task = [self.fetchedResultsController objectAtIndexPath:indexPath];
-
+    [cell updateWithTask:task];
     [cell setCheckboxTarget:self action:@selector(checkboxTapped:)];
-    cell.title = task.name ? task.name : @"Task Name";
-    cell.subtitle = task.hashtag;
-    
-    [cell setTaskImageFromUrl: task.pictureurl];
-    
-    cell.time = nil;
-    cell.date = nil;
-    
-    NSLog(@"Displaying Cell: %@", task.pictureurl);
-    if(task.pictureurl)
-        [cell setTaskImageFromUrl:task.pictureurl];
     
     return cell;
 }
@@ -312,7 +293,7 @@ static void RKTwitterShowAlertWithError(NSError *error)
             break;
             
         case NSFetchedResultsChangeUpdate:
-//            [(NewsItemCell*)[tableView cellForRowAtIndexPath:indexPath] updateWithNews:[self.fetchedResultsController objectAtIndexPath:indexPath]];
+            [(TaskCell *)[tableView cellForRowAtIndexPath:indexPath] updateWithTask:[self.fetchedResultsController objectAtIndexPath:indexPath]];
             break;
             
         case NSFetchedResultsChangeMove:

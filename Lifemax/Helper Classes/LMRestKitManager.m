@@ -182,7 +182,7 @@
     
     AFHTTPClient *httpClient = [RKTest sharedManager];
     
-    NSMutableURLRequest *request = [httpClient multipartFormRequestWithMethod:@"POST" path:path parameters:@{@"hashToken" : [[self defaultUserAuthToken] md5] } constructingBodyWithBlock:^(id <AFMultipartFormData>formData) {
+    NSMutableURLRequest *request = [httpClient multipartFormRequestWithMethod:@"POST" path:path parameters:@{@"hashToken" : [self defaultUserHashToken] } constructingBodyWithBlock:^(id <AFMultipartFormData>formData) {
         [formData appendPartWithFileData:jpegData
                                     name:@"photo"
                                 fileName:@"uploadedImage.jpg" mimeType:@"image/jpeg"];
@@ -236,16 +236,11 @@
     NSNumber *task_id = task.task_id;
 
     
-    NSUserDefaults *stdDefaults = [NSUserDefaults standardUserDefaults];
-    NSDictionary *loginInfo = [stdDefaults objectForKey:LIFEMAX_LOGIN_INFORMATION_KEY];
+    NSString *deleteTasksPath = [NSString stringWithFormat:@"/api/user/%@/deletetasks", [self defaultUserId]];
     
-    if (!loginInfo) return NO;
+    NSString *tok = [self defaultUserHashToken];
     
-    NSString *deleteTasksPath = [NSString stringWithFormat:@"/api/user/%@/deletetasks", [loginInfo objectForKey:@"id"]];
-    
-    NSString *tok = [loginInfo objectForKey:@"authToken"];
-    
-    [[RKTest sharedManager] postPath:deleteTasksPath parameters:@{@"hashToken" : [tok md5], @"taskId" : task_id} success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [[RKTest sharedManager] postPath:deleteTasksPath parameters:@{@"hashToken" : tok, @"taskId" : task_id} success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
         [self deleteTaskFromLocalStore:task];
         
@@ -281,18 +276,20 @@
     if(values[@"hashtag"])
         task.hashtag = values[@"hashtag"];
     if(values[@"completed"])
-        task.completed = values[@"completion"];
+        task.completed = values[@"completed"];
     if(values[@"pictureurl"])
         task.pictureurl = values[@"pictureurl"];
-    
+    if(values[@"private"])
+        task.private = values[@"private"];
+
     
     NSString *postPath = [NSString stringWithFormat:@"/api/user/%@/updatetask", [self defaultUserId]];
     
     [[RKObjectManager sharedManager] postObject:task
                                            path:postPath
-                                     parameters:@{ @"hashToken" : [[self defaultUserAuthToken] md5] }
+                                     parameters:@{ @"hashToken" : [self defaultUserHashToken] }
                                         success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-                                            NSLog(@"Post success response");
+                                            NSLog(@"Post success response: %@", mappingResult);
                                             
                                         }
                                         failure:^(RKObjectRequestOperation *operation, NSError *error) {
@@ -313,6 +310,9 @@
 - (NSString *) defaultUserId {
     return [self loginInfo][@"id"];
 }
+- (NSString *)defaultUserHashToken {
+    return [[self defaultUserAuthToken] md5];
+}
 
 
 - (void) newTaskForValues:(NSDictionary *)values {
@@ -322,38 +322,29 @@
         dateFormatter.dateFormat = @"yyyy-MM-dd'T'hh:mm:ssZ";
         dateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
 
-        NSString *name = [values objectForKey:@"name"];
+        NSString *name = values[@"name"];
         name = name ? name : @"new task";
         
-        NSString *hashtag = [values objectForKey:@"hashtag"];
+        NSString *hashtag = values[@"hashtag"];
         hashtag = hashtag ? hashtag : @"#personal";
         
-        NSString *description = [values objectForKey:@"task_description"];
-        description = description ? description : @"";
+        NSNumber *private = values[@"private"];
+        private = private ? private : @(0);
         
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-        [dict setObject:@"" forKey:@"location"];
         [dict setObject:@"" forKey:@"pictureurl"];
-        
         [dict setObject:name forKey:@"name"];
-        
         [dict setObject:hashtag forKey:@"hashtag"];
+        
 
-        
-        [dict setObject:[dateFormatter stringFromDate:[NSDate date]] forKey:@"starttime"];
-        [dict setObject:[dateFormatter stringFromDate:[NSDate dateWithTimeInterval:100 sinceDate:[NSDate date]]] forKey:@"endtime"];
-        [dict setObject:description forKey:@"description"];
-        
-        NSDictionary *loginInfo = [[NSUserDefaults standardUserDefaults] objectForKey:LIFEMAX_LOGIN_INFORMATION_KEY];
-        
-        NSString *tok = [loginInfo objectForKey:@"authToken"];
-        if(!tok)
+        NSString *hashTok = [self defaultUserHashToken];
+        if(!hashTok)
             return;
         
         
-        NSString *path = [NSString stringWithFormat:@"/api/user/%@/tasks", loginInfo[@"id"]];
+        NSString *path = [NSString stringWithFormat:@"/api/user/%@/tasks", [self defaultUserId]];
         
-        [dict setObject:[tok md5] forKey:@"hashToken"];
+        [dict setObject:hashTok forKey:@"hashToken"];
         
         [[RKTest sharedManager] postPath:path parameters:dict success:^(AFHTTPRequestOperation *operation, id responseObject) {
             NSLog(@"Post success: %@", responseObject);
@@ -366,10 +357,8 @@
 }
 
 -(void)fetchTasksForDefaultUser {
-    NSUserDefaults *stdDefaults = [NSUserDefaults standardUserDefaults];
-    NSDictionary *loginInfo = [stdDefaults objectForKey:LIFEMAX_LOGIN_INFORMATION_KEY];
-    if (!loginInfo) return;
-    [self fetchTasksForUser:loginInfo[@"id"] hashtoken:[(loginInfo[@"authToken"]) md5]];
+    
+    [self fetchTasksForUser:[self defaultUserId] hashtoken:[self defaultUserHashToken]];
 }
 
 

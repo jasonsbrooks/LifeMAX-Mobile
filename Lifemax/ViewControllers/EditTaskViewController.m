@@ -24,6 +24,7 @@
 @property (nonatomic, strong) IBOutlet UIScrollView *contentScrollView;
 @property (nonatomic, strong) IBOutlet UIButton *deleteButton;
 @property (nonatomic, strong) IBOutlet UITextField *nameField;
+@property (nonatomic, strong) IBOutlet UISwitch *privacySwitch;
 
 @property (nonatomic, strong) IBOutlet HashtagSelector *hashtagSelector;
 
@@ -34,6 +35,7 @@
 @property (nonatomic, strong) NSMutableDictionary *values;
 
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint *heightConstraint;
+@property (nonatomic, strong) IBOutlet UIView *overlayView;
 
 @property BOOL deleted;
 
@@ -59,30 +61,30 @@
 -(void)setTask:(Task *)task {
     if(_task != task){
         _task = task;
-        [self updateViewForTask];
+        [self initializeWithTaskValues:task];
     }
 }
 
 -(void)initializeWithTaskValues :(Task *)task {
+    NSLog(@"initialize for task: %@", task);
     if(task.name) self.values[@"name"] = task.name;
     if(task.hashtag) self.values[@"hashtag"] = task.hashtag;
-    if(task.pictureurl) self.values[@"pictureurl"] = task.pictureurl;
+//    if(task.pictureurl) self.values[@"pictureurl"] = task.pictureurl;
 
+    if(task.private) self.values[@"private"] = task.private;
+    
+    [self updateViewForTask];
 }
 
 - (void) selectActiveTag {
-    NSInteger hashtagIndex = [self.hashtags indexOfObject:self.task.hashtag];
-
+    NSInteger hashtagIndex = [self.hashtags indexOfObject:self.values[@"hashtag"]];
+    [self.hashtagSelector selectTag:hashtagIndex];
     
 }
 
 -(void) updateViewForTask {
-    
-    self.values[@"name"] = self.task.name ? self.task.name : @"";
-    self.values[@"hashtag"] = self.task.hashtag ? self.task.hashtag : @"";
-//    self.values[@"private"] = self.task.privacy
-    
     self.nameField.text = self.values[@"name"];
+    self.privacySwitch.on = !self.values[@"private"];
     
     [self selectActiveTag];
 }
@@ -91,9 +93,22 @@
     [super viewWillAppear:animated];
 
     [((AppDelegate *)([UIApplication sharedApplication].delegate)) disablePanning:self];
+    [self updateViewForTask];
 }
 
-
+-(UIView *)overlayView {
+    if(!_overlayView) {
+        CGRect frame = self.contentScrollView.bounds;
+        CGFloat offset = self.nameField.frame.origin.y + self.nameField.frame.size.height;
+        frame.origin.y = offset;
+        frame.size.height = frame.size.height - offset;
+        _overlayView = [[UIView alloc] initWithFrame:frame];
+        _overlayView.backgroundColor = [UIColor colorWithWhite:1 alpha:.3];
+         UITapGestureRecognizer *tapBehind = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapInScrollView)];
+        [_overlayView addGestureRecognizer:tapBehind];
+    }
+    return _overlayView;
+}
 
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
@@ -118,10 +133,16 @@
     
     //configure default hashtags
     self.hashtags = LIFEMAX_HASHTAGS;
-    
+    self.contentScrollView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.view.translatesAutoresizingMaskIntoConstraints = NO;
+    self.hashtagSelector.translatesAutoresizingMaskIntoConstraints = NO;
     [self configureHashtagSelector];
     
+    self.contentScrollView.alwaysBounceVertical = YES;
+    
 }
+
+
 
 - (BOOL) validateInput
 {
@@ -150,6 +171,7 @@
 }
 
 - (void) cancelPressed: (id) sender {
+    [self.nameField endEditing:YES];
     UIAlertView *cancelAlert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"Cancel", nil)
                                                          message:@"Are you sure?\nYour changes will be lost."
                                                         delegate:nil cancelButtonTitle:NSLocalizedString(@"Cancel", nil) otherButtonTitles:NSLocalizedString(@"Discard", nil), nil];
@@ -189,10 +211,11 @@
 - (void)configureHashtagSelector
 {
     NSInteger viewsNeeded = self.hashtags.count / 8 + MIN((self.hashtags.count % 8), 1);
-    
+    [self.hashtagSelector initialize];
 }
 
 - (void)tapInScrollView {
+    NSLog(@"Tap in scroll view");
     [self.nameField endEditing:YES];
 }
 
@@ -216,6 +239,7 @@
 
 -(void)textFieldDidBeginEditing:(UITextField *)textField {
     self.nameField = textField;
+    [self.view addSubview:self.overlayView];
 //    [self enableTaskEditing];
     [UIView animateWithDuration:.5 animations:^{
         self.hashtagSelector.alpha = .5;
@@ -227,7 +251,7 @@
 }
 
 -(void)textFieldDidEndEditing:(UITextField *)textField {
-    
+    [self.overlayView removeFromSuperview];
     [UIView animateWithDuration:.5 animations:^{
         self.hashtagSelector.alpha = 1;
     } completion:^(BOOL finished) {
@@ -250,8 +274,8 @@
 }
 
 -(void)hashtagSelector:(HashtagSelector *)selector buttonSelectedAtIndex:(NSInteger)index {
-    [self tapInScrollView];
     NSString *hashtag = [self hashtagSelector:selector titleForButtonIndex:index];
+    NSLog(@"Selected Hashtag: %@", hashtag);
     [self.values setObject:hashtag forKey:@"hashtag"];
 }
 
@@ -261,22 +285,17 @@
     return @"";
 }
 
+-(NSInteger)hashtagSelectorNumberOfTags:(HashtagSelector *)selector {
+    return [self.hashtags count];
+}
+
 
 
 - (BOOL) didInputChange {
-    if([[self.values allKeys] containsObject:@"hashtag"]) {
-        if ([self.values objectForKey:@"hashtag"] != self.task.hashtag) {
-            NSLog(@"Hashtag is not equal : %@ != %@", self.values[@"hashtag"], self.task.hashtag);
-            return YES;
-        }
-    } if([[self.values allKeys] containsObject:@"name"]) {
-        if ([self.values objectForKey:@"name"] != self.task.name) {
-            NSLog(@"name is not equal : %@ != %@", self.values[@"name"], self.task.name);
-            return YES;
-        }
-    }
-    NSLog(@"INPUT HAS NOT CHANGED.");
-    return NO;
+    return
+    (self.values[@"hashtag"] && ![self.values[@"hashtag"] isEqualToString:self.task.hashtag]) ||
+    (self.values[@"name"] && ![self.values[@"name"] isEqualToString:self.task.name]) ||
+    (self.values[@"private"] && [self.task.private boolValue] != [self.values[@"private"] boolValue]) ;
 }
 - (void) exit {
     [self.navigationController popViewControllerAnimated:YES];
@@ -287,6 +306,13 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+#pragma mark - Privacy Switch Action
+-(IBAction)privacySwitchToggled:(UISwitch *)sender {
+    BOOL private = !sender.on;
+    self.values[@"private"] = @(private);
+}
+
 
 /*
 #pragma mark - Navigation

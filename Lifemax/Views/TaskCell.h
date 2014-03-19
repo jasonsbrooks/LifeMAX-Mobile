@@ -7,18 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
-
+@class Task;
 @interface TaskCell : UITableViewCell
 
 @property (nonatomic, strong)  NSString *title;
 @property (nonatomic, readwrite)  NSString *subtitle;
-@property (nonatomic, readwrite)  NSString *date;
-@property (nonatomic, readwrite)  NSString *time;
+
 
 
 - (void) setTaskImage:(UIImage *)image;
 - (void) setTaskImageFromUrl : (NSString *)imageUrl;
 - (void) setCheckboxTarget:(id) target action:(SEL) action;
+- (void)updateWithTask:(Task *)task ;
 
 
 @end

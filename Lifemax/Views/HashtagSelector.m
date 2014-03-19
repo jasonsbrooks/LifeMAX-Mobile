@@ -26,12 +26,30 @@
     return self;
 }
 
-- (UIButton *) newTaskButtonWithSize:(CGSize)size {
-    UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
-    button.layer.cornerRadius = size.height / 2;
+
+- (UIButton *) newTaskButtonWithHeight:(CGFloat)height {
+    UIButton * button = [[UIButton alloc]initWithFrame:CGRectZero];
+    button.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:button];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:button
+                                                     attribute:NSLayoutAttributeHeight
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:nil
+                                                     attribute:NSLayoutAttributeNotAnAttribute
+                                                    multiplier:1
+                                                      constant:height]];
+    
+    button.layer.cornerRadius = height / 2;
     button.layer.borderColor = LIFEMAX_MEDIUM_GRAY_COLOR.CGColor;
     button.layer.borderWidth = 2;
-    
+    [button setTitle:@"" forState:UIControlStateNormal];
+    button.titleLabel.font = [UIFont systemFontOfSize:16];
+
+    [button setTitleColor:[UIColor darkTextColor] forState:UIControlStateNormal];
+    [button setTitleColor: LIFEMAX_LIGHT_GRAY_COLOR forState:UIControlStateHighlighted];
+
+    [button addTarget:self action:@selector(tagSelected:) forControlEvents:UIControlEventTouchUpInside];
+//    button.showsTouchWhenHighlighted = YES;
     return button;
 }
 
@@ -40,16 +58,83 @@
         [view removeFromSuperview];
     }
     NSInteger numtags = [self.delegate hashtagSelectorNumberOfTags:self];
-    NSInteger numrows = numtags / 2 + numtags % 2;
+//    NSInteger numrows = numtags / 2 + numtags % 2;
     
-    CGFloat width = (self.bounds.size.width - 20) / 2;
+    CGSize size = CGSizeMake((self.bounds.size.width - 20) / 2, 37);
     self.translatesAutoresizingMaskIntoConstraints = NO;
-    if(numtags > 0) {
+    
+    UIView *ref = nil;
+    
+    for (int i = 0; i <= numtags; i+=2) {
+        if(i == 0) {
+            UIButton *button1 = [self newTaskButtonWithHeight:size.height];
+            UIButton *button2 = [self newTaskButtonWithHeight:size.height];
+            NSString *title1 = [self.delegate hashtagSelector:self titleForButtonIndex:i];
+            NSString *title2 = [self.delegate hashtagSelector:self titleForButtonIndex:i + 1];
+            [button1 setTitle:title1 forState:UIControlStateNormal];
+            [button2 setTitle:title2 forState:UIControlStateNormal];
+            button1.tag = i + HASHTAG_BUTTON_INDEX_OFFSET;
+            button2.tag = i + 1 + HASHTAG_BUTTON_INDEX_OFFSET;
+
+            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[button1]"
+                                                                         options:0
+                                                                         metrics:nil
+                                                                           views:NSDictionaryOfVariableBindings(button1)]];
+            
+            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[button1]-[button2(==button1)]|"
+                                                                         options:NSLayoutFormatAlignAllCenterY
+                                                                         metrics:nil
+                                                                           views:NSDictionaryOfVariableBindings(button1, button2)]];
+            ref = button1;
+        } else if( i < numtags - 1) {
+            UIButton *button1 = [self newTaskButtonWithHeight:size.height];
+            UIButton *button2 = [self newTaskButtonWithHeight:size.height];
+            NSString *title1 = [self.delegate hashtagSelector:self titleForButtonIndex:i];
+            NSString *title2 = [self.delegate hashtagSelector:self titleForButtonIndex:i + 1];
+            [button1 setTitle:title1 forState:UIControlStateNormal];
+            [button2 setTitle:title2 forState:UIControlStateNormal];
+            button1.tag = i + HASHTAG_BUTTON_INDEX_OFFSET;
+            button2.tag = i + 1 + HASHTAG_BUTTON_INDEX_OFFSET;
+
         
-        for (int i = 0; i < numtags; i++) {
-            UIButton *taskButton = [self newTaskButtonWithSize:CGSizeMake(width, 37)];
+            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[ref]-(5)-[button1]"
+                                                                         options:0
+                                                                         metrics:nil
+                                                                           views:NSDictionaryOfVariableBindings(button1, ref)]];
+            
+            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[button1]-[button2(==button1)]|"
+                                                                         options:NSLayoutFormatAlignAllCenterY
+                                                                         metrics:nil
+                                                                           views:NSDictionaryOfVariableBindings(button1, button2)]];
+            ref = button1;
+        } else  {
+            //only 1 in this row
+            UIButton *button1 = [self newTaskButtonWithHeight:size.height];
+            NSString *title1 = [self.delegate hashtagSelector:self titleForButtonIndex:i];
+            [button1 setTitle:title1 forState:UIControlStateNormal];
+            button1.tag = i + HASHTAG_BUTTON_INDEX_OFFSET;
+
+            
+            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[ref]-(5)-[button1]"
+                                                                         options:0
+                                                                         metrics:nil
+                                                                           views:NSDictionaryOfVariableBindings(button1, ref)]];
+            
+            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[button1(==ref)]"
+                                                                         options:0
+                                                                         metrics:nil
+                                                                           views:NSDictionaryOfVariableBindings(button1, ref)]];
+            ref = button1;
         }
     }
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:ref attribute:NSLayoutAttributeBottom
+                                                     relatedBy:NSLayoutRelationEqual
+                                                        toItem:self
+                                                     attribute:NSLayoutAttributeBottom
+                                                    multiplier:1
+                                                      constant:0]];
+    
+    
 
     
 }

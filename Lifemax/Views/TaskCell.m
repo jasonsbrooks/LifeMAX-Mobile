@@ -8,11 +8,10 @@
 
 #import "TaskCell.h"
 #import "CameraCheckbox.h"
+#import "Task.h"
 @interface TaskCell ()
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
 @property (nonatomic, weak) IBOutlet UILabel *subtitleLabel;
-@property (nonatomic, weak) IBOutlet UILabel *dateLabel;
-@property (nonatomic, weak) IBOutlet UILabel *timeLabel;
 
 @property (nonatomic, weak) IBOutlet CameraCheckbox *checkbox;
 
@@ -38,6 +37,20 @@
 -(void)awakeFromNib {
     [super awakeFromNib];
     [self configure];
+}
+
+- (void)updateWithTask:(Task *)task {
+    self.title = task.name ? task.name : @"Task Name";
+    self.subtitle = task.hashtag;
+    
+    [self setTaskImageFromUrl: task.pictureurl];
+    
+
+    
+    NSLog(@"Displaying Cell: %@", task.pictureurl);
+    if(task.pictureurl)
+        [self setTaskImageFromUrl:task.pictureurl];
+
 }
 
 - (void) configure {
@@ -76,21 +89,6 @@
 -(void)setSubtitle:(NSString *)subtitle {
     self.subtitleLabel.text = subtitle;
 }
-
--(NSString *)date {
-    return self.dateLabel.text;
-}
--(void)setDate:(NSString *)date {
-    self.dateLabel.text = date;
-}
-
--(NSString *)time {
-    return self.timeLabel.text;
-}
--(void)setTime:(NSString *)time {
-    self.timeLabel.text = time;
-}
-
 
 - (void) setTaskImage:(UIImage *)image {
     [self.checkbox setBackgroundImage:image];

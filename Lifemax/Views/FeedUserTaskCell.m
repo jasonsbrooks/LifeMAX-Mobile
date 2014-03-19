@@ -57,8 +57,7 @@
     self.timestampLabel.text = timestamp;
 }
 -(void)setImageFromURL:(NSString *)imageURL {
-//    [self.taskImageView setimage]
-    [self.taskImageView setImageWithURL:[NSURL URLWithString:imageURL] placeholderImage:[UIImage imageNamed:@"image_placeholder"]];
+    [self.taskImageView setImageWithURL:[NSURL URLWithString:imageURL] placeholderImage:[UIImage imageNamed:@"max-placeholder"]];
 }
 
 @end

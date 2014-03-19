@@ -25,5 +25,6 @@
 @property (nonatomic, weak) IBOutlet id <HashtagSelectorDelegate> delegate;
 - (void) reload;
 - (void)selectTag:(NSInteger) tag;
+- (void) initialize;
 
 @end

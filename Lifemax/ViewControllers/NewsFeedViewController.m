@@ -133,10 +133,9 @@ static void RKTwitterShowAlertWithError(NSError *error)
 - (void) loadData {
     //NSFetchedResultsController should automatically refresh
     //just trigger the manager to fetch from the server
-    NSDictionary *loginInfo = [[NSUserDefaults standardUserDefaults] objectForKey:LIFEMAX_LOGIN_INFORMATION_KEY];
-    id user = [loginInfo objectForKey:@"id"];
-    NSString *authToken = [loginInfo objectForKey:@"authToken"];
-    [[LMRestKitManager sharedManager] fetchFeedTasksForUser:user hashtag:nil maxResults:50 hashtoken:[authToken md5]];
+    id user = [[LMRestKitManager sharedManager] defaultUserId];
+    NSString *hashToken = [[LMRestKitManager sharedManager] defaultUserHashToken];
+    [[LMRestKitManager sharedManager] fetchFeedTasksForUser:user hashtag:nil maxResults:50 hashtoken:hashToken];
 }
 
 - (void) performFetch {
@@ -281,6 +280,7 @@ static void RKTwitterShowAlertWithError(NSError *error)
     FeedUserTaskCell *feedCell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
     [feedCell.addButton addTarget:self action:@selector(addbuttonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    feedCell.addButton.tag = indexPath.row;
     
     NSMutableAttributedString *atrTitle = [[NSMutableAttributedString alloc]initWithString:task.user.user_name
                                                                                 attributes:@{NSFontAttributeName:

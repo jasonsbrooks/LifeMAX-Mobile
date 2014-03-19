@@ -22,6 +22,7 @@
 - (void) updateTask:(Task *)task withValues:(NSDictionary *)values;
 - (NSString *) defaultUserAuthToken;
 - (NSString *) defaultUserId;
+- (NSString *)defaultUserHashToken;
 - (void) uploadPhoto:(UIImage *)image forTask: (Task *)task;
 
 
