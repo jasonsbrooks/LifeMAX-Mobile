@@ -17,11 +17,11 @@
 -(void)fetchTasksForDefaultUser;
 - (BOOL)deleteTask:(Task *) task;
 - (void) newTaskForValues:(NSDictionary *)values;
-- (void) fetchFeedTasksForUser:(NSString *)userid hashtag:(NSString *)hashtag maxResults:(NSInteger)maxResults hashtoken:(NSString *)hashtoken ;
+- (void) fetchFeedTasksForUser:(NSNumber *)userid hashtag:(NSString *)hashtag maxResults:(NSInteger)maxResults hashtoken:(NSString *)hashtoken ;
 
 - (void) updateTask:(Task *)task withValues:(NSDictionary *)values;
 - (NSString *) defaultUserAuthToken;
-- (NSString *) defaultUserId;
+- (NSNumber *) defaultUserId;
 - (NSString *)defaultUserHashToken;
 - (void) uploadPhoto:(UIImage *)image forTask: (Task *)task;
 

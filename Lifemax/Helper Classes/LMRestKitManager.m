@@ -130,7 +130,12 @@
     
 }
 
-- (void) fetchTasksForUser:(NSString *)userid hashtoken:(NSString *)hashtoken {
+- (void) fetchTasksForUser:(NSNumber *)userid hashtoken:(NSString *)hashtoken {
+    
+    if(!hashtoken || !userid) {
+        NSLog(@"Error fetching, not logged in.");
+        return;
+    }
     
     NSString *path = [NSString stringWithFormat:@"/api/user/%@/tasks", userid];
 
@@ -149,6 +154,11 @@
 }
 
 - (void) fetchFeedTasksForUser:(NSString *)userid hashtag:(NSString *)hashtag maxResults:(NSInteger)maxResults hashtoken:(NSString *)hashtoken {
+    
+    if(!hashtoken || !userid) {
+        NSLog(@"Error fetching, not logged in.");
+        return;
+    }
     
     NSString *path = [NSString stringWithFormat:@"/api/user/%@/newsfeed", userid];
     
@@ -178,13 +188,19 @@
 - (void) uploadPhoto:(UIImage *)image forTask:(Task *)task {
 
     NSData *jpegData = UIImageJPEGRepresentation(image, .6);
+    NSString *hashToken = [self defaultUserHashToken];
+    NSNumber *userid = [self defaultUserId];
     
+    if (!userid || !hashToken) {
+        NSLog(@"Error uploading photo - Not logged in");
+        return;
+    }
     
-    NSString *path = [NSString stringWithFormat:@"/api/user/%@/photoupload", [self defaultUserId]];
+    NSString *path = [NSString stringWithFormat:@"/api/user/%@/photoupload", userid];
     
     AFHTTPClient *httpClient = [RKTest sharedManager];
     
-    NSMutableURLRequest *request = [httpClient multipartFormRequestWithMethod:@"POST" path:path parameters:@{@"hashToken" : [self defaultUserHashToken] } constructingBodyWithBlock:^(id <AFMultipartFormData>formData) {
+    NSMutableURLRequest *request = [httpClient multipartFormRequestWithMethod:@"POST" path:path parameters:@{@"hashToken" :  hashToken} constructingBodyWithBlock:^(id <AFMultipartFormData>formData) {
         [formData appendPartWithFileData:jpegData
                                     name:@"photo"
                                 fileName:@"uploadedImage.jpg" mimeType:@"image/jpeg"];
@@ -312,7 +328,7 @@
 - (NSString *) defaultUserAuthToken {
     return [self loginInfo][@"authToken"];
 }
-- (NSString *) defaultUserId {
+- (NSNumber *) defaultUserId {
     return [self loginInfo][@"id"];
 }
 - (NSString *)defaultUserHashToken {
