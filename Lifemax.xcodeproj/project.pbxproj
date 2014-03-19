@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		629A2DEA4A4A4BD7A0029525 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 084D2420A83842369CBAA41A /* libPods.a */; };
 		9800F1C018B5E3FE00AFCD63 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 9800F1BF18B5E3FE00AFCD63 /* Podfile */; };
+		980FB60018D9840A008BCF14 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 980FB5FF18D9840A008BCF14 /* User.m */; };
+		980FB60318D9840B008BCF14 /* Task.m in Sources */ = {isa = PBXBuildFile; fileRef = 980FB60218D9840B008BCF14 /* Task.m */; };
 		981B73C518B42A2A0040D4A0 /* GoogleOAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = 981B73C418B42A290040D4A0 /* GoogleOAuth.m */; };
 		983A92FC18B7BD6C00B02E2C /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 983A92FB18B7BD6C00B02E2C /* NSString+MD5.m */; };
 		984676E118B9B50A0021E439 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 984676E018B9B50A0021E439 /* CoreData.framework */; };
@@ -25,7 +27,6 @@
 		989CE3F318B93AE00079ECA7 /* HashtagSelector.xib in Resources */ = {isa = PBXBuildFile; fileRef = 989CE3F218B93AE00079ECA7 /* HashtagSelector.xib */; };
 		989CE3F618B94C490079ECA7 /* EditFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 989CE3F518B94C490079ECA7 /* EditFieldCell.m */; };
 		98A269A218C40C6E0053D20B /* UIAlertView+NSCookbook.m in Sources */ = {isa = PBXBuildFile; fileRef = 98A269A118C40C6E0053D20B /* UIAlertView+NSCookbook.m */; };
-		98B4F0FA18D78CF2002943D9 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 98B4F0F918D78CF2002943D9 /* User.m */; };
 		98B62E7D18B5E8D500872BDE /* RKTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 98B62E7C18B5E8D500872BDE /* RKTest.m */; };
 		98C7496D18A745B1000A4CAF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98C7496C18A745B1000A4CAF /* Foundation.framework */; };
 		98C7496F18A745B1000A4CAF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98C7496E18A745B1000A4CAF /* CoreGraphics.framework */; };
@@ -42,7 +43,6 @@
 		98C7499818A745B1000A4CAF /* LifemaxTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 98C7499718A745B1000A4CAF /* LifemaxTests.m */; };
 		98C749A418A7495B000A4CAF /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98C749A318A7495B000A4CAF /* SWRevealViewController.m */; };
 		98C749A918A74AFB000A4CAF /* MenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98C749A618A74AFB000A4CAF /* MenuViewController.m */; };
-		98D2A8EB18C0498300FF5AD3 /* Task.m in Sources */ = {isa = PBXBuildFile; fileRef = 98D2A8EA18C0498300FF5AD3 /* Task.m */; };
 		98D951BB18A877F700333D4D /* CameraCheckbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 98D951BA18A877F700333D4D /* CameraCheckbox.m */; };
 		98D951C418A88D7700333D4D /* FeedUserTaskCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 98D951C318A88D7700333D4D /* FeedUserTaskCell.m */; };
 		98D951C718A8902A00333D4D /* NewsFeedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98D951C618A8902A00333D4D /* NewsFeedViewController.m */; };
@@ -69,6 +69,10 @@
 		084D2420A83842369CBAA41A /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1D474FF43FB44D7DBDF8170B /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		9800F1BF18B5E3FE00AFCD63 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		980FB5FE18D9840A008BCF14 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
+		980FB5FF18D9840A008BCF14 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
+		980FB60118D9840B008BCF14 /* Task.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Task.h; sourceTree = "<group>"; };
+		980FB60218D9840B008BCF14 /* Task.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Task.m; sourceTree = "<group>"; };
 		981B73C318B42A290040D4A0 /* GoogleOAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoogleOAuth.h; sourceTree = "<group>"; };
 		981B73C418B42A290040D4A0 /* GoogleOAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoogleOAuth.m; sourceTree = "<group>"; };
 		983A92FA18B7BD6C00B02E2C /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
@@ -98,8 +102,6 @@
 		989CE3F518B94C490079ECA7 /* EditFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditFieldCell.m; sourceTree = "<group>"; };
 		98A269A018C40C6E0053D20B /* UIAlertView+NSCookbook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+NSCookbook.h"; sourceTree = "<group>"; };
 		98A269A118C40C6E0053D20B /* UIAlertView+NSCookbook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+NSCookbook.m"; sourceTree = "<group>"; };
-		98B4F0F818D78CF2002943D9 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
-		98B4F0F918D78CF2002943D9 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		98B62E7B18B5E8D500872BDE /* RKTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RKTest.h; sourceTree = "<group>"; };
 		98B62E7C18B5E8D500872BDE /* RKTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RKTest.m; sourceTree = "<group>"; };
 		98C7496918A745B1000A4CAF /* Lifemax.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lifemax.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -123,8 +125,6 @@
 		98C749A318A7495B000A4CAF /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
 		98C749A518A74AFB000A4CAF /* MenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuViewController.h; sourceTree = "<group>"; };
 		98C749A618A74AFB000A4CAF /* MenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuViewController.m; sourceTree = "<group>"; };
-		98D2A8E918C0498300FF5AD3 /* Task.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Task.h; sourceTree = "<group>"; };
-		98D2A8EA18C0498300FF5AD3 /* Task.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Task.m; sourceTree = "<group>"; };
 		98D951B918A877F700333D4D /* CameraCheckbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraCheckbox.h; sourceTree = "<group>"; };
 		98D951BA18A877F700333D4D /* CameraCheckbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraCheckbox.m; sourceTree = "<group>"; };
 		98D951C218A88D7700333D4D /* FeedUserTaskCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedUserTaskCell.h; sourceTree = "<group>"; };
@@ -209,10 +209,10 @@
 		98B4F0FB18D78E32002943D9 /* Model Objects */ = {
 			isa = PBXGroup;
 			children = (
-				98D2A8E918C0498300FF5AD3 /* Task.h */,
-				98D2A8EA18C0498300FF5AD3 /* Task.m */,
-				98B4F0F818D78CF2002943D9 /* User.h */,
-				98B4F0F918D78CF2002943D9 /* User.m */,
+				980FB60118D9840B008BCF14 /* Task.h */,
+				980FB60218D9840B008BCF14 /* Task.m */,
+				980FB5FE18D9840A008BCF14 /* User.h */,
+				980FB5FF18D9840A008BCF14 /* User.m */,
 			);
 			name = "Model Objects";
 			sourceTree = "<group>";
@@ -530,11 +530,10 @@
 				98C7497D18A745B1000A4CAF /* AppDelegate.m in Sources */,
 				98A269A218C40C6E0053D20B /* UIAlertView+NSCookbook.m in Sources */,
 				98DC9FC118B28A0A004747B5 /* SettingsViewController.m in Sources */,
-				98B4F0FA18D78CF2002943D9 /* User.m in Sources */,
 				989CE3F118B9364F0079ECA7 /* HashtagSelector.m in Sources */,
+				980FB60318D9840B008BCF14 /* Task.m in Sources */,
 				983A92FC18B7BD6C00B02E2C /* NSString+MD5.m in Sources */,
 				98DF58A718A83E9000AC2BE0 /* GoogleSyncViewController.m in Sources */,
-				98D2A8EB18C0498300FF5AD3 /* Task.m in Sources */,
 				9876A6CF18BC596400021A06 /* LifemaxCoreData.xcdatamodeld in Sources */,
 				98C7497918A745B1000A4CAF /* main.m in Sources */,
 				98D951C418A88D7700333D4D /* FeedUserTaskCell.m in Sources */,
@@ -546,6 +545,7 @@
 				9847F3A118D3D7C70091A578 /* WebViewController.m in Sources */,
 				98C749A418A7495B000A4CAF /* SWRevealViewController.m in Sources */,
 				989CE3EE18B92B020079ECA7 /* EditTaskViewController.m in Sources */,
+				980FB60018D9840A008BCF14 /* User.m in Sources */,
 				98C749A918A74AFB000A4CAF /* MenuViewController.m in Sources */,
 				989CE3F618B94C490079ECA7 /* EditFieldCell.m in Sources */,
 				98B62E7D18B5E8D500872BDE /* RKTest.m in Sources */,

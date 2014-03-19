@@ -65,9 +65,7 @@
 
 -(void)initializeWithTaskValues :(Task *)task {
     if(task.name) self.values[@"name"] = task.name;
-    if(task.task_description) self.values[@"description"] = task.task_description;
     if(task.hashtag) self.values[@"hashtag"] = task.hashtag;
-    if(task.start) self.values[@"start"] = task.start;
     if(task.pictureurl) self.values[@"pictureurl"] = task.pictureurl;
 
 }

@@ -273,18 +273,8 @@ static void RKTwitterShowAlertWithError(NSError *error)
     
     [cell setTaskImageFromUrl: task.pictureurl];
     
-    
-    [self.formatter setDateFormat:@"MM/dd"];
-    if(task.start)
-        cell.date = [self.formatter stringFromDate: task.start];
-    else
-        cell.date = nil;
-    
-    [self.formatter setDateFormat:@"h:mm a"];
-    if(task.start)
-        cell.time = [self.formatter stringFromDate:task.start];
-    else
-        cell.time = nil;
+    cell.time = nil;
+    cell.date = nil;
     
     NSLog(@"Displaying Cell: %@", task.pictureurl);
     if(task.pictureurl)
