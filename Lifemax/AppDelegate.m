@@ -288,9 +288,32 @@
     
 }
 
+- (void)revealController:(SWRevealViewController *)revealController willMoveToPosition:(FrontViewPosition)position
+{
+    UINavigationController *navController = (UINavigationController *)revealController.frontViewController;
+
+    NSLog(@"Move to position!");
+    if (position == FrontViewPositionRight) {               // Menu will get revealed
+        revealController.tapGestureRecognizer.enabled = YES;                 // Enable the tap gesture Recognizer
+        
+        navController.interactivePopGestureRecognizer.enabled = NO;        // Prevents the iOS7's pan gesture
+        navController.topViewController.view.userInteractionEnabled = NO;       // Disable the topViewController's interaction
+        NSLog(@"Right Side");
+    }
+    else if (position == FrontViewPositionLeft){      // Menu will close
+        revealController.tapGestureRecognizer.enabled = NO;
+        navController.interactivePopGestureRecognizer.enabled = YES;
+        navController.topViewController.view.userInteractionEnabled = YES;
+        NSLog(@"Menu Close");
+
+    }
+    
+}
+
 #define LogDelegates 0
 
 #if LogDelegates
+
 - (NSString*)stringFromFrontViewPosition:(FrontViewPosition)position
 {
     NSString *str = nil;
@@ -305,21 +328,7 @@
 }
 
 
-- (void)revealController:(SWRevealViewController *)revealController willMoveToPosition:(FrontViewPosition)position
-{
-    /*
-    if (position == FrontViewPositionLeftSide) {               // Menu will get revealed
-        self.tapGestureRecognizer.enabled = YES;                 // Enable the tap gesture Recognizer
-        .interactivePopGestureRecognizer.enabled = NO;        // Prevents the iOS7's pan gesture
-        self.topViewController.view.userInteractionEnabled = NO;       // Disable the topViewController's interaction
-    }
-    else if (position == FrontViewPositionLeft){      // Menu will close
-        self.tapGestureRecognizer.enabled = NO;
-        self.interactivePopGestureRecognizer.enabled = YES;
-        self.topViewController.view.userInteractionEnabled = YES;
-    }
-     */
-}
+
 
 - (void)revealController:(SWRevealViewController *)revealController didMoveToPosition:(FrontViewPosition)position
 {
