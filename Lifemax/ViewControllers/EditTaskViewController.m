@@ -76,9 +76,7 @@
 
 -(void)initializeWithTaskValues :(Task *)task {
     if(task.name) self.values[@"name"] = task.name;
-    if(task.task_description) self.values[@"description"] = task.task_description;
     if(task.hashtag) self.values[@"hashtag"] = task.hashtag;
-    if(task.start) self.values[@"start"] = task.start;
     if(task.pictureurl) self.values[@"pictureurl"] = task.pictureurl;
 
 }
@@ -103,9 +101,6 @@
     [self.tableView reloadData];
    
     self.values[@"name"] = self.task.name ? self.task.name : @"";
-    self.values[@"task_description"] = self.task.task_description ? self.task.task_description : @"";
-    if(self.task.start)
-        self.values[@"start"] = self.task.start;
     self.values[@"hashtag"] = self.task.hashtag ? self.task.hashtag : @"";
     
     [self selectActiveTag];
@@ -396,16 +391,6 @@
     } if([[self.values allKeys] containsObject:@"name"]) {
         if ([self.values objectForKey:@"name"] != self.task.name) {
             NSLog(@"name is not equal : %@ != %@", self.values[@"name"], self.task.name);
-            return YES;
-        }
-    } if([[self.values allKeys] containsObject:@"task_description"]) {
-        if ([self.values objectForKey:@"task_description"] != self.task.task_description) {
-            NSLog(@"Description is not equal : %@ != %@", self.values[@"description"], self.task.task_description);
-            return YES;
-        }
-    } if([[self.values allKeys] containsObject:@"start"]) {
-        if ([self.values objectForKey:@"start"] != self.task.start) {
-            NSLog(@"Start is not equal : %@ != %@", self.values[@"start"], self.task.start);
             return YES;
         }
     }

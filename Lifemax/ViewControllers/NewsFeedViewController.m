@@ -15,6 +15,7 @@
 #import "TaskCell.h"
 #import <RestKit/RestKit.h>
 #import "Task.h"
+#import "User.h"
 #import "EditTaskViewController.h"
 #import "RKTest.h"
 #import "NSString+MD5.h"
@@ -284,7 +285,7 @@ static void RKTwitterShowAlertWithError(NSError *error)
     NSMutableAttributedString *atrTitle = [[NSMutableAttributedString alloc]initWithString:task.user.user_name
                                                                                 attributes:@{NSFontAttributeName:
                                                                                                  [UIFont boldSystemFontOfSize:[UIFont systemFontSize]]}];
-    NSString *actionstring = [NSString stringWithFormat:@" %@ a goal", [task.completion boolValue] ? @"completed" : @"added" ];
+    NSString *actionstring = [NSString stringWithFormat:@" %@ a goal", [task.completed boolValue] ? @"completed" : @"added" ];
     
     NSDictionary * attributes = @{NSFontAttributeName:
                                       [UIFont systemFontOfSize:[UIFont systemFontSize]]};

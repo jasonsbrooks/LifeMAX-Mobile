@@ -39,7 +39,8 @@
     userMapping.identificationAttributes = @[ @"user_id" ];
     [userMapping addAttributeMappingsFromDictionary:@{
                                                       @"id": @"user_id",
-                                                      @"name" : @"user_name"
+                                                      @"name" : @"user_name",
+                                                      @"fbid" : @"fbid"
                                                       }];
     // If source and destination key path are the same, we can simply add a string to the array
     
@@ -47,25 +48,15 @@
     taskMapping.identificationAttributes = @[ @"task_id" ];
     [taskMapping addAttributeMappingsFromDictionary:@{
                                                       @"name" : @"name",
-                                                      @"description" :@"task_description",
-                                                      @"location": @"location",
                                                       @"id": @"task_id",
-                                                      @"start" :@"start",
-                                                      @"end" : @"end",
-                                                      @"updated": @"updated",
                                                       @"pictureurl" :@"pictureurl",
                                                       @"hashtag" : @"hashtag",
-                                                      @"completion" : @"completion"
+                                                      @"completed" : @"completed"
                                                       }];
     [taskMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"user" toKeyPath:@"user" withMapping:userMapping]];
     
-    
-    // Update date format so that we can parse Twitter dates properly
-    // Wed Sep 29 15:31:08 +0000 2010
-    NSDateFormatter *dateFormatter = [NSDateFormatter new];
-    dateFormatter.dateFormat = @"yyyy-MM-ddThh:mm:ssZ";
-    dateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
-    [[RKValueTransformer defaultValueTransformer] insertValueTransformer:dateFormatter atIndex:0];
+    RKDotNetDateFormatter *formatter = [RKDotNetDateFormatter dotNetDateFormatterWithTimeZone:[NSTimeZone defaultTimeZone]];
+    [[RKValueTransformer defaultValueTransformer] insertValueTransformer: formatter atIndex:0];
     
     // Register our mappings with the provider
     RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:taskMapping
@@ -146,8 +137,8 @@
         NSLog(@"[FETCH-TASKS] Response: %@", operation.HTTPRequestOperation.responseString);
         for(Task *task in [mappingResult array]) {
             NSLog(@"[FETCHED-TASK]: %@", task);
-        }*/
-        
+        }
+        */
         
         
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
@@ -287,14 +278,10 @@
 - (void) updateTask:(Task *)task withValues:(NSDictionary *)values {
     if(values[@"name"])
         task.name = values[@"name"];
-    if(values[@"description"])
-        task.task_description = values[@"description"];
     if(values[@"hashtag"])
         task.hashtag = values[@"hashtag"];
-    if(values[@"start"])
-        task.start = values[@"start"];
-    if(values[@"completion"])
-        task.completion = values[@"completion"];
+    if(values[@"completed"])
+        task.completed = values[@"completion"];
     if(values[@"pictureurl"])
         task.pictureurl = values[@"pictureurl"];
     
