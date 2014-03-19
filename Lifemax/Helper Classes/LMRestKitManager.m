@@ -298,6 +298,7 @@
     if(values[@"pictureurl"])
         task.pictureurl = values[@"pictureurl"];
     
+    
     NSString *postPath = [NSString stringWithFormat:@"/api/user/%@/updatetask", [self defaultUserId]];
     
     [[RKObjectManager sharedManager] postObject:task

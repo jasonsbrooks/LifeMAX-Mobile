@@ -16,12 +16,14 @@
 - (NSString *)hashtagSelector:(HashtagSelector *)selector titleForButtonIndex:(NSInteger)index;
 - (void)hashtagSelector:(HashtagSelector *)selector buttonSelectedAtIndex:(NSInteger)index;
 
+- (NSInteger) hashtagSelectorNumberOfTags:(HashtagSelector *)selector;
+
 @end
 
 @interface HashtagSelector : UIView
 
 @property (nonatomic, weak) IBOutlet id <HashtagSelectorDelegate> delegate;
-- (void) reloadTagNames;
+- (void) reload;
 - (void)selectTag:(NSInteger) tag;
 
 @end

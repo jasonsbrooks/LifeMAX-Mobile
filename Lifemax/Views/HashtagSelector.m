@@ -11,7 +11,7 @@
 #import "LifemaxHeaders.h"
 
 @interface HashtagSelector ()
-@property (nonatomic, strong) UIView *shadowView;
+
 @end
 
 @implementation HashtagSelector
@@ -25,40 +25,47 @@
     }
     return self;
 }
--(UIView *)shadowView {
-    if (!_shadowView) {
-        _shadowView = [[UIView alloc] initWithFrame:CGRectZero];
-        _shadowView.backgroundColor = LIFEMAX_MEDIUM_GRAY_COLOR;
-        _shadowView.layer.masksToBounds = YES;
-        [self addSubview:_shadowView];
-        [self sendSubviewToBack:_shadowView];
 
-    }
-    return _shadowView;
+- (UIButton *) newTaskButtonWithSize:(CGSize)size {
+    UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.layer.cornerRadius = size.height / 2;
+    button.layer.borderColor = LIFEMAX_MEDIUM_GRAY_COLOR.CGColor;
+    button.layer.borderWidth = 2;
+    
+    return button;
 }
 
-- (void) reloadTagNames {
+- (void) initialize {
+    for (UIView *view in self.subviews) {
+        [view removeFromSuperview];
+    }
+    NSInteger numtags = [self.delegate hashtagSelectorNumberOfTags:self];
+    NSInteger numrows = numtags / 2 + numtags % 2;
+    
+    CGFloat width = (self.bounds.size.width - 20) / 2;
+    self.translatesAutoresizingMaskIntoConstraints = NO;
+    if(numtags > 0) {
+        
+        for (int i = 0; i < numtags; i++) {
+            UIButton *taskButton = [self newTaskButtonWithSize:CGSizeMake(width, 37)];
+        }
+    }
+
+    
+}
+
+- (void) reload{
     for (UIButton *button in self.subviews) {
-        button.layer.cornerRadius = button.bounds.size.height / 2;
-        button.layer.masksToBounds = YES;
-        button.layer.borderWidth = 2;
-        button.layer.borderColor = LIFEMAX_MEDIUM_GRAY_COLOR.CGColor;
         NSString *title = [self.delegate hashtagSelector:self titleForButtonIndex:button.tag - HASHTAG_BUTTON_INDEX_OFFSET];
         [button setTitle:title forState:UIControlStateNormal];
     }
 }
 
-- (void)selectTag:(NSInteger) tag {
-    tag = tag + HASHTAG_BUTTON_INDEX_OFFSET;
-    UIButton *button = (UIButton *)[self viewWithTag:tag];
-    if([button isKindOfClass:[UIButton class]]) {
-        self.shadowView.frame = button.frame;
-        self.shadowView.layer.cornerRadius = button.frame.size.height/2;
+- (void)selectTag:(NSInteger) index {
+    NSInteger tag = index + HASHTAG_BUTTON_INDEX_OFFSET;
+    for (UIButton * button in self.subviews) {
+        button.layer.backgroundColor = (button.tag == tag) ?LIFEMAX_MEDIUM_GRAY_COLOR.CGColor : [UIColor clearColor].CGColor;
     }
-    else {
-        self.shadowView.frame = CGRectZero;
-    }
-
 }
 
 

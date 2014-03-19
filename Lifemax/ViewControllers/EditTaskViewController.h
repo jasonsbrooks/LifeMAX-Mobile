@@ -16,7 +16,7 @@
 -(void)editor:(EditTaskViewController *)editor didEditTaskFields:(NSDictionary *)values forTask:(Task *)task;
 @end
 
-@interface EditTaskViewController : UITableViewController
+@interface EditTaskViewController : UIViewController
 @property (nonatomic, retain) Task *task;
 @property (nonatomic, weak) id<EditTaskDelegate> delegate;
 
