@@ -20,6 +20,10 @@
 #import "LMRestKitManager.h"
 #import "LifemaxHeaders.h"
 
+#import <Crashlytics/Crashlytics.h>
+#import "Flurry.h"
+#import <Countly/Countly.h>
+
 @interface AppDelegate () <SWRevealViewControllerDelegate>
 @property BOOL dismissing;
 @end
@@ -37,6 +41,10 @@
     //    RKLogConfigureByName("RestKit/ObjectMapping", RKLogLevelTrace);
     RKLogConfigureByName("RestKit/Network", RKLogLevelCritical);
     
+    [Flurry startSession:@"44GKHY9KNCZ9MRHSCWC2"];
+    [[Countly sharedInstance] startOnCloudWithAppKey:@"be20105e17988ee1a090fece97e72956bda068f1"];
+    [Crashlytics startWithAPIKey:@"5a1ea7c8bd1ae0bb396436b70b13b63df02a4039"];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(facebookLoginSuccess) name:@"FACEBOOK_DID_LOGIN_NOTIFICATION" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(triggerLogout:) name:LIFEMAX_TRIGGER_LOGOUT object:nil];
     
@@ -53,6 +61,10 @@
 	UINavigationController *frontNavigationController = [[UINavigationController alloc] initWithRootViewController:frontViewController];
     UINavigationController *rearNavigationController = [[UINavigationController alloc] initWithRootViewController:rearViewController];
 
+    [Flurry logAllPageViews:frontNavigationController];
+    [Flurry logAllPageViews:rearNavigationController];
+
+    
     frontNavigationController.navigationBar.translucent = NO;
     rearNavigationController.navigationBar.translucent = NO;
 
@@ -81,8 +93,7 @@
 	[self.window makeKeyAndVisible];
     
     
-    [[LMRestKitManager sharedManager] initializeMappings];
-
+    [[LMRestKitManager sharedManager] initializeMappings];    
     
 	return YES;
 }
@@ -205,8 +216,10 @@
     [stdDefaults setObject:loginResponse forKey:LIFEMAX_LOGIN_INFORMATION_KEY];
     [stdDefaults synchronize];
     
-    if(loginResponse)
+    if(loginResponse) {
+        [Flurry setUserID:loginResponse[@"id"]];
         [[NSNotificationCenter defaultCenter] postNotificationName:LIFEMAX_NOTIFICATION_NAME_LOGIN_SUCCESS object:loginResponse];
+    }
     
 }
 

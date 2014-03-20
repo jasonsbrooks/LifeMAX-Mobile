@@ -9,6 +9,7 @@
 #import "MenuViewController.h"
 #import "SWRevealViewController.h"
 #import "NewsFeedViewController.h"
+#import "Flurry.h"
 @implementation SWUITableViewCell
 @end
 
@@ -40,6 +41,8 @@
         rvcs.performBlock = ^(SWRevealViewControllerSegue* rvc_segue, UIViewController* svc, UIViewController* dvc)
         {
             UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:dvc];
+            [Flurry logAllPageViews:nc];
+
             [rvc setFrontViewController:nc animated:YES];
         };
     }

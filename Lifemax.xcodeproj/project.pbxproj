@@ -15,6 +15,10 @@
 		981A15EF18DA5593005560DE /* Checkbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 981A15EE18DA5593005560DE /* Checkbox.m */; };
 		981A15F218DAA7E8005560DE /* Task+TaskAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 981A15F118DAA7E8005560DE /* Task+TaskAdditions.m */; };
 		981A15F518DAA8D1005560DE /* Hashtag.m in Sources */ = {isa = PBXBuildFile; fileRef = 981A15F418DAA8D1005560DE /* Hashtag.m */; };
+		981A15F818DB5F9E005560DE /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 981A15F718DB5F9E005560DE /* Crashlytics.framework */; };
+		981A15FC18DB679D005560DE /* libFlurry_4.3.2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 981A15FB18DB679D005560DE /* libFlurry_4.3.2.a */; };
+		981A15FE18DB680F005560DE /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 981A15FD18DB680F005560DE /* SystemConfiguration.framework */; };
+		981A160018DB6814005560DE /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 981A15FF18DB6814005560DE /* Security.framework */; };
 		981B73C518B42A2A0040D4A0 /* GoogleOAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = 981B73C418B42A290040D4A0 /* GoogleOAuth.m */; };
 		983A92FC18B7BD6C00B02E2C /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 983A92FB18B7BD6C00B02E2C /* NSString+MD5.m */; };
 		984676E118B9B50A0021E439 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 984676E018B9B50A0021E439 /* CoreData.framework */; };
@@ -85,6 +89,11 @@
 		981A15F118DAA7E8005560DE /* Task+TaskAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Task+TaskAdditions.m"; sourceTree = "<group>"; };
 		981A15F318DAA8D1005560DE /* Hashtag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Hashtag.h; sourceTree = "<group>"; };
 		981A15F418DAA8D1005560DE /* Hashtag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Hashtag.m; sourceTree = "<group>"; };
+		981A15F718DB5F9E005560DE /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
+		981A15FA18DB679D005560DE /* Flurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Flurry.h; sourceTree = "<group>"; };
+		981A15FB18DB679D005560DE /* libFlurry_4.3.2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry_4.3.2.a; sourceTree = "<group>"; };
+		981A15FD18DB680F005560DE /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		981A15FF18DB6814005560DE /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		981B73C318B42A290040D4A0 /* GoogleOAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoogleOAuth.h; sourceTree = "<group>"; };
 		981B73C418B42A290040D4A0 /* GoogleOAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoogleOAuth.m; sourceTree = "<group>"; };
 		983A92FA18B7BD6C00B02E2C /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
@@ -163,10 +172,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				981A160018DB6814005560DE /* Security.framework in Frameworks */,
+				981A15FE18DB680F005560DE /* SystemConfiguration.framework in Frameworks */,
 				984676E118B9B50A0021E439 /* CoreData.framework in Frameworks */,
 				9874FD7F18A74CEC006F64D3 /* QuartzCore.framework in Frameworks */,
+				981A15F818DB5F9E005560DE /* Crashlytics.framework in Frameworks */,
 				98FB50AF18A8044200C916BC /* FacebookSDK.framework in Frameworks */,
 				98C7496F18A745B1000A4CAF /* CoreGraphics.framework in Frameworks */,
+				981A15FC18DB679D005560DE /* libFlurry_4.3.2.a in Frameworks */,
 				98C7497118A745B1000A4CAF /* UIKit.framework in Frameworks */,
 				98C7496D18A745B1000A4CAF /* Foundation.framework in Frameworks */,
 				629A2DEA4A4A4BD7A0029525 /* libPods.a in Frameworks */,
@@ -186,6 +199,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		981A15F918DB679D005560DE /* Flurry */ = {
+			isa = PBXGroup;
+			children = (
+				981A15FA18DB679D005560DE /* Flurry.h */,
+				981A15FB18DB679D005560DE /* libFlurry_4.3.2.a */,
+			);
+			path = Flurry;
+			sourceTree = "<group>";
+		};
 		983A92F918B7BD2900B02E2C /* Helper Classes */ = {
 			isa = PBXGroup;
 			children = (
@@ -239,6 +261,7 @@
 			isa = PBXGroup;
 			children = (
 				98C7497218A745B1000A4CAF /* Lifemax */,
+				981A15F918DB679D005560DE /* Flurry */,
 				98C749A118A7495B000A4CAF /* SWRevealViewController */,
 				98C7499118A745B1000A4CAF /* LifemaxTests */,
 				98C7496B18A745B1000A4CAF /* Frameworks */,
@@ -259,6 +282,9 @@
 		98C7496B18A745B1000A4CAF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				981A15FF18DB6814005560DE /* Security.framework */,
+				981A15FD18DB680F005560DE /* SystemConfiguration.framework */,
+				981A15F718DB5F9E005560DE /* Crashlytics.framework */,
 				984676E018B9B50A0021E439 /* CoreData.framework */,
 				98FB50AE18A8044200C916BC /* FacebookSDK.framework */,
 				9874FD8018A74D04006F64D3 /* MapKit.framework */,
@@ -402,7 +428,8 @@
 				98C7496618A745B1000A4CAF /* Frameworks */,
 				98C7496718A745B1000A4CAF /* Resources */,
 				6B75DBF7E10E4F7AB82FC3C1 /* Copy Pods Resources */,
-				98EF8A3118D8452D000ECC3A /* ShellScript */,
+				98EF8A3118D8452D000ECC3A /* Build Number Bump */,
+				981A15F618DB5F4B005560DE /* Crashlytics */,
 			);
 			buildRules = (
 			);
@@ -507,13 +534,28 @@
 			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		98EF8A3118D8452D000ECC3A /* ShellScript */ = {
+		981A15F618DB5F4B005560DE /* Crashlytics */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = Crashlytics;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Crashlytics.framework/run 5a1ea7c8bd1ae0bb396436b70b13b63df02a4039 8f4e76bb8f22b99e5f40a5db93ea23ec3039dcc94f7a5a74b68305634b04be19";
+		};
+		98EF8A3118D8452D000ECC3A /* Build Number Bump */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Build Number Bump";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -667,10 +709,15 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/mrosales/Documents/FacebookSDK,
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Lifemax/Lifemax-Prefix.pch";
 				INFOPLIST_FILE = "Lifemax/Lifemax-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Flurry",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -775,10 +822,15 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/mrosales/Documents/FacebookSDK,
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Lifemax/Lifemax-Prefix.pch";
 				INFOPLIST_FILE = "Lifemax/Lifemax-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Flurry",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -795,10 +847,15 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/mrosales/Documents/FacebookSDK,
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Lifemax/Lifemax-Prefix.pch";
 				INFOPLIST_FILE = "Lifemax/Lifemax-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Flurry",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

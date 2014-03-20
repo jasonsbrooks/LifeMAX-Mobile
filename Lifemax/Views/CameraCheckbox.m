@@ -8,7 +8,7 @@
 
 #import "CameraCheckbox.h"
 #import "UIImageView+AFNetworking.h"
-
+#import <Crashlytics/Crashlytics.h>
 @interface CameraCheckbox ()
 @property (nonatomic, strong) UIImageView *backgroundImageView;
 @property (nonatomic, strong) UIImageView *cameraCheckboxImageView;
@@ -118,6 +118,7 @@
 - (void)tap:(UITapGestureRecognizer *)tapgr
 {
 //    NSLog(@"Tap Detected!");
+
     if(self.target && self.action) {
         [self.target performSelector:self.action withObject:nil afterDelay:0];
     }
