@@ -11,6 +11,8 @@
 		9800F1C018B5E3FE00AFCD63 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 9800F1BF18B5E3FE00AFCD63 /* Podfile */; };
 		980FB60018D9840A008BCF14 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 980FB5FF18D9840A008BCF14 /* User.m */; };
 		980FB60318D9840B008BCF14 /* Task.m in Sources */ = {isa = PBXBuildFile; fileRef = 980FB60218D9840B008BCF14 /* Task.m */; };
+		981A15EC18DA3279005560DE /* NSObject+ObjCSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 981A15EB18DA3279005560DE /* NSObject+ObjCSwitch.m */; };
+		981A15EF18DA5593005560DE /* Checkbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 981A15EE18DA5593005560DE /* Checkbox.m */; };
 		981B73C518B42A2A0040D4A0 /* GoogleOAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = 981B73C418B42A290040D4A0 /* GoogleOAuth.m */; };
 		983A92FC18B7BD6C00B02E2C /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 983A92FB18B7BD6C00B02E2C /* NSString+MD5.m */; };
 		984676E118B9B50A0021E439 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 984676E018B9B50A0021E439 /* CoreData.framework */; };
@@ -27,7 +29,7 @@
 		989CE3F318B93AE00079ECA7 /* HashtagSelector.xib in Resources */ = {isa = PBXBuildFile; fileRef = 989CE3F218B93AE00079ECA7 /* HashtagSelector.xib */; };
 		989CE3F618B94C490079ECA7 /* EditFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 989CE3F518B94C490079ECA7 /* EditFieldCell.m */; };
 		98A269A218C40C6E0053D20B /* UIAlertView+NSCookbook.m in Sources */ = {isa = PBXBuildFile; fileRef = 98A269A118C40C6E0053D20B /* UIAlertView+NSCookbook.m */; };
-		98B62E7D18B5E8D500872BDE /* RKTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 98B62E7C18B5E8D500872BDE /* RKTest.m */; };
+		98B62E7D18B5E8D500872BDE /* LMHttpClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 98B62E7C18B5E8D500872BDE /* LMHttpClient.m */; };
 		98C7496D18A745B1000A4CAF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98C7496C18A745B1000A4CAF /* Foundation.framework */; };
 		98C7496F18A745B1000A4CAF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98C7496E18A745B1000A4CAF /* CoreGraphics.framework */; };
 		98C7497118A745B1000A4CAF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98C7497018A745B1000A4CAF /* UIKit.framework */; };
@@ -73,6 +75,10 @@
 		980FB5FF18D9840A008BCF14 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		980FB60118D9840B008BCF14 /* Task.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Task.h; sourceTree = "<group>"; };
 		980FB60218D9840B008BCF14 /* Task.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Task.m; sourceTree = "<group>"; };
+		981A15EA18DA3279005560DE /* NSObject+ObjCSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+ObjCSwitch.h"; sourceTree = "<group>"; };
+		981A15EB18DA3279005560DE /* NSObject+ObjCSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+ObjCSwitch.m"; sourceTree = "<group>"; };
+		981A15ED18DA5593005560DE /* Checkbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Checkbox.h; sourceTree = "<group>"; };
+		981A15EE18DA5593005560DE /* Checkbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Checkbox.m; sourceTree = "<group>"; };
 		981B73C318B42A290040D4A0 /* GoogleOAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoogleOAuth.h; sourceTree = "<group>"; };
 		981B73C418B42A290040D4A0 /* GoogleOAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoogleOAuth.m; sourceTree = "<group>"; };
 		983A92FA18B7BD6C00B02E2C /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
@@ -102,8 +108,8 @@
 		989CE3F518B94C490079ECA7 /* EditFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditFieldCell.m; sourceTree = "<group>"; };
 		98A269A018C40C6E0053D20B /* UIAlertView+NSCookbook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+NSCookbook.h"; sourceTree = "<group>"; };
 		98A269A118C40C6E0053D20B /* UIAlertView+NSCookbook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+NSCookbook.m"; sourceTree = "<group>"; };
-		98B62E7B18B5E8D500872BDE /* RKTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RKTest.h; sourceTree = "<group>"; };
-		98B62E7C18B5E8D500872BDE /* RKTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RKTest.m; sourceTree = "<group>"; };
+		98B62E7B18B5E8D500872BDE /* LMHttpClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMHttpClient.h; sourceTree = "<group>"; };
+		98B62E7C18B5E8D500872BDE /* LMHttpClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMHttpClient.m; sourceTree = "<group>"; };
 		98C7496918A745B1000A4CAF /* Lifemax.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lifemax.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		98C7496C18A745B1000A4CAF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		98C7496E18A745B1000A4CAF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -182,6 +188,8 @@
 				983A92FA18B7BD6C00B02E2C /* NSString+MD5.h */,
 				983A92FB18B7BD6C00B02E2C /* NSString+MD5.m */,
 				984676DF18B971E10021E439 /* LifemaxHeaders.h */,
+				981A15EA18DA3279005560DE /* NSObject+ObjCSwitch.h */,
+				981A15EB18DA3279005560DE /* NSObject+ObjCSwitch.m */,
 			);
 			path = "Helper Classes";
 			sourceTree = "<group>";
@@ -259,8 +267,8 @@
 			children = (
 				98C7497B18A745B1000A4CAF /* AppDelegate.h */,
 				98C7497C18A745B1000A4CAF /* AppDelegate.m */,
-				98B62E7B18B5E8D500872BDE /* RKTest.h */,
-				98B62E7C18B5E8D500872BDE /* RKTest.m */,
+				98B62E7B18B5E8D500872BDE /* LMHttpClient.h */,
+				98B62E7C18B5E8D500872BDE /* LMHttpClient.m */,
 				98B4F0FB18D78E32002943D9 /* Model Objects */,
 				983A92F918B7BD2900B02E2C /* Helper Classes */,
 				98DF58A118A8204700AC2BE0 /* Views */,
@@ -330,6 +338,8 @@
 				98DF58A818A85B9A00AC2BE0 /* TableViewCells */,
 				98DF58A218A8207E00AC2BE0 /* LifeListFilter.h */,
 				98DF58A318A8207E00AC2BE0 /* LifeListFilter.m */,
+				981A15ED18DA5593005560DE /* Checkbox.h */,
+				981A15EE18DA5593005560DE /* Checkbox.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -533,6 +543,7 @@
 				989CE3F118B9364F0079ECA7 /* HashtagSelector.m in Sources */,
 				980FB60318D9840B008BCF14 /* Task.m in Sources */,
 				983A92FC18B7BD6C00B02E2C /* NSString+MD5.m in Sources */,
+				981A15EC18DA3279005560DE /* NSObject+ObjCSwitch.m in Sources */,
 				98DF58A718A83E9000AC2BE0 /* GoogleSyncViewController.m in Sources */,
 				9876A6CF18BC596400021A06 /* LifemaxCoreData.xcdatamodeld in Sources */,
 				98C7497918A745B1000A4CAF /* main.m in Sources */,
@@ -548,7 +559,8 @@
 				980FB60018D9840A008BCF14 /* User.m in Sources */,
 				98C749A918A74AFB000A4CAF /* MenuViewController.m in Sources */,
 				989CE3F618B94C490079ECA7 /* EditFieldCell.m in Sources */,
-				98B62E7D18B5E8D500872BDE /* RKTest.m in Sources */,
+				98B62E7D18B5E8D500872BDE /* LMHttpClient.m in Sources */,
+				981A15EF18DA5593005560DE /* Checkbox.m in Sources */,
 				9876A6CC18BC580100021A06 /* LMRestKitManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

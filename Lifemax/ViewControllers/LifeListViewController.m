@@ -15,8 +15,12 @@
 #import <RestKit/RestKit.h>
 #import "Task.h"
 #import "EditTaskViewController.h"
-#import "RKTest.h"
+#import "LMHttpClient.h"
 #import "NSString+MD5.h"
+#import <OHActionSheet/OHActionSheet.h>
+#import <OHAlertView/OHAlertView.h>
+#import "NSObject+ObjCSwitch.h"
+//#import "OH"
 
 @interface LifeListViewController () <LifeListFilterDelegate, NSFetchedResultsControllerDelegate, EditTaskDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 @property (strong, nonatomic) IBOutlet LifeListFilter *tableFilterView;
@@ -355,12 +359,44 @@
 
 - (IBAction)takePhoto {
     
-    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-    picker.delegate = self;
-    picker.allowsEditing = YES;
-    picker.sourceType = UIImagePickerControllerSourceTypeCamera;
     
-    [self presentViewController:picker animated:YES completion:NULL];
+    [OHActionSheet showSheetInView:self.view
+                             title:NSLocalizedString(@"Choose photo", nil)
+                 cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+            destructiveButtonTitle:NSLocalizedString(@"Camera", nil)
+                 otherButtonTitles:@[NSLocalizedString(@"Camera roll", nil), NSLocalizedString(@"No photo", nil) ]
+                        completion:^(OHActionSheet *sheet, NSInteger buttonIndex) {
+                            
+                            if(sheet.cancelButtonIndex == buttonIndex) {
+                                NSLog(@"Cancel photo chooser");
+                            } else if (sheet.destructiveButtonIndex == buttonIndex) {
+                                
+
+                                if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+                                    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+                                    picker.delegate = self;
+                                    picker.allowsEditing = YES;
+                                    
+                                    picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+                    
+                                    [self presentViewController:picker animated:YES completion:NULL];
+                                } else {
+                                    [OHAlertView showAlertWithTitle:@"Camera not supported" message:@"Sorry, this device does not support the usage of a camera." dismissButton:@"OK"];
+                                }
+                            } else if ((buttonIndex - sheet.firstOtherButtonIndex) == 0) {
+                                UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+                                picker.delegate = self;
+                                picker.allowsEditing = YES;
+                                picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+                                
+                                [self presentViewController:picker animated:YES completion:NULL];
+                            } else if ((buttonIndex - sheet.firstOtherButtonIndex) == 1) {
+                                [self imagePickerController:nil didFinishPickingMediaWithInfo:nil];
+                            }
+                            
+                        }];
+    
+
     
 }
 
@@ -376,17 +412,21 @@
 
 
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    NSLog(@"Got an image picker: %@", info);
-    
-    UIImage *pickedImageEdited = [info objectForKey:UIImagePickerControllerEditedImage];
     Task *task = [self.fetchedResultsController objectAtIndexPath:self.selectedIndexPath];
-    [[LMRestKitManager sharedManager] uploadPhoto:pickedImageEdited forTask:task];
-    
 
-    //do your stuff
-    [self dismissViewControllerAnimated:YES completion:^{
+    if(info) {
+        UIImage *pickedImageEdited = [info objectForKey:UIImagePickerControllerEditedImage];
+        [[LMRestKitManager sharedManager] uploadPhoto:pickedImageEdited forTask:task];
         
-    }];
+        
+        //do your stuff
+        [self dismissViewControllerAnimated:YES completion:nil];
+
+    } else {
+        //chose no photo, just mark as complete
+        [[LMRestKitManager sharedManager] updateTask:task withValues:@{@"completed" : @(YES), @"pictureurl" : @""}];
+    }
+    
 }
 
 -(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {

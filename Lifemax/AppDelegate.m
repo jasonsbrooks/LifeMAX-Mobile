@@ -12,7 +12,7 @@
 #import "LifeListViewController.h"
 #import <FacebookSDK/FacebookSDK.h>
 
-#import "RKTest.h"
+#import "LMHttpClient.h"
 
 #import "NSString+MD5.h"
 
@@ -166,13 +166,13 @@
 
 - (void)triggerLMLoginWithToken:(NSString *)fbAccessToken {
     
-    [[RKTest sharedManager] getPath:@"/api/login" parameters:@{ @"userToken": fbAccessToken} success:^(AFHTTPRequestOperation *operation, id jsonResponse) {
+    [[LMHttpClient sharedManager] getPath:@"/api/login" parameters:@{ @"userToken": fbAccessToken} success:^(AFHTTPRequestOperation *operation, id jsonResponse) {
         [self saveLifemaxLogin:jsonResponse];
         [[LMRestKitManager sharedManager] fetchTasksForDefaultUser];
         NSLog(@"Lifemax Login Success!");
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         if ([operation.responseString isEqualToString:@"Error: User does not exist!"] ) {
-            [[RKTest sharedManager] postPath:@"/api/register" parameters:@{@"shortToken" : fbAccessToken, @"privacy" : @(0) } success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            [[LMHttpClient sharedManager] postPath:@"/api/register" parameters:@{@"shortToken" : fbAccessToken, @"privacy" : @(0) } success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 NSLog(@"Register success!");
                 NSLog(@"REgister Response: %@", responseObject);
                 [self triggerLMLoginWithToken:fbAccessToken];
@@ -220,7 +220,7 @@
     BOOL post = NO;
     
     if(post) {
-        [[RKTest sharedManager] postPath:tasksPath parameters:postparams success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [[LMHttpClient sharedManager] postPath:tasksPath parameters:postparams success:^(AFHTTPRequestOperation *operation, id responseObject) {
             NSLog(@"Post success: %@", responseObject);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"Data : %@", [[NSString alloc]initWithData:[operation responseData] encoding:NSUTF8StringEncoding]);
@@ -298,13 +298,11 @@
         
         navController.interactivePopGestureRecognizer.enabled = NO;        // Prevents the iOS7's pan gesture
         navController.topViewController.view.userInteractionEnabled = NO;       // Disable the topViewController's interaction
-        NSLog(@"Right Side");
     }
     else if (position == FrontViewPositionLeft){      // Menu will close
         revealController.tapGestureRecognizer.enabled = NO;
         navController.interactivePopGestureRecognizer.enabled = YES;
         navController.topViewController.view.userInteractionEnabled = YES;
-        NSLog(@"Menu Close");
 
     }
     

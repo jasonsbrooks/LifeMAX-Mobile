@@ -39,12 +39,14 @@
 -(void) configure {
     if (!self.backgroundImageView){
         self.backgroundImageView = [[UIImageView alloc]initWithFrame:self.bounds];
-        self.backgroundImageView.layer.cornerRadius = 5;
+        self.backgroundImageView.layer.cornerRadius = 10;
         self.backgroundImageView.layer.masksToBounds = YES;
+        self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
         [self addSubview:self.backgroundImageView];
     }
     if(!self.cameraCheckboxImageView) {
         self.cameraCheckboxImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"todo-camera.png"] highlightedImage:[UIImage imageNamed:@"todo-camera-dark.png"]];
+        self.cameraCheckboxImageView.contentMode = UIViewContentModeCenter;
         [self.backgroundImageView addSubview:self.cameraCheckboxImageView];
     }
     if(!self.tapgr) {
@@ -59,34 +61,11 @@
     self.backgroundImageView.translatesAutoresizingMaskIntoConstraints = NO;
     self.cameraCheckboxImageView.translatesAutoresizingMaskIntoConstraints = NO;
     
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self
-                                                     attribute:NSLayoutAttributeLeft
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:self.backgroundImageView
-                                                     attribute:NSLayoutAttributeLeft
-                                                    multiplier:1
-                                                      constant:0]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self
-                                                     attribute:NSLayoutAttributeRight
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:self.backgroundImageView
-                                                     attribute:NSLayoutAttributeRight
-                                                    multiplier:1
-                                                      constant:0]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self
-                                                     attribute:NSLayoutAttributeTop
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:self.backgroundImageView
-                                                     attribute:NSLayoutAttributeTop
-                                                    multiplier:1
-                                                      constant:0]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self
-                                                     attribute:NSLayoutAttributeBottom
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:self.backgroundImageView
-                                                     attribute:NSLayoutAttributeBottom
-                                                    multiplier:1
-                                                      constant:0]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[background]|"
+                                                                options:0 metrics:nil views:@{@"background" : self.backgroundImageView}]];
+    
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[background]|"
+                                                                 options:0 metrics:nil views:@{@"background" : self.backgroundImageView}]];
     
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.cameraCheckboxImageView
                                                      attribute:NSLayoutAttributeWidth
@@ -156,14 +135,21 @@
 - (void) setBackgroundImageFromUrl:(NSString *)imageUrl {
     if(imageUrl && imageUrl.length > 0){
         [self.backgroundImageView setImageWithURL:[NSURL URLWithString:imageUrl]];
-        [self.cameraCheckboxImageView setImage:[UIImage imageNamed:@"todo-check"]];
-        [self.cameraCheckboxImageView setHighlightedImage:[UIImage imageNamed:@"todo-check-dark"]];
+    } else {
+        [self.backgroundImageView setImage:nil];
+    }
+}
 
-        [self.cameraCheckboxImageView setContentMode:UIViewContentModeScaleAspectFit];
+- (void) setCompleted:(BOOL)completed {
+    if (completed) {
+        NSString *highlightImage = self.backgroundImageView.image ? @"todo-check-dark" : @"todo-check";
+        NSString *regularImage = !self.backgroundImageView.image ? @"todo-check-dark" : @"todo-check";
+        
+        [self.cameraCheckboxImageView setImage:[UIImage imageNamed:regularImage]];
+        [self.cameraCheckboxImageView setHighlightedImage:[UIImage imageNamed:highlightImage]];
     } else {
         [self.cameraCheckboxImageView setImage:[UIImage imageNamed:@"todo-camera"]];
         [self.cameraCheckboxImageView setHighlightedImage:[UIImage imageNamed:@"todo-camera-dark"]];
-
     }
 }
 

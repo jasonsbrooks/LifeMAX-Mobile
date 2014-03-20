@@ -12,7 +12,7 @@
 #import "NSString+MD5.h"
 #import "Task.h"
 #import "User.h"
-#import "RKTest.h"
+#import "LMHttpClient.h"
 
 @implementation LMRestKitManager
 
@@ -57,8 +57,8 @@
                                                       }];
     [taskMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"user" toKeyPath:@"user" withMapping:userMapping]];
     
-    RKDotNetDateFormatter *formatter = [RKDotNetDateFormatter dotNetDateFormatterWithTimeZone:[NSTimeZone defaultTimeZone]];
-    [[RKValueTransformer defaultValueTransformer] insertValueTransformer: formatter atIndex:0];
+//    RKDotNetDateFormatter *formatter = [ dotNetDateFormatterWithTimeZone:[NSTimeZone defaultTimeZone]];
+//    [[RKValueTransformer defaultValueTransformer] insertValueTransformer: formatter atIndex:0];
     
     // Register our mappings with the provider
     RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:taskMapping
@@ -130,7 +130,7 @@
     
 }
 
-- (void) fetchTasksForUser:(NSNumber *)userid hashtoken:(NSString *)hashtoken {
+- (void) fetchTasksForUser:(id)userid hashtoken:(NSString *)hashtoken {
     
     if(!hashtoken || !userid) {
         NSLog(@"Error fetching, not logged in.");
@@ -153,7 +153,7 @@
     }];
 }
 
-- (void) fetchFeedTasksForUser:(NSString *)userid hashtag:(NSString *)hashtag maxResults:(NSInteger)maxResults hashtoken:(NSString *)hashtoken {
+- (void) fetchFeedTasksForUser:(id)userid hashtag:(NSString *)hashtag maxResults:(NSInteger)maxResults hashtoken:(NSString *)hashtoken {
     
     if(!hashtoken || !userid) {
         NSLog(@"Error fetching, not logged in.");
@@ -198,7 +198,7 @@
     
     NSString *path = [NSString stringWithFormat:@"/api/user/%@/photoupload", userid];
     
-    AFHTTPClient *httpClient = [RKTest sharedManager];
+    AFHTTPClient *httpClient = [LMHttpClient sharedManager];
     
     NSMutableURLRequest *request = [httpClient multipartFormRequestWithMethod:@"POST" path:path parameters:@{@"hashToken" :  hashToken} constructingBodyWithBlock:^(id <AFMultipartFormData>formData) {
         [formData appendPartWithFileData:jpegData
@@ -258,7 +258,7 @@
     
     NSString *tok = [self defaultUserHashToken];
     
-    [[RKTest sharedManager] postPath:deleteTasksPath parameters:@{@"hashToken" : tok, @"taskId" : task_id} success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [[LMHttpClient sharedManager] postPath:deleteTasksPath parameters:@{@"hashToken" : tok, @"taskId" : task_id} success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
         [self deleteTaskFromLocalStore:task];
         
@@ -350,13 +350,16 @@
         hashtag = hashtag ? hashtag : @"#personal";
         
         NSNumber *private = values[@"private"];
-        private = private ? private : @(0);
+        private = private ? private : @(NO);
+        NSNumber *completed = values[@"completed"];
+        completed = completed ? completed : @(NO);
         
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
         [dict setObject:@"" forKey:@"pictureurl"];
         [dict setObject:name forKey:@"name"];
         [dict setObject:hashtag forKey:@"hashtag"];
-        
+        [dict setObject:private forKey:@"private"];
+        [dict setObject:completed forKey:@"completed"];
 
         NSString *hashTok = [self defaultUserHashToken];
         if(!hashTok)
@@ -367,7 +370,7 @@
         
         [dict setObject:hashTok forKey:@"hashToken"];
         
-        [[RKTest sharedManager] postPath:path parameters:dict success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [[LMHttpClient sharedManager] postPath:path parameters:dict success:^(AFHTTPRequestOperation *operation, id responseObject) {
             NSLog(@"Post success: %@", responseObject);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"Data : %@", [[NSString alloc]initWithData:[operation responseData] encoding:NSUTF8StringEncoding]);
@@ -379,7 +382,7 @@
 
 -(void)fetchTasksForDefaultUser {
     
-    [self fetchTasksForUser:[self defaultUserId] hashtoken:[self defaultUserHashToken]];
+    [self fetchTasksForUser: [self defaultUserId] hashtoken:[self defaultUserHashToken]];
 }
 
 

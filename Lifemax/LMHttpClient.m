@@ -6,10 +6,10 @@
 //  Copyright (c) 2014 YUCG. All rights reserved.
 //
 
-#import "RKTest.h"
+#import "LMHttpClient.h"
 #import <RestKit/RestKit.h>
 
-@implementation RKTest
+@implementation LMHttpClient
 
 #pragma mark - Methods
 
@@ -43,10 +43,10 @@
 
 #pragma mark - Singleton Methods
 
-+ (RKTest *)sharedManager
++ (LMHttpClient *)sharedManager
 {
     static dispatch_once_t pred;
-    static RKTest *_sharedManager = nil;
+    static LMHttpClient *_sharedManager = nil;
     
     dispatch_once(&pred, ^{ _sharedManager = [[self alloc] initWithBaseURL:[NSURL URLWithString:@"http://lifemax-staging.herokuapp.com"]]; }); // You should probably make this a constant somewhere
     return _sharedManager;

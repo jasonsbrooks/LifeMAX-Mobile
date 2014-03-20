@@ -3,12 +3,12 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "todo-camera.png"
+      "filename" : "todo-check-box-checked.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "todo-camera@2x.png"
+      "filename" : "todo-check-box-checked@2x.png"
     }
   ],
   "info" : {

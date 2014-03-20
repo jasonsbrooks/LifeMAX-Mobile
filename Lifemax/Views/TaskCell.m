@@ -43,13 +43,17 @@
     self.title = task.name ? task.name : @"Task Name";
     self.subtitle = task.hashtag;
     
-    [self setTaskImageFromUrl: task.pictureurl];
-    
+    if(task.pictureurl && task.pictureurl.length > 0)
+        [self setTaskImageFromUrl: task.pictureurl];
+    else
+        [self setTaskImage:nil];
 
-    
-    NSLog(@"Displaying Cell: %@", task.pictureurl);
     if(task.pictureurl)
         [self setTaskImageFromUrl:task.pictureurl];
+
+    //must be after set picture url b/c color depends on image
+    [self.checkbox setCompleted:task.completed.boolValue];
+
 
 }
 

@@ -16,15 +16,15 @@
 #import "UIAlertView+NSCookbook.h"
 #import <RestKit/RestKit.h>
 #import "LMRestKitManager.h"
-
+#import "Checkbox.h"
 #define DESCRIPTION_PLACEHOLDER_TEXT @"description"
-#define CELL_HEIGHT 55
 
 @interface EditTaskViewController () <UIScrollViewDelegate, UITextFieldDelegate, HashtagSelectorDelegate>
 @property (nonatomic, strong) IBOutlet UIScrollView *contentScrollView;
 @property (nonatomic, strong) IBOutlet UIButton *deleteButton;
 @property (nonatomic, strong) IBOutlet UITextField *nameField;
-@property (nonatomic, strong) IBOutlet UISwitch *privacySwitch;
+@property (nonatomic, strong) IBOutlet Checkbox *privacyCheckbox;
+@property (nonatomic, strong) IBOutlet Checkbox *completedCheckbox;
 
 @property (nonatomic, strong) IBOutlet HashtagSelector *hashtagSelector;
 
@@ -72,7 +72,9 @@
 //    if(task.pictureurl) self.values[@"pictureurl"] = task.pictureurl;
 
     if(task.private) self.values[@"private"] = task.private;
+    if(task.completed) self.values[@"completed"] = task.completed;
     
+    NSLog(@"Private : %@", self.values[@"private"]);
     [self updateViewForTask];
 }
 
@@ -84,8 +86,8 @@
 
 -(void) updateViewForTask {
     self.nameField.text = self.values[@"name"];
-    self.privacySwitch.on = !self.values[@"private"];
-    
+    self.privacyCheckbox.checked = ![self.values[@"private"] boolValue];
+    self.completedCheckbox.checked = [self.values[@"completed"] boolValue];
     [self selectActiveTag];
 }
 
@@ -139,10 +141,20 @@
     [self configureHashtagSelector];
     
     self.contentScrollView.alwaysBounceVertical = YES;
-    
+    [self.completedCheckbox addTarget:self action:@selector(completedChanged:) forControlEvents:UIControlEventTouchUpInside];
+    [self.privacyCheckbox addTarget:self action:@selector(privacyChanged:) forControlEvents:UIControlEventTouchUpInside];
+
 }
 
+- (void)completedChanged:(Checkbox *)sender {
+    BOOL completed = sender.checked;
+    self.values[@"completed"] = @(completed);
+}
 
+- (void)privacyChanged:(Checkbox *)sender {
+    BOOL private = !sender.checked;
+    self.values[@"private"] = @(private);
+}
 
 - (BOOL) validateInput
 {
@@ -305,12 +317,6 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-#pragma mark - Privacy Switch Action
--(IBAction)privacySwitchToggled:(UISwitch *)sender {
-    BOOL private = !sender.on;
-    self.values[@"private"] = @(private);
 }
 
 

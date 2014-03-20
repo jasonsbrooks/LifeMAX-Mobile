@@ -268,7 +268,7 @@
 
 -(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response{
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-    NSLog(@"Request received Response! : %ld", [httpResponse statusCode]);
+    NSLog(@"Request received Response! : %d", [httpResponse statusCode]);
 }
 
 -(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data{

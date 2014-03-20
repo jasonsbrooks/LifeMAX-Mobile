@@ -7,14 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
-
 #import <RestKit/RestKit.h>
 
-@interface RKTest : AFHTTPClient
+@interface LMHttpClient : AFHTTPClient
 
 - (void)setUsername:(NSString *)username andPassword:(NSString *)password;
 
-+ (RKTest *)sharedManager;
++ (LMHttpClient *)sharedManager;
 
 
 @end

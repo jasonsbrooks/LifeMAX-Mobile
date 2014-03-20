@@ -14,5 +14,6 @@
 
 - (void) setBackgroundImage:(UIImage *) image;
 - (void) setBackgroundImageFromUrl:(NSString *)imageUrl;
+- (void) setCompleted:(BOOL)completed;
 
 @end
