@@ -42,6 +42,8 @@
     RKLogConfigureByName("RestKit/Network", RKLogLevelCritical);
     
     [Flurry startSession:@"44GKHY9KNCZ9MRHSCWC2"];
+    [Flurry setDebugLogEnabled:YES];
+
     [[Countly sharedInstance] startOnCloudWithAppKey:@"be20105e17988ee1a090fece97e72956bda068f1"];
     [Crashlytics startWithAPIKey:@"5a1ea7c8bd1ae0bb396436b70b13b63df02a4039"];
     
@@ -217,7 +219,7 @@
     [stdDefaults synchronize];
     
     if(loginResponse) {
-        [Flurry setUserID:loginResponse[@"id"]];
+        [Flurry setUserID:[NSString stringWithFormat:@"%@",loginResponse[@"id"]]];
         [[NSNotificationCenter defaultCenter] postNotificationName:LIFEMAX_NOTIFICATION_NAME_LOGIN_SUCCESS object:loginResponse];
     }
     
