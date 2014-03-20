@@ -10,11 +10,13 @@
 @class Task;
 @interface LMRestKitManager : NSObject
 
-- (void) fetchTasksForUser:(id)userid hashtoken:(NSString *)hashtoken;
+- (void) fetchTasksForUser:(id)userid hashtoken:(NSString *)hashtoken completion:(void (^)(BOOL success, NSError *error))completionBlock;
+
 - (void)initializeMappings;
 + (LMRestKitManager *)sharedManager;
 
--(void)fetchTasksForDefaultUser;
+-(void)fetchTasksForDefaultUserOnCompletion:(void (^)(BOOL success, NSError *error))completionBlock;
+
 - (BOOL)deleteTask:(Task *) task;
 - (void) newTaskForValues:(NSDictionary *)values;
 - (void) fetchFeedTasksForUser:(id)userid hashtag:(NSString *)hashtag maxResults:(NSInteger)maxResults hashtoken:(NSString *)hashtoken ;

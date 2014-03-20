@@ -21,6 +21,7 @@
 @property (nonatomic, retain) NSNumber * private;
 @property (nonatomic, retain) NSDate * timecompleted;
 @property (nonatomic, retain) NSDate * timecreated;
+@property (nonatomic, retain) NSDate * displaydate;
 
 @property (nonatomic, retain) User *user;
 

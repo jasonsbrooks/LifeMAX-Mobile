@@ -23,7 +23,6 @@
 
 #define LIFEMAX_LOGIN_INFORMATION_KEY @"com.yucg.lifemax.login-information-defaults-key"
 #define LIFEMAX_INITIALIZED_CD_KEY @"com.yucg.lifemax.initializedcoredata"
-#define LIFEMAX_LOGGED_IN @"com.yucg.lifemax.lifemax-did-login-to-server"
 #define LIFEMAX_TRIGGER_LOGOUT @"com.yucg.lifemax.lifemax-trigger-logout-op"
 
 

@@ -76,7 +76,7 @@
                                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <imageView userInteractionEnabled="NO" tag="11" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="list-check" translatesAutoresizingMaskIntoConstraints="NO" id="I52-HE-5e8">
+                                                    <imageView userInteractionEnabled="NO" tag="11" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="list-check" translatesAutoresizingMaskIntoConstraints="NO" id="I52-HE-5e8">
                                                         <rect key="frame" x="286" y="17" width="14" height="10"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <constraints>
@@ -226,7 +226,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="1" verticalCompressionResistancePriority="1" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Q5W-MG-R9u">
-                                            <rect key="frame" x="0.0" y="53" width="320" height="236"/>
+                                            <rect key="frame" x="0.0" y="51" width="320" height="236"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12 minutes ago" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gjv-XK-XPa">
@@ -336,12 +336,12 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="300"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="1" verticalCompressionResistancePriority="1" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8SM-a4-VO0">
-                                            <rect key="frame" x="0.0" y="58" width="320" height="231"/>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="1" verticalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="8SM-a4-VO0">
+                                            <rect key="frame" x="0.0" y="41" width="320" height="249"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
-                                        <view opaque="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="P6a-9E-fmX" userLabel="Overlay View">
-                                            <rect key="frame" x="0.0" y="227" width="320" height="52"/>
+                                        <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P6a-9E-fmX" userLabel="Overlay View">
+                                            <rect key="frame" x="0.0" y="228" width="320" height="52"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hike East Rock" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="zcJ-uf-JqH">
@@ -427,7 +427,7 @@
                                         <constraint firstItem="CMj-zJ-ZUp" firstAttribute="leading" secondItem="3lA-Bx-7vu" secondAttribute="trailing" constant="8" id="jzF-51-AHt"/>
                                         <constraint firstItem="3lA-Bx-7vu" firstAttribute="centerY" secondItem="C2M-HJ-GR4" secondAttribute="centerY" id="l4S-X5-qJO"/>
                                         <constraint firstItem="8SM-a4-VO0" firstAttribute="bottom" secondItem="P6a-9E-fmX" secondAttribute="bottom" constant="10" id="pri-2J-Kiu"/>
-                                        <constraint firstItem="8SM-a4-VO0" firstAttribute="top" secondItem="C2M-HJ-GR4" secondAttribute="bottom" constant="17" id="tNh-yX-Gf4"/>
+                                        <constraint firstItem="8SM-a4-VO0" firstAttribute="top" secondItem="C2M-HJ-GR4" secondAttribute="bottom" id="tNh-yX-Gf4"/>
                                         <constraint firstAttribute="bottom" secondItem="8SM-a4-VO0" secondAttribute="bottom" constant="10" id="yWq-uK-Uh2"/>
                                     </constraints>
                                 </tableViewCellContentView>
@@ -444,6 +444,9 @@
                             <outlet property="delegate" destination="oqo-bz-XqF" id="KCF-BJ-dFD"/>
                         </connections>
                     </tableView>
+                    <toolbarItems/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <segue destination="HcA-dI-R5W" kind="push" identifier="edit_task" id="VU4-Eb-Got"/>
                     </connections>
@@ -869,7 +872,7 @@
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <connections>
-                                    <segue destination="oqo-bz-XqF" kind="custom" customClass="SWRevealViewControllerSegue" id="AsX-7h-gf5"/>
+                                    <segue destination="oqo-bz-XqF" kind="custom" identifier="news-feed" customClass="SWRevealViewControllerSegue" id="AsX-7h-gf5"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="story" id="nkY-Zo-GlI" customClass="SWUITableViewCell">
@@ -908,7 +911,7 @@
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <connections>
-                                    <segue destination="oqo-bz-XqF" kind="custom" customClass="SWRevealViewControllerSegue" id="78c-VL-5qa"/>
+                                    <segue destination="oqo-bz-XqF" kind="custom" identifier="my-story" customClass="SWRevealViewControllerSegue" id="78c-VL-5qa"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="settings" id="KhV-hw-Bzd" customClass="SWUITableViewCell">
@@ -977,7 +980,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FHP-1A-3bL">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FHP-1A-3bL">
                                 <rect key="frame" x="0.0" y="20" width="320" height="548"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
@@ -1127,7 +1130,7 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="AsX-7h-gf5"/>
+        <segue reference="78c-VL-5qa"/>
         <segue reference="VU4-Eb-Got"/>
     </inferredMetricsTieBreakers>
 </document>

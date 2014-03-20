@@ -55,7 +55,7 @@
 
 - (void) fetchHashTags:(id)sender {
     NSFetchRequest *hashtagfetch = [[NSFetchRequest alloc] initWithEntityName:@"Hashtag"];
-    NSArray *hashtagObjs = [[RKObjectManager sharedManager].managedObjectStore.mainQueueManagedObjectContext executeFetchRequest:hashtagfetch error:nil];
+    NSArray *hashtagObjs = [[RKManagedObjectStore defaultStore].mainQueueManagedObjectContext executeFetchRequest:hashtagfetch error:nil];
     NSMutableArray *hashtags = [NSMutableArray array];
     for (Hashtag *tag in hashtagObjs) {
         [hashtags addObject:tag.name];
@@ -69,14 +69,8 @@
 {
     [super viewDidLoad];
     
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.locale = [NSLocale currentLocale];
-    dateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
-    dateFormatter.dateFormat = @"yyyy-MM-dd'T'hh:mm:ssZ";
-    [self configureFRC];
-
+    [self fetchedResultsController];
     self.filterExpanded = NO;
-    
     
     [self fetchHashTags:nil];
 
@@ -87,7 +81,6 @@
     
     
     [self.tableFilterView.tapgr addTarget:self action:@selector(toggleFilter)];
-//    [self.tableFilterView addGestureRecognizer: [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleFilter)]];
     
     SWRevealViewController *revealController = [self revealViewController];
     
@@ -97,8 +90,6 @@
     
     UIBarButtonItem *revealButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"reveal-icon.png"]
                                                                          style:UIBarButtonItemStyleBordered target:revealController action:@selector(revealToggle:)];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(configureFRC) name:LIFEMAX_INITIALIZED_CD_KEY object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refresh:) name:LIFEMAX_INITIALIZED_CD_KEY object:nil];
 
     self.navigationItem.leftBarButtonItem = revealButtonItem;
 
@@ -106,65 +97,75 @@
     
     self.refreshControl = [[UIRefreshControl alloc]init];
     [self.refreshControl addTarget:self action:@selector(refresh:) forControlEvents:UIControlEventValueChanged];
-//    [self filterForHashtag:nil];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self performFetch];
-    [self loadData];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(performFetch) name:LIFEMAX_NOTIFICATION_NAME_LOGIN_SUCCESS object:nil];
 }
 
-- (void) configureFRC {
-    
-    id user_id = [[LMRestKitManager sharedManager] defaultUserId];;
-    
-    NSFetchRequest *userFetch = [NSFetchRequest fetchRequestWithEntityName:@"User"];
-    userFetch.predicate = [NSPredicate predicateWithFormat:@"user_id = %@", user_id];
-    
-    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Task"];
-    NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"task_id" ascending:NO];
-    
-    fetchRequest.sortDescriptors = @[descriptor];
-    NSError *error = nil;
-    
-    NSManagedObjectContext *ctx = [RKManagedObjectStore defaultStore].mainQueueManagedObjectContext;
-    
-    if (!ctx) {
-        return;
-    }
-    
-    User *user = [[ctx executeFetchRequest:userFetch error:&error] lastObject];
-    
-    if (!user) return;
-    
-    fetchRequest.predicate = [NSPredicate predicateWithFormat:@"user = %@", user];
-    
-    
-    // Setup fetched results
-    self.fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
+- (NSFetchedResultsController *) fetchedResultsController {
+    if(!_fetchedResultsController) {
+        id user_id = [[LMRestKitManager sharedManager] defaultUserId];;
+        
+        if(!user_id) return nil;
+        
+        NSFetchRequest *userFetch = [NSFetchRequest fetchRequestWithEntityName:@"User"];
+        userFetch.predicate = [NSPredicate predicateWithFormat:@"user_id = %@", user_id];
+        
+        NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Task"];
+        NSSortDescriptor *descriptor1 = [NSSortDescriptor sortDescriptorWithKey:@"completed" ascending:YES];
+        NSSortDescriptor *descriptor2 = [NSSortDescriptor sortDescriptorWithKey:@"displaydate" ascending:NO];
+        NSSortDescriptor *descriptor3 = [NSSortDescriptor sortDescriptorWithKey:@"task_id" ascending:NO];
+        
+        fetchRequest.sortDescriptors = @[descriptor1,descriptor2, descriptor3];
+        NSError *error = nil;
+        
+        NSManagedObjectContext *ctx = [RKManagedObjectStore defaultStore].mainQueueManagedObjectContext;
+        
+        if (!ctx) {
+            return nil;
+        }
+        
+        fetchRequest.predicate = [NSPredicate predicateWithFormat:@"user.user_id = %@", user_id];
+        
+        
+        // Setup fetched results
+        _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
                                                                         managedObjectContext:ctx
                                                                           sectionNameKeyPath:nil
                                                                                    cacheName:nil];
-    [self.fetchedResultsController setDelegate:self];
-    BOOL fetchSuccessful = [self.fetchedResultsController performFetch:&error];
-    
-    if (! fetchSuccessful) {
-        NSLog(@"Prefetch did not work.");
+        [_fetchedResultsController setDelegate:self];
+        
+        BOOL fetchSuccessful = [_fetchedResultsController performFetch:&error];
+        
+        if (! fetchSuccessful) {
+            NSLog(@"Prefetch did not work.");
+        }
     }
+    
+    return _fetchedResultsController;
+    
 }
 
 
 - (void) loadData {
     //NSFetchedResultsController should automatically refresh
     //just trigger the manager to fetch from the server
-    [[LMRestKitManager sharedManager] fetchTasksForDefaultUser];
+    [[LMRestKitManager sharedManager] fetchTasksForDefaultUserOnCompletion:^(BOOL success, NSError *error) {
+        if (success) {
+            NSLog(@"LoadData Success!");
+            [self performFetch];
+        }
+    }];
 }
 
 - (void) performFetch {
     dispatch_async(dispatch_get_main_queue(), ^{
         NSError *error = nil;
+        NSLog(@"FRC: %@", self.fetchedResultsController);
         BOOL fetchSuccessful = [self.fetchedResultsController performFetch:&error];
         
         if(fetchSuccessful)
@@ -181,7 +182,6 @@
     if (self.refreshControl.refreshing) {
         
         //prefetch the cached data, then load from server
-        [self performFetch];
         [self loadData];
         //end the spinner after a shory timeout
         [self.refreshControl performSelector:@selector(endRefreshing) withObject:nil afterDelay:.4];
@@ -291,6 +291,8 @@
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type {
+    NSLog(@"Change section at index  %d", sectionIndex);
+
     switch(type) {
         case NSFetchedResultsChangeInsert:
             [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -303,6 +305,7 @@
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath*)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath*)newIndexPath {
     UITableView* tableView = self.tableView;
+    NSLog(@"Change object at index path: %@", indexPath);
     switch(type) {
         case NSFetchedResultsChangeInsert:
             [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];

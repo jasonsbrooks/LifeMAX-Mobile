@@ -20,6 +20,8 @@
 @dynamic private;
 @dynamic timecompleted;
 @dynamic timecreated;
+@dynamic displaydate;
+
 @dynamic user;
 
 @end

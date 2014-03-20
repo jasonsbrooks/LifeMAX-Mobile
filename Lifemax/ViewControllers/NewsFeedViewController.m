@@ -22,20 +22,11 @@
 #import "FeedUserTaskCell.h"
 
 
-static void RKTwitterShowAlertWithError(NSError *error)
-{
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                    message:[error localizedDescription]
-                                                   delegate:nil
-                                          cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [alert show];
-}
-
 @interface NewsFeedViewController () <LifeListFilterDelegate, NSFetchedResultsControllerDelegate, EditTaskDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 @property (strong, nonatomic) IBOutlet LifeListFilter *tableFilterView;
+
 @property BOOL filterExpanded;
 @property NSArray *filterTitles;
-
 @property (strong, nonatomic) NSDateFormatter *formatter;
 
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
@@ -88,6 +79,9 @@ static void RKTwitterShowAlertWithError(NSError *error)
     
     UIBarButtonItem *revealButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"reveal-icon.png"]
                                                                          style:UIBarButtonItemStyleBordered target:revealController action:@selector(revealToggle:)];
+    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addbuttonPressed:)];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(configureFRC) name:LIFEMAX_INITIALIZED_CD_KEY object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refresh:) name:LIFEMAX_INITIALIZED_CD_KEY object:nil];
     
@@ -101,15 +95,28 @@ static void RKTwitterShowAlertWithError(NSError *error)
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reinitializeFRC) name:LIFEMAX_NOTIFICATION_NAME_LOGIN_SUCCESS object:nil];
     [self performFetch];
+    [self loadData];
+}
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void) reinitializeFRC {
+    [self configureFRC];
     [self loadData];
 }
 
 - (void) configureFRC {
     
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Task"];
-    NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"task_id" ascending:NO];
-    fetchRequest.sortDescriptors = @[descriptor];
+    NSSortDescriptor *descriptor1 = [NSSortDescriptor sortDescriptorWithKey:@"displaydate" ascending:NO];
+    NSSortDescriptor *descriptor2 = [NSSortDescriptor sortDescriptorWithKey:@"task_id" ascending:NO];
+    fetchRequest.sortDescriptors = @[descriptor1, descriptor2];
+    if(self.isStoryController)
+        fetchRequest.predicate = [NSPredicate predicateWithFormat:@"user.user_id = %@", [[LMRestKitManager sharedManager] defaultUserId] ];
     NSError *error = nil;
     
     NSManagedObjectContext *ctx = [RKManagedObjectStore defaultStore].mainQueueManagedObjectContext;
@@ -126,7 +133,7 @@ static void RKTwitterShowAlertWithError(NSError *error)
     BOOL fetchSuccessful = [self.fetchedResultsController performFetch:&error];
     
     if (! fetchSuccessful) {
-        RKTwitterShowAlertWithError(error);
+        NSLog(@"ERROR prefetching content");
     }
 }
 
@@ -240,9 +247,14 @@ static void RKTwitterShowAlertWithError(NSError *error)
 
 
 - (IBAction)addbuttonPressed:(id)sender {
-    NSIndexPath *selectedPath = [NSIndexPath indexPathForRow:[sender tag] inSection:0];
     
-    self.selectedIndexPath = selectedPath;
+    if([sender isKindOfClass:[UIBarButtonItem class]]){
+        //dont do anything
+        self.selectedIndexPath = nil;
+    } else {
+        NSIndexPath *selectedPath = [NSIndexPath indexPathForRow:[sender tag] inSection:0];
+        self.selectedIndexPath = selectedPath;
+    }
     
     [self performSegueWithIdentifier:@"edit_task" sender:self];
     
@@ -276,7 +288,6 @@ static void RKTwitterShowAlertWithError(NSError *error)
     
     //user id == 0 means it is a suggestion
     BOOL suggestion = [task.user.user_id isEqualToNumber:@(0)];
-    NSLog(@"Task user : %@ %@", task.user.user_id, task.user.user_name);
     CellIdentifier = (suggestion) ?@"feed-suggestion":  @"feed-user";
     
     
@@ -364,8 +375,9 @@ static void RKTwitterShowAlertWithError(NSError *error)
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
     EditTaskViewController *editController = [segue destinationViewController];
-//    editController.task = [self.fetchedResultsController objectAtIndexPath:[self.tableView indexPathForSelectedRow]];
-    [editController initializeWithTaskValues:[self.fetchedResultsController objectAtIndexPath:self.selectedIndexPath]];
+
+    if(self.selectedIndexPath)
+        [editController initializeWithTaskValues:[self.fetchedResultsController objectAtIndexPath:self.selectedIndexPath] fromFeed:YES];
     editController.delegate = self;
 }
 
@@ -379,8 +391,6 @@ static void RKTwitterShowAlertWithError(NSError *error)
     [[LMRestKitManager sharedManager] newTaskForValues:values];
     if(task)
         [[LMRestKitManager sharedManager] deleteTask:task];
-    
-    [[LMRestKitManager sharedManager] fetchTasksForDefaultUser];
     
 }
 

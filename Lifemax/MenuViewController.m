@@ -8,7 +8,7 @@
 
 #import "MenuViewController.h"
 #import "SWRevealViewController.h"
-
+#import "NewsFeedViewController.h"
 @implementation SWUITableViewCell
 @end
 
@@ -42,6 +42,11 @@
             UINavigationController* nc = [[UINavigationController alloc] initWithRootViewController:dvc];
             [rvc setFrontViewController:nc animated:YES];
         };
+    }
+    
+    if([segue.identifier isEqualToString:@"my-story"]) {
+        NewsFeedViewController *feed = segue.destinationViewController;
+        feed.isStoryController = YES;
     }
 }
 

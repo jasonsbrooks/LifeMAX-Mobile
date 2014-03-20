@@ -62,18 +62,23 @@
 -(void)setTask:(Task *)task {
     if(_task != task){
         _task = task;
-        [self initializeWithTaskValues:task];
+        [self initializeWithTaskValues:task fromFeed:NO];
     }
 }
 
--(void)initializeWithTaskValues :(Task *)task {
+-(void)initializeWithTaskValues :(Task *)task fromFeed:(BOOL)fromFeed{
     NSLog(@"initialize for task: %@", task);
     if(task.name) self.values[@"name"] = task.name;
     if(task.hashtag) self.values[@"hashtag"] = task.hashtag;
-//    if(task.pictureurl) self.values[@"pictureurl"] = task.pictureurl;
+    
+    if(task.pictureurl) self.values[@"pictureurl"] = task.pictureurl;
 
-    if(task.private) self.values[@"private"] = task.private;
-    if(task.completed) self.values[@"completed"] = task.completed;
+    if(task.private) self.values[@"private"] = @(task.private.boolValue);
+    
+    if(!fromFeed){
+        if(task.completed) self.values[@"completed"] = @(task.completed.boolValue);
+    }
+    else self.values[@"completed"] = @(NO);
     
     NSLog(@"Private : %@", self.values[@"private"]);
     [self updateViewForTask];
@@ -137,7 +142,7 @@
     //configure default hashtags
     
     NSFetchRequest *hashtagfetch = [[NSFetchRequest alloc] initWithEntityName:@"Hashtag"];
-    NSArray *hashtagObjs = [[RKObjectManager sharedManager].managedObjectStore.mainQueueManagedObjectContext executeFetchRequest:hashtagfetch error:nil];
+    NSArray *hashtagObjs = [[RKManagedObjectStore defaultStore].mainQueueManagedObjectContext executeFetchRequest:hashtagfetch error:nil];
     NSMutableArray *hashtags = [NSMutableArray array];
     for (Hashtag *tag in hashtagObjs) {
         [hashtags addObject:tag.name];
@@ -315,7 +320,8 @@
     return
     (self.values[@"hashtag"] && ![self.values[@"hashtag"] isEqualToString:self.task.hashtag]) ||
     (self.values[@"name"] && ![self.values[@"name"] isEqualToString:self.task.name]) ||
-    (self.values[@"private"] && [self.task.private boolValue] != [self.values[@"private"] boolValue]) ;
+    (self.values[@"private"] && [self.task.private boolValue] != [self.values[@"private"] boolValue]) ||
+    (self.values[@"completed"] && [self.task.completed boolValue] != [self.values[@"completed"] boolValue]);
 }
 - (void) exit {
     [self.navigationController popViewControllerAnimated:YES];

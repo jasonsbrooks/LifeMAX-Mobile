@@ -10,6 +10,7 @@
 #import "SWRevealViewController.h"
 #import "MenuViewController.h"
 #import "LifeListViewController.h"
+#import "NewsFeedViewController.h"
 #import <FacebookSDK/FacebookSDK.h>
 
 #import "LMHttpClient.h"
@@ -46,7 +47,7 @@
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:storyboardName bundle:[NSBundle mainBundle]];
     
     
-	LifeListViewController *frontViewController = [storyboard instantiateViewControllerWithIdentifier:@"LifeListViewController"];
+	NewsFeedViewController *frontViewController = [storyboard instantiateViewControllerWithIdentifier:@"news_feed"];
 	MenuViewController *rearViewController = [storyboard instantiateViewControllerWithIdentifier:@"MenuViewController"];
 	
 	UINavigationController *frontNavigationController = [[UINavigationController alloc] initWithRootViewController:frontViewController];
@@ -169,11 +170,13 @@
     
     [[LMHttpClient sharedManager] getPath:@"/api/login" parameters:@{ @"userToken": fbAccessToken} success:^(AFHTTPRequestOperation *operation, id jsonResponse) {
         [self saveLifemaxLogin:jsonResponse];
-        [[NSNotificationCenter defaultCenter] postNotificationName:LIFEMAX_NOTIFICATION_NAME_LOGIN_SUCCESS object:jsonResponse];
         [[LMRestKitManager sharedManager] fetchHashtagListOnCompletion:^(NSArray *hashtags, NSError *error) {
 //            NSLog(@"Do something with these hashtags: %@", hashtags);
         }];
-        [[LMRestKitManager sharedManager] fetchTasksForDefaultUser];
+
+        [[LMRestKitManager sharedManager] fetchTasksForDefaultUserOnCompletion:^(BOOL success, NSError *error) {
+            NSLog(@"Finished Initial task fetch!");
+        } ];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         if ([operation.responseString isEqualToString:@"Error: User does not exist!"] ) {
             [[LMHttpClient sharedManager] postPath:@"/api/register" parameters:@{@"shortToken" : fbAccessToken, @"privacy" : @(0) } success:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -202,85 +205,8 @@
     [stdDefaults setObject:loginResponse forKey:LIFEMAX_LOGIN_INFORMATION_KEY];
     [stdDefaults synchronize];
     
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:LIFEMAX_LOGGED_IN object:loginResponse];
-    
-    NSString *tok = [loginResponse objectForKey:@"authToken"];
-    NSString *tasksPath = [NSString stringWithFormat:@"/api/user/%@/tasks", [loginResponse objectForKey:@"id"]];
-//    NSString *deleteTasksPath = [NSString stringWithFormat:@"/api/user/%@/deletetasks", [loginResponse objectForKey:@"id"]];
-    
-    NSDictionary *postparams = @{
-                                 @"description": @"code lifemax app",
-                                 @"endtime": @"2014-02-24T02:00:00Z",
-                                 @"hashToken": [tok md5],
-                                 @"hashtag": @"#raging",
-                                 @"location": @"zoo",
-                                 @"name": @"CodeCodeCode",
-                                 @"pictureurl": @"",
-                                 @"recurrence": @"RRULE:FREQ=WEEKLY;UNTIL=20140701T100000-07:00",
-                                 @"starttime": @"2014-02-23T19:25:00Z"
-                                 };
-    
-    BOOL post = NO;
-    
-    if(post) {
-        [[LMHttpClient sharedManager] postPath:tasksPath parameters:postparams success:^(AFHTTPRequestOperation *operation, id responseObject) {
-            NSLog(@"Post success: %@", responseObject);
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"Data : %@", [[NSString alloc]initWithData:[operation responseData] encoding:NSUTF8StringEncoding]);
-        }];
-
-    } else {
-        
-        [[LMRestKitManager sharedManager] fetchFeedTasksForUser:[loginResponse objectForKey:@"id"] hashtag:nil maxResults:50 hashtoken:[tok md5]];
-        
-//        [[LMRestKitManager sharedManager] fetchTasksForDefaultUser];
-
-        /*
-        [[RKTest sharedManager] getPath:tasksPath parameters:params success:^(AFHTTPRequestOperation *operation, id jsonResponse) {
-            NSDictionary *task = [jsonResponse lastObject];
-            
-            
-            if(task) {
-                NSDictionary *extendedProps = task[@"extendedProperties"][@"shared"];
-                
-                NSLog(@"TaskDescription: %@", [task objectForKey:@"description"]);
-                NSLog(@"Task ID: %@", [task objectForKey:@"id"]);
-                NSLog(@"Task Summary: %@", [task objectForKey:@"summary"]);
-                NSLog(@"Extended Props: %@", extendedProps);
-                NSLog(@"Starts : %@", task[@"start"][@"dateTime"]);
-                NSLog(@"ends : %@", task[@"end"][@"dateTime"]);
-                NSLog(@"Updated : %@", task[@"updated"]);
-            }
-
-            
-         
-             NSDictionary * task1 = [jsonResponse lastObject];
-             NSLog(@"Fetch Headers : %@", [operation.request allHTTPHeaderFields]);
-             if (task1) {
-             [[RKTest sharedManager] postPath:deleteTasksPath parameters:@{@"hashToken" : [tok md5], @"eventId" : task1[@"id"]} success:^(AFHTTPRequestOperation *operation, id responseObject) {
-             NSLog(@"Delete Successful! : %@", responseObject);
-             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-             NSLog(@"Delete Headers : %@", [operation.request allHTTPHeaderFields]);
-             NSLog(@"Delete Response: %@", operation.responseString);
-             }];
-             }
-            
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"Error : %@", operation.responseString);
-            NSLog(@"Operation path: %@ ", operation.request.URL);
-        }];
-    */
-    }
-    
-    
-    
-    
-
-     
-    
-    
-    
+    if(loginResponse)
+        [[NSNotificationCenter defaultCenter] postNotificationName:LIFEMAX_NOTIFICATION_NAME_LOGIN_SUCCESS object:loginResponse];
     
 }
 
@@ -296,7 +222,6 @@
 {
     UINavigationController *navController = (UINavigationController *)revealController.frontViewController;
 
-    NSLog(@"Move to position!");
     if (position == FrontViewPositionRight) {               // Menu will get revealed
         revealController.tapGestureRecognizer.enabled = YES;                 // Enable the tap gesture Recognizer
         

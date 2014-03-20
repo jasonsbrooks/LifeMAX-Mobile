@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface NewsFeedViewController : UITableViewController
+@property BOOL isStoryController;
 
 @end

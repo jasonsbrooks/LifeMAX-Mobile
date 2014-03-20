@@ -10,7 +10,7 @@
 #import "UIImageView+AFNetworking.h"
 #import "Task+TaskAdditions.h"
 #import "User.h"
-
+#import "LMRestKitManager.h"
 @interface FeedUserTaskCell ()
 @property (nonatomic, strong) IBOutlet UILabel *actionLabel;
 @property (nonatomic, strong) IBOutlet UILabel *timestampLabel;
@@ -76,9 +76,13 @@
         
         [self setAttributedAction:atrTitle];
         
-        [self setTimestamp:[self dateDiff:[task dateToDisplay]]];
+        [self setTimestamp:[self dateDiff:task.displaydate]];
         
     }
+    
+    BOOL thisUser = [task.user.user_id isEqualToNumber:[[LMRestKitManager sharedManager] defaultUserId]];
+    self.addButton.hidden = thisUser;
+
     
     [self setTitle:task.name];
     [self setSubtitle:task.hashtag];

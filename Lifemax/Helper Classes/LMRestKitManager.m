@@ -61,6 +61,7 @@
                                                       @"timecompleted" : @"timecompleted",
                                                       @"timecreated" : @"timecreated"
                                                       }];
+    
     [taskMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"user" toKeyPath:@"user" withMapping:userMapping]];
     
 //    RKDotNetDateFormatter *formatter = [ dotNetDateFormatterWithTimeZone:[NSTimeZone defaultTimeZone]];
@@ -74,6 +75,14 @@
                                                                                        statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
     
     [objectManager addResponseDescriptor:responseDescriptor];
+    
+    RKResponseDescriptor *postResponse = [RKResponseDescriptor responseDescriptorWithMapping:taskMapping
+                                                                                            method:RKRequestMethodPOST
+                                                                                       pathPattern:@"/api/user/:userid/tasks"
+                                                                                           keyPath:nil
+                                                                                       statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
+    
+    [objectManager addResponseDescriptor:postResponse];
     
     RKResponseDescriptor *updateTaskResponse = [RKResponseDescriptor responseDescriptorWithMapping:taskMapping
                                                                                             method:RKRequestMethodPOST
@@ -98,6 +107,7 @@
                                                                                  method:RKRequestMethodPOST];
     [objectManager addRequestDescriptor:postTask];
     
+    
     RKResponseDescriptor *hashtagResponse = [RKResponseDescriptor responseDescriptorWithMapping:hashtagMapping
                                                                                                 method:RKRequestMethodGET
                                                                                            pathPattern:@"/api/hashtags"
@@ -121,6 +131,20 @@
         return nil;
     }];
     
+    [objectManager addFetchRequestBlock:^NSFetchRequest *(NSURL *URL) {
+        
+        RKPathMatcher *pathMatcherTask = [RKPathMatcher pathMatcherWithPattern:@"/api/user/:userid/newsfeed"];
+        BOOL matchTask = [pathMatcherTask matchesPath:[URL relativePath] tokenizeQueryStrings:NO parsedArguments:nil];
+        
+        if (matchTask) {
+            NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Task"];
+            return fetchRequest;
+        }
+        return nil;
+    }];
+    
+    
+    
     /**
      Complete Core Data stack initialization
      */
@@ -130,7 +154,10 @@
     NSError *error;
     NSPersistentStore *persistentStore = [managedObjectStore addSQLitePersistentStoreAtPath:storePath fromSeedDatabaseAtPath:nil withConfiguration:nil options:nil error:&error];
     if (!persistentStore) {
-        NSLog(@"Could not create persistent store");
+        NSLog(@"Could not create persistent store, resetting and trying again.");
+        //try deleting and going again
+        [[NSFileManager defaultManager] removeItemAtPath:storePath error:nil];
+        persistentStore = [managedObjectStore addSQLitePersistentStoreAtPath:storePath fromSeedDatabaseAtPath:nil withConfiguration:nil options:nil error:&error];
     }
     NSAssert(persistentStore, @"Failed to add persistent store with error: %@", error);
     
@@ -144,7 +171,7 @@
     
 }
 
-- (void) fetchTasksForUser:(id)userid hashtoken:(NSString *)hashtoken {
+- (void) fetchTasksForUser:(id)userid hashtoken:(NSString *)hashtoken completion:(void (^)(BOOL success, NSError *error))completionBlock {
     
     if(!hashtoken || !userid) {
         NSLog(@"Error fetching, not logged in.");
@@ -154,16 +181,17 @@
     NSString *path = [NSString stringWithFormat:@"/api/user/%@/tasks", userid];
 
     [[RKObjectManager sharedManager] getObjectsAtPath:path parameters:@{@"hashToken" : hashtoken} success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        /*
-        NSLog(@"[FETCH-TASKS] Response: %@", operation.HTTPRequestOperation.responseString);
-        for(Task *task in [mappingResult array]) {
-            NSLog(@"[FETCHED-TASK]: %@", task);
+        NSLog(@"Get Tasks Success");
+        for (Task *task in [mappingResult array]) {
+            if(task.timecompleted) task.displaydate = task.timecompleted;
+            else task.displaydate = task.timecreated;
+            [task.managedObjectContext save:nil];
         }
-        */
-        
+        if(completionBlock) completionBlock(YES, nil);
         
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
         NSLog(@"Map Failure: %@", operation.HTTPRequestOperation.responseString);
+        if(completionBlock) completionBlock(NO, error);
     }];
 }
 
@@ -177,7 +205,11 @@
     NSString *path = [NSString stringWithFormat:@"/api/user/%@/newsfeed", userid];
     
     [[RKObjectManager sharedManager] getObjectsAtPath:path parameters:@{@"hashToken" : hashtoken} success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        
+        for (Task *task in [mappingResult array]) {
+            if(task.timecompleted) task.displaydate = task.timecompleted;
+            else task.displaydate = task.timecreated;
+            [task.managedObjectContext save:nil];
+        }
         /*
         NSLog(@"[FEED-FETCH-TASKS] Response: %@", operation.HTTPRequestOperation.responseString);
          for(id obj in [mappingResult array]) {
@@ -289,19 +321,6 @@
     return YES;
 }
 
-/*
-- (BOOL) deleteTask:(Task *)task {
-    if(!task)
-        return NO;
-    [[RKObjectManager sharedManager] deleteObject:task path:@"" parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        NSLog(@"Delete Success!");
-    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-        NSLog(@"Delete Failure: %@", operation.responseDescriptors);
-    }];
-    return YES;
-}
-*/
-
 - (void) updateTask:(Task *)task withValues:(NSDictionary *)values {
     if(values[@"name"])
         task.name = values[@"name"];
@@ -322,9 +341,11 @@
                                            path:postPath
                                      parameters:@{ @"hashToken" : [self defaultUserHashToken] }
                                         success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-                                            NSLog(@"Post Data: %@", [[NSString alloc] initWithData:operation.HTTPRequestOperation.request.HTTPBody encoding:NSUTF8StringEncoding]);
-                                            NSLog(@"Post response: %@", operation.HTTPRequestOperation.responseString);
-                                            NSLog(@"Post success response: %@", mappingResult);
+                                            NSLog(@"Update Task successful");
+                                            Task *task = [mappingResult firstObject];
+                                            if(task.timecompleted) task.displaydate = task.timecompleted;
+                                            else task.displaydate = task.timecreated;
+                                            [task.managedObjectContext save:nil];
                                             
                                         }
                                         failure:^(RKObjectRequestOperation *operation, NSError *error) {
@@ -361,7 +382,7 @@
         name = name ? name : @"new task";
         
         NSString *hashtag = values[@"hashtag"];
-        hashtag = hashtag ? hashtag : @"#personal";
+        hashtag = hashtag ? hashtag : @"#yalebucketlist";
         
         NSNumber *private = values[@"private"];
         private = private ? private : @(NO);
@@ -375,28 +396,32 @@
         [dict setObject:private forKey:@"private"];
         [dict setObject:completed forKey:@"completed"];
 
+        Task *task = [[RKObjectManager sharedManager].managedObjectStore.mainQueueManagedObjectContext insertNewObjectForEntityForName:@"Task"];
+        
         NSString *hashTok = [self defaultUserHashToken];
         if(!hashTok)
             return;
         
-        
         NSString *path = [NSString stringWithFormat:@"/api/user/%@/tasks", [self defaultUserId]];
         
         [dict setObject:hashTok forKey:@"hashToken"];
-        
-        [[LMHttpClient sharedManager] postPath:path parameters:dict success:^(AFHTTPRequestOperation *operation, id responseObject) {
-            NSLog(@"Post success: %@", responseObject);
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"Data : %@", [[NSString alloc]initWithData:[operation responseData] encoding:NSUTF8StringEncoding]);
+
+        [[RKObjectManager sharedManager] postObject:task path:path parameters:dict success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+            NSLog(@"Post new task successful");
+            Task *task = [mappingResult firstObject];
+            if(task.timecompleted) task.displaydate = task.timecompleted;
+            else task.displaydate = task.timecreated;
+            NSLog(@"Task : %@", task);
+            [task.managedObjectContext save:nil];
+        } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+            NSLog(@"Mapping Failed: %@ - %@", [error localizedDescription], operation.HTTPRequestOperation.responseString);
         }];
-        
 
     }
 }
 
--(void)fetchTasksForDefaultUser {
-    
-    [self fetchTasksForUser: [self defaultUserId] hashtoken:[self defaultUserHashToken]];
+-(void)fetchTasksForDefaultUserOnCompletion:(void (^)(BOOL success, NSError *error))completionBlock {
+    [self fetchTasksForUser: [self defaultUserId] hashtoken:[self defaultUserHashToken] completion:completionBlock];
 }
 
 - (void)fetchHashtagListOnCompletion:(void (^)(NSArray *, NSError *))completionBlock {
@@ -404,6 +429,7 @@
                                            parameters:nil
                                               success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
                                                   [[NSNotificationCenter defaultCenter] postNotificationName:LIFEMAX_NOTIFICATION_HASHTAG_RETRIEVE_SUCCESS object:[mappingResult array] userInfo:nil];
+                                                  
                                                   if(completionBlock)
                                                       completionBlock([mappingResult array], nil);
                                               } failure:^(RKObjectRequestOperation *operation, NSError *error) {
