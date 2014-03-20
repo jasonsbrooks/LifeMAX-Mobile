@@ -12,6 +12,7 @@
 #import "EditDescriptionCell.h"
 #import "LifemaxHeaders.h"
 #import "Task.h"
+#import "Hashtag.h"
 #import "AppDelegate.h"
 #import "UIAlertView+NSCookbook.h"
 #import <RestKit/RestKit.h>
@@ -134,7 +135,14 @@
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cancel", nil) style:UIBarButtonItemStyleBordered target:self action:@selector(cancelPressed:)];
     
     //configure default hashtags
-    self.hashtags = LIFEMAX_HASHTAGS;
+    
+    NSFetchRequest *hashtagfetch = [[NSFetchRequest alloc] initWithEntityName:@"Hashtag"];
+    NSArray *hashtagObjs = [[RKObjectManager sharedManager].managedObjectStore.mainQueueManagedObjectContext executeFetchRequest:hashtagfetch error:nil];
+    NSMutableArray *hashtags = [NSMutableArray array];
+    for (Hashtag *tag in hashtagObjs) {
+        [hashtags addObject:tag.name];
+    }
+    self.hashtags = hashtags;
     self.contentScrollView.translatesAutoresizingMaskIntoConstraints = NO;
     self.view.translatesAutoresizingMaskIntoConstraints = NO;
     self.hashtagSelector.translatesAutoresizingMaskIntoConstraints = NO;

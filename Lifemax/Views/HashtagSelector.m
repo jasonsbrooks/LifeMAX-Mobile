@@ -48,6 +48,9 @@
     [button setTitleColor:[UIColor darkTextColor] forState:UIControlStateNormal];
     [button setTitleColor: LIFEMAX_LIGHT_GRAY_COLOR forState:UIControlStateHighlighted];
 
+    button.titleLabel.adjustsFontSizeToFitWidth = YES;
+    button.titleLabel.minimumScaleFactor = .5;
+    
     [button addTarget:self action:@selector(tagSelected:) forControlEvents:UIControlEventTouchUpInside];
 //    button.showsTouchWhenHighlighted = YES;
     return button;
@@ -65,7 +68,7 @@
     
     UIView *ref = nil;
     
-    for (int i = 0; i <= numtags; i+=2) {
+    for (int i = 0; i < numtags; i+=2) {
         if(i == 0) {
             UIButton *button1 = [self newTaskButtonWithHeight:size.height];
             UIButton *button2 = [self newTaskButtonWithHeight:size.height];

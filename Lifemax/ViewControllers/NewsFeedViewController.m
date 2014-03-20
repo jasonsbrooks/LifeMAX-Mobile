@@ -14,12 +14,13 @@
 #import "LMRestKitManager.h"
 #import "TaskCell.h"
 #import <RestKit/RestKit.h>
-#import "Task.h"
+#import "Task+TaskAdditions.h"
 #import "User.h"
 #import "EditTaskViewController.h"
 #import "LMHttpClient.h"
 #import "NSString+MD5.h"
 #import "FeedUserTaskCell.h"
+
 
 static void RKTwitterShowAlertWithError(NSError *error)
 {
@@ -273,55 +274,20 @@ static void RKTwitterShowAlertWithError(NSError *error)
     
     Task *task = [self.fetchedResultsController objectAtIndexPath:indexPath];
     
+    //user id == 0 means it is a suggestion
+    BOOL suggestion = [task.user.user_id isEqualToNumber:@(0)];
+    NSLog(@"Task user : %@ %@", task.user.user_id, task.user.user_name);
+    CellIdentifier = (suggestion) ?@"feed-suggestion":  @"feed-user";
     
     
-    
-    CellIdentifier = @"user_action";
     FeedUserTaskCell *feedCell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
     [feedCell.addButton addTarget:self action:@selector(addbuttonPressed:) forControlEvents:UIControlEventTouchUpInside];
     feedCell.addButton.tag = indexPath.row;
     
-    NSMutableAttributedString *atrTitle = [[NSMutableAttributedString alloc]initWithString:task.user.user_name
-                                                                                attributes:@{NSFontAttributeName:
-                                                                                                 [UIFont boldSystemFontOfSize:[UIFont systemFontSize]]}];
-    NSString *actionstring = [NSString stringWithFormat:@" %@ a goal", [task.completed boolValue] ? @"completed" : @"added" ];
+    [feedCell updateForTask:task];
     
-    NSDictionary * attributes = @{NSFontAttributeName:
-                                      [UIFont systemFontOfSize:[UIFont systemFontSize]]};
-    NSAttributedString * subString = [[NSAttributedString alloc] initWithString:actionstring attributes:attributes];
-    [atrTitle appendAttributedString:subString];
-    
-    [feedCell setAttributedAction:atrTitle];
-    [feedCell setTimestamp:@"2 hours ago"];
-    [feedCell setTitle:task.name];
-    [feedCell setSubtitle:task.hashtag];
-    
-    
-    NSArray *imageUrls = @[@"http://twistedsifter.files.wordpress.com/2013/03/full-moon-olympic-rings-london-bridge-2012.jpg",
-                           @"http://twistedsifter.files.wordpress.com/2013/03/diver-whale-high-five-perfect-timing.jpg",
-                           @"http://twistedsifter.files.wordpress.com/2013/03/just-a-pinch-buddah-perfect-timing.jpg",
-                           @"http://twistedsifter.files.wordpress.com/2013/03/lightning-rainbow-perfect-timing.jpg",
-                           @"http://twistedsifter.files.wordpress.com/2013/03/underwater-fish-photobomb-animal-photobombs.jpg",
-                           @"http://twistedsifter.files.wordpress.com/2013/03/moon-crane-perfect-timing.jpg",
-                           @"http://totallycoolpix.com/wp-content/uploads/2013/20131206_top_weird_wonderful_2013/top_weird_2013_002.jpg",
-                           ];
-
-    
-    NSInteger rnd = arc4random_uniform((u_int32_t)[imageUrls count]);
-    
-    NSString *randomObject = [imageUrls objectAtIndex:rnd];
-    
-    if (task.pictureurl && [task.pictureurl length] > 0)
-        randomObject = task.pictureurl;
-    
-    [feedCell setImageFromURL:randomObject];
-    feedCell.taskImageView.contentMode = UIViewContentModeScaleAspectFill;
-    feedCell.layer.masksToBounds = YES;
-        return feedCell;
-    
-    // Configure the cell...
-    
+    return feedCell;
 }
 
 #pragma mark NSFetchedResultsControllerDelegate methods
@@ -353,7 +319,7 @@ static void RKTwitterShowAlertWithError(NSError *error)
             break;
             
         case NSFetchedResultsChangeUpdate:
-            //            [(NewsItemCell*)[tableView cellForRowAtIndexPath:indexPath] updateWithNews:[self.fetchedResultsController objectAtIndexPath:indexPath]];
+            [(FeedUserTaskCell *)[tableView cellForRowAtIndexPath:indexPath] updateForTask:[self.fetchedResultsController objectAtIndexPath:indexPath]];
             break;
             
         case NSFetchedResultsChangeMove:

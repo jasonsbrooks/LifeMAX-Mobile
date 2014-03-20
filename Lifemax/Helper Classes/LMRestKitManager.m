@@ -35,6 +35,11 @@
      name. This allows us to map back Twitter user objects directly onto NSManagedObject instances --
      there is no backing model class!
      */
+    
+    RKEntityMapping *hashtagMapping = [RKEntityMapping mappingForEntityForName:@"Hashtag" inManagedObjectStore:managedObjectStore];
+    hashtagMapping.identificationAttributes = @[ @"name" ];
+    [hashtagMapping addAttributeMappingsFromDictionary:@{@"hashtag" : @"name", @"imageurl" : @"imageurl"}];
+    
     RKEntityMapping *userMapping = [RKEntityMapping mappingForEntityForName:@"User" inManagedObjectStore:managedObjectStore];
     userMapping.identificationAttributes = @[ @"user_id" ];
     [userMapping addAttributeMappingsFromDictionary:@{
@@ -53,7 +58,8 @@
                                                       @"hashtag" : @"hashtag",
                                                       @"completed" : @"completed",
                                                       @"private" : @"private",
-                                                      @"timecompleted" : @"timecompleted"
+                                                      @"timecompleted" : @"timecompleted",
+                                                      @"timecreated" : @"timecreated"
                                                       }];
     [taskMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"user" toKeyPath:@"user" withMapping:userMapping]];
     
@@ -91,6 +97,14 @@
                                                                             rootKeyPath:nil
                                                                                  method:RKRequestMethodPOST];
     [objectManager addRequestDescriptor:postTask];
+    
+    RKResponseDescriptor *hashtagResponse = [RKResponseDescriptor responseDescriptorWithMapping:hashtagMapping
+                                                                                                method:RKRequestMethodGET
+                                                                                           pathPattern:@"/api/hashtags"
+                                                                                               keyPath:@"hashtags"
+                                                                                           statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
+    
+    [objectManager addResponseDescriptor:hashtagResponse];
     
     
     
@@ -383,6 +397,21 @@
 -(void)fetchTasksForDefaultUser {
     
     [self fetchTasksForUser: [self defaultUserId] hashtoken:[self defaultUserHashToken]];
+}
+
+- (void)fetchHashtagListOnCompletion:(void (^)(NSArray *, NSError *))completionBlock {
+    [[RKObjectManager sharedManager] getObjectsAtPath:@"/api/hashtags"
+                                           parameters:nil
+                                              success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                                  [[NSNotificationCenter defaultCenter] postNotificationName:LIFEMAX_NOTIFICATION_HASHTAG_RETRIEVE_SUCCESS object:[mappingResult array] userInfo:nil];
+                                                  if(completionBlock)
+                                                      completionBlock([mappingResult array], nil);
+                                              } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                                  NSLog(@"Fetched Hashtags FAILED: %@\n%@", [error localizedDescription], operation.HTTPRequestOperation.responseString);
+
+                                                  if(completionBlock)
+                                                      completionBlock(nil, error);
+                                              }];
 }
 
 

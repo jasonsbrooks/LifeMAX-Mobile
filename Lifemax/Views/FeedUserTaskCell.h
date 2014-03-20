@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+@class Task;
 @interface FeedUserTaskCell : UITableViewCell
 
 - (void) setTitle:(NSString *)title;
@@ -18,6 +18,7 @@
 - (void) setSubtitle: (NSString *) subtitle;
 
 -(UIImageView *)taskImageView;
+-(void)updateForTask: (Task *)task ;
 @property (nonatomic, strong) IBOutlet UIButton *addButton;
 
 @end

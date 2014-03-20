@@ -13,6 +13,8 @@
 		980FB60318D9840B008BCF14 /* Task.m in Sources */ = {isa = PBXBuildFile; fileRef = 980FB60218D9840B008BCF14 /* Task.m */; };
 		981A15EC18DA3279005560DE /* NSObject+ObjCSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 981A15EB18DA3279005560DE /* NSObject+ObjCSwitch.m */; };
 		981A15EF18DA5593005560DE /* Checkbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 981A15EE18DA5593005560DE /* Checkbox.m */; };
+		981A15F218DAA7E8005560DE /* Task+TaskAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 981A15F118DAA7E8005560DE /* Task+TaskAdditions.m */; };
+		981A15F518DAA8D1005560DE /* Hashtag.m in Sources */ = {isa = PBXBuildFile; fileRef = 981A15F418DAA8D1005560DE /* Hashtag.m */; };
 		981B73C518B42A2A0040D4A0 /* GoogleOAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = 981B73C418B42A290040D4A0 /* GoogleOAuth.m */; };
 		983A92FC18B7BD6C00B02E2C /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 983A92FB18B7BD6C00B02E2C /* NSString+MD5.m */; };
 		984676E118B9B50A0021E439 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 984676E018B9B50A0021E439 /* CoreData.framework */; };
@@ -79,6 +81,10 @@
 		981A15EB18DA3279005560DE /* NSObject+ObjCSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+ObjCSwitch.m"; sourceTree = "<group>"; };
 		981A15ED18DA5593005560DE /* Checkbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Checkbox.h; sourceTree = "<group>"; };
 		981A15EE18DA5593005560DE /* Checkbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Checkbox.m; sourceTree = "<group>"; };
+		981A15F018DAA7E8005560DE /* Task+TaskAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Task+TaskAdditions.h"; sourceTree = "<group>"; };
+		981A15F118DAA7E8005560DE /* Task+TaskAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Task+TaskAdditions.m"; sourceTree = "<group>"; };
+		981A15F318DAA8D1005560DE /* Hashtag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Hashtag.h; sourceTree = "<group>"; };
+		981A15F418DAA8D1005560DE /* Hashtag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Hashtag.m; sourceTree = "<group>"; };
 		981B73C318B42A290040D4A0 /* GoogleOAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoogleOAuth.h; sourceTree = "<group>"; };
 		981B73C418B42A290040D4A0 /* GoogleOAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoogleOAuth.m; sourceTree = "<group>"; };
 		983A92FA18B7BD6C00B02E2C /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
@@ -219,8 +225,12 @@
 			children = (
 				980FB60118D9840B008BCF14 /* Task.h */,
 				980FB60218D9840B008BCF14 /* Task.m */,
+				981A15F018DAA7E8005560DE /* Task+TaskAdditions.h */,
+				981A15F118DAA7E8005560DE /* Task+TaskAdditions.m */,
 				980FB5FE18D9840A008BCF14 /* User.h */,
 				980FB5FF18D9840A008BCF14 /* User.m */,
+				981A15F318DAA8D1005560DE /* Hashtag.h */,
+				981A15F418DAA8D1005560DE /* Hashtag.m */,
 			);
 			name = "Model Objects";
 			sourceTree = "<group>";
@@ -533,8 +543,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				9847F3A618D515A10091A578 /* EditDescriptionCell.m in Sources */,
+				981A15F218DAA7E8005560DE /* Task+TaskAdditions.m in Sources */,
 				98D951BB18A877F700333D4D /* CameraCheckbox.m in Sources */,
 				98D951C718A8902A00333D4D /* NewsFeedViewController.m in Sources */,
+				981A15F518DAA8D1005560DE /* Hashtag.m in Sources */,
 				98FB50A918A7FCC800C916BC /* LifeListViewController.m in Sources */,
 				98DF58AB18A85BAF00AC2BE0 /* TaskCell.m in Sources */,
 				98C7497D18A745B1000A4CAF /* AppDelegate.m in Sources */,

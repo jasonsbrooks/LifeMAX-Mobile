@@ -19,6 +19,7 @@
 @dynamic task_id;
 @dynamic private;
 @dynamic timecompleted;
+@dynamic timecreated;
 @dynamic user;
 
 @end

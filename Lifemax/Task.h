@@ -20,6 +20,8 @@
 @property (nonatomic, retain) NSNumber * task_id;
 @property (nonatomic, retain) NSNumber * private;
 @property (nonatomic, retain) NSDate * timecompleted;
+@property (nonatomic, retain) NSDate * timecreated;
+
 @property (nonatomic, retain) User *user;
 
 @end

@@ -36,6 +36,10 @@
     self.titleLabel.text = title;
 }
 
+- (void) reload {
+    [self.tableView reloadData];
+}
+
 
 
 - (void) expandViewToFill : (UIView *)superview{

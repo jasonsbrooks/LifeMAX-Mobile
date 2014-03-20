@@ -19,6 +19,7 @@
 
 -(void)setTitle:(NSString *)title;
 
+- (void) reload;
 
 @end
 

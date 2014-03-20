@@ -25,5 +25,7 @@
 - (NSString *)defaultUserHashToken;
 - (void) uploadPhoto:(UIImage *)image forTask: (Task *)task;
 
+- (void)fetchHashtagListOnCompletion:(void (^)(NSArray *, NSError *))completionBlock;
+
 
 @end

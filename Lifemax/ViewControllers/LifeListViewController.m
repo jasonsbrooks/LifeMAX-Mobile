@@ -14,6 +14,7 @@
 #import "TaskCell.h"
 #import <RestKit/RestKit.h>
 #import "Task.h"
+#import "Hashtag.h"
 #import "EditTaskViewController.h"
 #import "LMHttpClient.h"
 #import "NSString+MD5.h"
@@ -52,6 +53,18 @@
     return self;
 }
 
+- (void) fetchHashTags:(id)sender {
+    NSFetchRequest *hashtagfetch = [[NSFetchRequest alloc] initWithEntityName:@"Hashtag"];
+    NSArray *hashtagObjs = [[RKObjectManager sharedManager].managedObjectStore.mainQueueManagedObjectContext executeFetchRequest:hashtagfetch error:nil];
+    NSMutableArray *hashtags = [NSMutableArray array];
+    for (Hashtag *tag in hashtagObjs) {
+        [hashtags addObject:tag.name];
+    }
+    
+    self.filterTitles = [@[@"all"] arrayByAddingObjectsFromArray:hashtags];
+    [self.tableFilterView reload];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -64,7 +77,10 @@
 
     self.filterExpanded = NO;
     
-    self.filterTitles = [@[@"all"] arrayByAddingObjectsFromArray:LIFEMAX_HASHTAGS];
+    
+    [self fetchHashTags:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchHashTags:) name:LIFEMAX_NOTIFICATION_HASHTAG_RETRIEVE_SUCCESS object:nil];
     
     [self.tableFilterView setTitle:self.filterTitles[0]];
 

@@ -9,6 +9,14 @@
 #ifndef Lifemax_LifemaxHeaders_h
 #define Lifemax_LifemaxHeaders_h
 
+//////////////////////////////////
+#pragma mark - Notifications
+#define LIFEMAX_NOTIFICATION_NAME_REGISTER_SUCCESS @"com.yucg.lifemax.notification.registersuccess"
+#define LIFEMAX_NOTIFICATION_NAME_LOGIN_SUCCESS @"com.yucg.lifemax.notification.loginsuccess"
+#define LIFEMAX_NOTIFICATION_HASHTAG_RETRIEVE_SUCCESS @"com.yucg.lifemax.notification.hashtagsuccess"
+
+
+
 
 #define LIFEMAX_HASHTAGS (@[@"#raging", @"#school", @"#friends", @"#fitness", @"#nutrition", @"#spirit", @"#culture", @"#personal", @"#entertainment", @"#work", @"#travel", @"#bucketlist", @"#firsttime"])
 #define LIFEMAX_ROOT_URL @"http://lifemax-staging.herokuapp.com"
@@ -18,6 +26,8 @@
 #define LIFEMAX_LOGGED_IN @"com.yucg.lifemax.lifemax-did-login-to-server"
 #define LIFEMAX_TRIGGER_LOGOUT @"com.yucg.lifemax.lifemax-trigger-logout-op"
 
+
+#
 
 #define LIFEMAX_ROOT_COLOR ([UIColor colorWithRed:44/255.0 green:54/255.0 blue:219/255.0 alpha:1])
 #define LIFEMAX_LIGHT_GRAY_COLOR ([UIColor colorWithRed:248/255.0 green:249/255.0 blue:250/255.0 alpha:1])
