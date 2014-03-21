@@ -37,12 +37,9 @@
     self.dismissing = NO;
     [FBLoginView class];
     
-    RKLogConfigureByName("RestKit", RKLogLevelCritical);
-    //    RKLogConfigureByName("RestKit/ObjectMapping", RKLogLevelTrace);
-    RKLogConfigureByName("RestKit/Network", RKLogLevelCritical);
+    RKLogConfigureByName("*", RKLogLevelOff);
     
     [Flurry startSession:@"44GKHY9KNCZ9MRHSCWC2"];
-    [Flurry setDebugLogEnabled:YES];
 
     [[Countly sharedInstance] startOnCloudWithAppKey:@"be20105e17988ee1a090fece97e72956bda068f1"];
     [Crashlytics startWithAPIKey:@"5a1ea7c8bd1ae0bb396436b70b13b63df02a4039"];
@@ -151,7 +148,6 @@
     
     if(!loggedIn)
     {
-        NSLog(@"Check Login, Not Logged in : %@", self.window.rootViewController);
         [self performSelector:@selector(presentLoginController) withObject:nil afterDelay:.2];
     }
     else
@@ -168,7 +164,6 @@
 
 - (void)facebookLoginSuccess {
     NSString *token = [[[FBSession activeSession] accessTokenData] accessToken];
-    NSLog(@"Facebook Login Success!");
     
     [self triggerLMLoginWithToken:token];
     
@@ -183,13 +178,9 @@
     
     [[LMHttpClient sharedManager] getPath:@"/api/login" parameters:@{ @"userToken": fbAccessToken} success:^(AFHTTPRequestOperation *operation, id jsonResponse) {
         [self saveLifemaxLogin:jsonResponse];
-        [[LMRestKitManager sharedManager] fetchHashtagListOnCompletion:^(NSArray *hashtags, NSError *error) {
-//            NSLog(@"Do something with these hashtags: %@", hashtags);
-        }];
+        [[LMRestKitManager sharedManager] fetchHashtagListOnCompletion:nil];
 
-        [[LMRestKitManager sharedManager] fetchTasksForDefaultUserOnCompletion:^(BOOL success, NSError *error) {
-            NSLog(@"Finished Initial task fetch!");
-        } ];
+        [[LMRestKitManager sharedManager] fetchTasksForDefaultUserOnCompletion:nil ];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         if ([operation.responseString isEqualToString:@"Error: User does not exist!"] ) {
             [[LMHttpClient sharedManager] postPath:@"/api/register" parameters:@{@"shortToken" : fbAccessToken, @"privacy" : @(0) } success:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -197,13 +188,12 @@
                 
                 [self triggerLMLoginWithToken:fbAccessToken];
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                NSLog(@"Lifemax failed to register an acount: %@", [error localizedDescription]);
-                NSLog(@"Register Response: %@", operation.responseString);
+                NSLog(@"[LM-ERROR]: Failed to register an acount: %@", [error localizedDescription]);
+                NSLog(@"[LM-ERROR]: Register Response: %@", operation.responseString);
             }];
         } else {
-            NSLog(@"[LM-Login] Error : %@", [error localizedDescription]);
-            NSLog(@"[LM-Login] Response : %@", operation.responseString);
-            NSLog(@"[LM-Login] Request : %@", operation.request.URL);
+            NSLog(@"[LM-Login-ERROR] Error : %@", [error localizedDescription]);
+            NSLog(@"[LM-Login-ERROR] Response : %@", operation.responseString);
         }
     }];
 }

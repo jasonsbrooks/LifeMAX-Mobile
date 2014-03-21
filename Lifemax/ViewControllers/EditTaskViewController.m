@@ -67,7 +67,6 @@
 }
 
 -(void)initializeWithTaskValues :(Task *)task fromFeed:(BOOL)fromFeed{
-    NSLog(@"initialize for task: %@", task);
     if(task.name) self.values[@"name"] = task.name;
     if(task.hashtag) self.values[@"hashtag"] = task.hashtag;
     
@@ -80,7 +79,6 @@
     }
     else self.values[@"completed"] = @(NO);
     
-    NSLog(@"Private : %@", self.values[@"private"]);
     [self updateViewForTask];
 }
 
@@ -102,6 +100,8 @@
 
     [((AppDelegate *)([UIApplication sharedApplication].delegate)) disablePanning:self];
     [self updateViewForTask];
+
+    self.contentScrollView.frame = self.view.bounds;
 }
 
 -(UIView *)overlayView {
@@ -121,7 +121,6 @@
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
-    [((AppDelegate *)([UIApplication sharedApplication].delegate)) enablePanning:self];
 }
 
 -(void)awakeFromNib {
@@ -134,7 +133,8 @@
     self.deleted = NO;
     
     self.title = NSLocalizedString(@"Edit Task", nil);
-    
+
+
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save", nil) style:UIBarButtonItemStyleBordered target:self action:@selector(savePressed:)];
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cancel", nil) style:UIBarButtonItemStyleBordered target:self action:@selector(cancelPressed:)];
@@ -148,9 +148,9 @@
         [hashtags addObject:tag.name];
     }
     self.hashtags = hashtags;
-    self.contentScrollView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.view.translatesAutoresizingMaskIntoConstraints = NO;
-    self.hashtagSelector.translatesAutoresizingMaskIntoConstraints = NO;
+//    self.contentScrollView.translatesAutoresizingMaskIntoConstraints = NO;
+//    self.view.translatesAutoresizingMaskIntoConstraints = NO;
+//    self.hashtagSelector.translatesAutoresizingMaskIntoConstraints = NO;
     [self configureHashtagSelector];
     
     self.contentScrollView.alwaysBounceVertical = YES;
@@ -220,8 +220,6 @@
                                                         delegate:nil cancelButtonTitle:NSLocalizedString(@"Cancel", nil) otherButtonTitles:NSLocalizedString(@"OK", nil), nil];
     
     [cancelAlert showWithCompletion:^(UIAlertView *alertView, NSInteger buttonIndex) {
-        NSLog(@"Delete Dat!");
-       
         if(self.task){
             [[LMRestKitManager sharedManager] deleteTask:self.task];
             self.deleted = YES;
@@ -240,7 +238,6 @@
 }
 
 - (void)tapInScrollView {
-    NSLog(@"Tap in scroll view");
     [self.nameField endEditing:YES];
 }
 
@@ -300,7 +297,6 @@
 
 -(void)hashtagSelector:(HashtagSelector *)selector buttonSelectedAtIndex:(NSInteger)index {
     NSString *hashtag = [self hashtagSelector:selector titleForButtonIndex:index];
-    NSLog(@"Selected Hashtag: %@", hashtag);
     [self.values setObject:hashtag forKey:@"hashtag"];
 }
 

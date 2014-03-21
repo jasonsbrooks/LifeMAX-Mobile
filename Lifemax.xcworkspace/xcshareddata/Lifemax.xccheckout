@@ -5,34 +5,34 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>263E4CDF-FB09-4FB0-8506-8F0BB8AC9C71</string>
+	<string>3307BAB6-06EF-484D-95DC-AF136BA70667</string>
 	<key>IDESourceControlProjectName</key>
 	<string>Lifemax</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>9A03A285-B17F-4FDB-8D25-2780A90596F7</key>
-		<string>https://bitbucket.org/mrosales/lifemax.git</string>
+		<key>0F1BD92C-C3F5-455D-91C4-B1CE188F26F7</key>
+		<string>https://github.com/jasonsbrooks/LifeMAX-Mobile.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>Lifemax.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>9A03A285-B17F-4FDB-8D25-2780A90596F7</key>
+		<key>0F1BD92C-C3F5-455D-91C4-B1CE188F26F7</key>
 		<string>..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://bitbucket.org/mrosales/lifemax.git</string>
+	<string>https://github.com/jasonsbrooks/LifeMAX-Mobile.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>9A03A285-B17F-4FDB-8D25-2780A90596F7</string>
+	<string>0F1BD92C-C3F5-455D-91C4-B1CE188F26F7</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>9A03A285-B17F-4FDB-8D25-2780A90596F7</string>
+			<string>0F1BD92C-C3F5-455D-91C4-B1CE188F26F7</string>
 			<key>IDESourceControlWCCName</key>
 			<string>Lifemax</string>
 		</dict>

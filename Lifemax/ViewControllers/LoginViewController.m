@@ -37,13 +37,11 @@
 }
 
 -(void)loginViewShowingLoggedInUser:(FBLoginView *)loginView {
-    NSLog(@"Showing Logged in User!");
     [[NSNotificationCenter defaultCenter] postNotificationName:@"FACEBOOK_DID_LOGIN_NOTIFICATION" object:nil];
 }
 
 -(void)loginViewShowingLoggedOutUser:(FBLoginView *)loginView {
-    NSLog(@"Showing logged out user!");
-
+    //can only log out of facebook by loging out of lifemax
 }
 
 // Handle possible errors that can occur during login
@@ -69,7 +67,7 @@
         // the user not being able to complete a task they had initiated in your app
         // (like accessing FB-stored information or posting to Facebook)
     } else if ([FBErrorUtility errorCategoryForError:error] == FBErrorCategoryUserCancelled) {
-        NSLog(@"user cancelled login");
+//        NSLog(@"user cancelled login");
         
         // For simplicity, this sample handles other errors with a generic message
         // You can checkout our error handling guide for more detailed information
@@ -77,7 +75,7 @@
     } else {
         alertTitle  = @"Something went wrong";
         alertMessage = @"Please try again later.";
-        NSLog(@"Unexpected error:%@", error);
+        NSLog(@"[FB-Login]: Unexpected error:%@", error);
     }
     
     if (alertMessage) {

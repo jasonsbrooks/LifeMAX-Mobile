@@ -142,7 +142,7 @@
         BOOL fetchSuccessful = [_fetchedResultsController performFetch:&error];
         
         if (! fetchSuccessful) {
-            NSLog(@"Prefetch did not work.");
+//            NSLog(@"Prefetch did not work.");
         }
     }
     
@@ -156,7 +156,6 @@
     //just trigger the manager to fetch from the server
     [[LMRestKitManager sharedManager] fetchTasksForDefaultUserOnCompletion:^(BOOL success, NSError *error) {
         if (success) {
-            NSLog(@"LoadData Success!");
             [self performFetch];
         }
     }];
@@ -165,13 +164,12 @@
 - (void) performFetch {
     dispatch_async(dispatch_get_main_queue(), ^{
         NSError *error = nil;
-        NSLog(@"FRC: %@", self.fetchedResultsController);
         BOOL fetchSuccessful = [self.fetchedResultsController performFetch:&error];
         
         if(fetchSuccessful)
             [self.tableView reloadData];
         else
-            NSLog(@"Core Data fetch error: %@", [error localizedDescription]);
+            NSLog(@"[LM-ERROR]: Core Data fetch error: %@", [error localizedDescription]);
     });
 }
 
@@ -291,8 +289,6 @@
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type {
-    NSLog(@"Change section at index  %d", sectionIndex);
-
     switch(type) {
         case NSFetchedResultsChangeInsert:
             [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -305,7 +301,6 @@
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath*)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath*)newIndexPath {
     UITableView* tableView = self.tableView;
-    NSLog(@"Change object at index path: %@", indexPath);
     switch(type) {
         case NSFetchedResultsChangeInsert:
             [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
@@ -369,7 +364,6 @@
 
 - (void) checkboxTapped:(id)sender {
     NSIndexPath *indexpath = [self.tableView indexPathForCell:sender];
-//    NSLog(@"CheckboxTapped: %@",indexpath );
     self.selectedIndexPath = indexpath;
     
     [self takePhoto];
@@ -387,7 +381,7 @@
                         completion:^(OHActionSheet *sheet, NSInteger buttonIndex) {
                             
                             if(sheet.cancelButtonIndex == buttonIndex) {
-                                NSLog(@"Cancel photo chooser");
+
                             } else if (sheet.destructiveButtonIndex == buttonIndex) {
                                 
 
@@ -420,7 +414,6 @@
 }
 
 -(void)editor:(EditTaskViewController *)editor didEditTaskFields:(NSDictionary *)values forTask:(Task *)task {
-    NSLog(@"Editor Did make changes!: %@", values);
     
     if(task)
         [[LMRestKitManager sharedManager] updateTask:task withValues:values];
@@ -449,10 +442,7 @@
 }
 
 -(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
-    NSLog(@"Canceled image chooser");
-    [self dismissViewControllerAnimated:YES completion:^{
-        
-    }];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 

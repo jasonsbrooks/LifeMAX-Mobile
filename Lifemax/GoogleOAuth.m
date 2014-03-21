@@ -152,7 +152,6 @@
 -(void)webViewDidFinishLoad:(UIWebView *)webView{
     // Get the webpage title.
     NSString *webviewTitle = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];
-    //NSLog(@"Webview Title = %@", webviewTitle);
     
     // Check for the "Success token" literal in title.
     if ([webviewTitle rangeOfString:@"Success code"].location != NSNotFound) {

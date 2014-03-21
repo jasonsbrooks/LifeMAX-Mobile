@@ -56,8 +56,8 @@
 {
     [super viewDidLoad];
     
-    self.title = NSLocalizedString(@"News Feed", nil);
-    
+    self.title = self.isStoryController ?  NSLocalizedString(@"My Story", nil) :  NSLocalizedString(@"News Feed", nil);
+
     [self configureFRC];
     
     self.filterExpanded = NO;
@@ -133,7 +133,7 @@
     BOOL fetchSuccessful = [self.fetchedResultsController performFetch:&error];
     
     if (! fetchSuccessful) {
-        NSLog(@"ERROR prefetching content");
+        //NSLog(@"ERROR prefetching content");
     }
 }
 
@@ -152,8 +152,9 @@
         
         if(fetchSuccessful)
             [self.tableView reloadData];
-        else
-            NSLog(@"ERROR FETCHING!");
+        else{
+            //NSLog(@"ERROR FETCHING!");
+        }
     });
 }
 
@@ -384,10 +385,7 @@
 #pragma mark - Edit Task Delegate method
 
 
--(void)editor:(EditTaskViewController *)editor didEditTaskFields:(NSDictionary *)values forTask:(Task *)task {
-
-    NSLog(@"Editor Did make changes!: %@", values);
-    
+-(void)editor:(EditTaskViewController *)editor didEditTaskFields:(NSDictionary *)values forTask:(Task *)task {    
     [[LMRestKitManager sharedManager] newTaskForValues:values];
     if(task)
         [[LMRestKitManager sharedManager] deleteTask:task];

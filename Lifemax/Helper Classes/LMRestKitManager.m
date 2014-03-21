@@ -154,7 +154,7 @@
     NSError *error;
     NSPersistentStore *persistentStore = [managedObjectStore addSQLitePersistentStoreAtPath:storePath fromSeedDatabaseAtPath:nil withConfiguration:nil options:nil error:&error];
     if (!persistentStore) {
-        NSLog(@"Could not create persistent store, resetting and trying again.");
+        NSLog(@"[LM-ERROR]: Could not create persistent store, resetting and trying again.");
         //try deleting and going again
         [[NSFileManager defaultManager] removeItemAtPath:storePath error:nil];
         persistentStore = [managedObjectStore addSQLitePersistentStoreAtPath:storePath fromSeedDatabaseAtPath:nil withConfiguration:nil options:nil error:&error];
@@ -174,14 +174,13 @@
 - (void) fetchTasksForUser:(id)userid hashtoken:(NSString *)hashtoken completion:(void (^)(BOOL success, NSError *error))completionBlock {
     
     if(!hashtoken || !userid) {
-        NSLog(@"Error fetching, not logged in.");
+        NSLog(@"[LM-ERROR]: Error fetching, not logged in.");
         return;
     }
     
     NSString *path = [NSString stringWithFormat:@"/api/user/%@/tasks", userid];
 
     [[RKObjectManager sharedManager] getObjectsAtPath:path parameters:@{@"hashToken" : hashtoken} success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        NSLog(@"Get Tasks Success");
         for (Task *task in [mappingResult array]) {
             if(task.timecompleted) task.displaydate = task.timecompleted;
             else task.displaydate = task.timecreated;
@@ -198,7 +197,7 @@
 - (void) fetchFeedTasksForUser:(id)userid hashtag:(NSString *)hashtag maxResults:(NSInteger)maxResults hashtoken:(NSString *)hashtoken {
     
     if(!hashtoken || !userid) {
-        NSLog(@"Error fetching, not logged in.");
+        NSLog(@"[LM-ERROR]: Error fetching, not logged in.");
         return;
     }
     
@@ -210,23 +209,8 @@
             else task.displaydate = task.timecreated;
             [task.managedObjectContext save:nil];
         }
-        /*
-        NSLog(@"[FEED-FETCH-TASKS] Response: %@", operation.HTTPRequestOperation.responseString);
-         for(id obj in [mappingResult array]) {
-             if ([obj isKindOfClass:[Task class]]){
-                 Task * task = obj;
-                 NSLog(@"[FEED-FETCHED-TASK]: %@\nUser:%@", task, task.user.user_id);
-             }
-             else {
-                 NSLog(@"Not a task : %@", obj);
-             }
-         }
-         
-        */
-         
         
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-        NSLog(@"Operation: %@", [operation HTTPRequestOperation]);
         NSLog(@"Map Failure: %@", operation.HTTPRequestOperation.responseString);
     }];
 }
@@ -238,7 +222,7 @@
     NSNumber *userid = [self defaultUserId];
     
     if (!userid || !hashToken) {
-        NSLog(@"Error uploading photo - Not logged in");
+        NSLog(@"[LM-ERROR]: Error uploading photo - Not logged in");
         return;
     }
     
@@ -256,17 +240,15 @@
 
     
     AFJSONRequestOperation *jsonOp = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        NSLog(@"upload photo success: %@", JSON );
         
         LMRestKitManager *ss = ws;
         if ([JSON objectForKey: @"success"] && [[JSON objectForKey: @"success"] boolValue]) {
             NSString *imgurl = JSON[@"imageurl"];
-            NSLog(@"imgurl: %@", imgurl);
             [ss updateTask:task withValues:@{@"pictureurl" : imgurl, @"completed" : @(1)}];
         }
 
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-        NSLog(@"Upload photo failed : %d", response.statusCode);
+        NSLog(@"[LM-ERROR]: Upload photo failed : %d", response.statusCode);
     }];
     
     
@@ -274,13 +256,6 @@
     
 
     // if you want progress updates as it's uploading, uncomment the following:
-    
-    [jsonOp setUploadProgressBlock:^(NSUInteger bytesWritten,
-    long long totalBytesWritten,
-    long long totalBytesExpectedToWrite) {
-             NSLog(@"Sent %lld of %lld bytes", totalBytesWritten, totalBytesExpectedToWrite);
-    }];
-    
         
     [httpClient enqueueHTTPRequestOperation:jsonOp];
 }
@@ -291,8 +266,6 @@
         
         NSError *error = nil;
         [[RKObjectManager sharedManager].managedObjectStore.mainQueueManagedObjectContext save:&error];
-        
-        NSLog(@"Delete Successful!");
     });
 }
 
@@ -311,11 +284,8 @@
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         if(operation.response.statusCode == 200) {
             [self deleteTaskFromLocalStore:task];
-            NSLog(@"Delete Response: %@", operation.responseString);
-
         } else {
-            NSLog(@"Delete Response: %@", operation.responseString);
-
+            NSLog(@"[LM-ERROR]: Delete Response: %@", operation.responseString);
         }
     }];
     return YES;
@@ -332,8 +302,6 @@
         task.pictureurl = values[@"pictureurl"];
     if(values[@"private"])
         task.private = values[@"private"];
-
-    NSLog(@"Uploading Task: %@", task);
     
     NSString *postPath = [NSString stringWithFormat:@"/api/user/%@/updatetask", [self defaultUserId]];
     
@@ -341,7 +309,6 @@
                                            path:postPath
                                      parameters:@{ @"hashToken" : [self defaultUserHashToken] }
                                         success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-                                            NSLog(@"Update Task successful");
                                             Task *task = [mappingResult firstObject];
                                             if(task.timecompleted) task.displaydate = task.timecompleted;
                                             else task.displaydate = task.timecreated;
@@ -349,10 +316,8 @@
                                             
                                         }
                                         failure:^(RKObjectRequestOperation *operation, NSError *error) {
-                                            NSLog(@"Update Failed: %@", operation.HTTPRequestOperation.responseString);
-                                            NSLog(@"Update Error : %@", [error localizedDescription]);
-                                            NSLog(@"Update URL : %@", operation.HTTPRequestOperation.request.URL);
-                                            NSLog(@"Update Request: %@", [[NSString alloc]initWithData:operation.HTTPRequestOperation.request.HTTPBody encoding:NSUTF8StringEncoding] );
+                                            NSLog(@"[LM-ERROR]: Update Task Failed: %@", operation.HTTPRequestOperation.responseString);
+                                            NSLog(@"[LM-ERROR]: Update Request Body: %@", [[NSString alloc]initWithData:operation.HTTPRequestOperation.request.HTTPBody encoding:NSUTF8StringEncoding] );
                                         }];
     [task.managedObjectContext save:nil];
 }
@@ -407,14 +372,12 @@
         [dict setObject:hashTok forKey:@"hashToken"];
 
         [[RKObjectManager sharedManager] postObject:task path:path parameters:dict success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-            NSLog(@"Post new task successful");
             Task *task = [mappingResult firstObject];
             if(task.timecompleted) task.displaydate = task.timecompleted;
             else task.displaydate = task.timecreated;
-            NSLog(@"Task : %@", task);
             [task.managedObjectContext save:nil];
         } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-            NSLog(@"Mapping Failed: %@ - %@", [error localizedDescription], operation.HTTPRequestOperation.responseString);
+            NSLog(@"[LM-ERROR]: New Task Mapping Failed: %@ - %@", [error localizedDescription], operation.HTTPRequestOperation.responseString);
         }];
 
     }
@@ -433,7 +396,7 @@
                                                   if(completionBlock)
                                                       completionBlock([mappingResult array], nil);
                                               } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-                                                  NSLog(@"Fetched Hashtags FAILED: %@\n%@", [error localizedDescription], operation.HTTPRequestOperation.responseString);
+                                                  NSLog(@"[LM-ERROR]: Fetched Hashtags Failure: %@\n%@", [error localizedDescription], operation.HTTPRequestOperation.responseString);
 
                                                   if(completionBlock)
                                                       completionBlock(nil, error);

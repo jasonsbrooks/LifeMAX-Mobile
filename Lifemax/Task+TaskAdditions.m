@@ -16,8 +16,9 @@
     
     NSError *error = nil;
     Hashtag *hashtag = [[self.managedObjectContext executeFetchRequest:fetch error:&error] lastObject];
-    if(error || !hashtag)
-        NSLog(@"Error Fetching hashtag!");
+    if(error || !hashtag){
+        return nil;
+    }
     return hashtag.imageurl;
 }
 

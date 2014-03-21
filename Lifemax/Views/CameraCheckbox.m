@@ -100,7 +100,6 @@
     
 }
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-//    NSLog(@"Touches Began!");
     [self.cameraCheckboxImageView setHighlighted:YES];
 }
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -111,14 +110,11 @@
 }
 -(void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
-//    NSLog(@"Touches Canceled");
     [self.cameraCheckboxImageView setHighlighted:NO];
 }
 
 - (void)tap:(UITapGestureRecognizer *)tapgr
 {
-//    NSLog(@"Tap Detected!");
-
     if(self.target && self.action) {
         [self.target performSelector:self.action withObject:nil afterDelay:0];
     }
