@@ -61,7 +61,7 @@
         [hashtags addObject:tag.name];
     }
     
-    self.filterTitles = [@[@"all"] arrayByAddingObjectsFromArray:hashtags];
+    self.filterTitles = [@[@"Show Everything"] arrayByAddingObjectsFromArray:hashtags];
     [self.tableFilterView reload];
 }
 
@@ -69,17 +69,15 @@
 {
     [super viewDidLoad];
     
+    self.title = NSLocalizedString(@"Things I Want To Do", nil);
+    
     [self fetchedResultsController];
+    
+    //filter view
     self.filterExpanded = NO;
-    
     [self fetchHashTags:nil];
-
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchHashTags:) name:LIFEMAX_NOTIFICATION_HASHTAG_RETRIEVE_SUCCESS object:nil];
-    
     [self.tableFilterView setTitle:self.filterTitles[0]];
-
-    
-    
     [self.tableFilterView.tapgr addTarget:self action:@selector(toggleFilter)];
     
     SWRevealViewController *revealController = [self revealViewController];

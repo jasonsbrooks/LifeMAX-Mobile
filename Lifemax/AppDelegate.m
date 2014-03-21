@@ -175,11 +175,18 @@
 
 
 - (void)triggerLMLoginWithToken:(NSString *)fbAccessToken {
-    
+    /*
+    //invalidate current auth token
+    NSUserDefaults *stdDefaults = [NSUserDefaults standardUserDefaults];
+    NSDictionary *info = [stdDefaults objectForKey:LIFEMAX_LOGIN_INFORMATION_KEY];
+    if(info){
+        [stdDefaults setObject:@{@"id" : info[@"id"]} forKey:LIFEMAX_LOGIN_INFORMATION_KEY];
+        [stdDefaults synchronize];
+    }
+     */
     [[LMHttpClient sharedManager] getPath:@"/api/login" parameters:@{ @"userToken": fbAccessToken} success:^(AFHTTPRequestOperation *operation, id jsonResponse) {
         [self saveLifemaxLogin:jsonResponse];
         [[LMRestKitManager sharedManager] fetchHashtagListOnCompletion:nil];
-
         [[LMRestKitManager sharedManager] fetchTasksForDefaultUserOnCompletion:nil ];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         if ([operation.responseString isEqualToString:@"Error: User does not exist!"] ) {
@@ -192,8 +199,8 @@
                 NSLog(@"[LM-ERROR]: Register Response: %@", operation.responseString);
             }];
         } else {
-            NSLog(@"[LM-Login-ERROR] Error : %@", [error localizedDescription]);
             NSLog(@"[LM-Login-ERROR] Response : %@", operation.responseString);
+            [[NSNotificationCenter defaultCenter] postNotificationName:LIFEMAX_TRIGGER_LOGOUT object:nil];
         }
     }];
 }

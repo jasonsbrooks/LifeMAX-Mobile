@@ -20,6 +20,7 @@
 #import "LMHttpClient.h"
 #import "NSString+MD5.h"
 #import "FeedUserTaskCell.h"
+#import "Hashtag.h"
 
 
 @interface NewsFeedViewController () <LifeListFilterDelegate, NSFetchedResultsControllerDelegate, EditTaskDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
@@ -31,6 +32,8 @@
 
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
 @property (nonatomic, strong) NSIndexPath *selectedIndexPath;
+@property BOOL selectedUserTask;
+@property (nonatomic, strong) NSPredicate *root_predicate;
 @end
 
 @implementation NewsFeedViewController
@@ -52,29 +55,36 @@
     return self;
 }
 
+- (void) fetchHashTags:(id)sender {
+    NSFetchRequest *hashtagfetch = [[NSFetchRequest alloc] initWithEntityName:@"Hashtag"];
+    NSArray *hashtagObjs = [[RKManagedObjectStore defaultStore].mainQueueManagedObjectContext executeFetchRequest:hashtagfetch error:nil];
+    NSMutableArray *hashtags = [NSMutableArray array];
+    for (Hashtag *tag in hashtagObjs) {
+        [hashtags addObject:tag.name];
+    }
+    
+    self.filterTitles = [@[@"Show Everything"] arrayByAddingObjectsFromArray:hashtags];
+    [self.tableFilterView reload];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
     self.title = self.isStoryController ?  NSLocalizedString(@"My Story", nil) :  NSLocalizedString(@"News Feed", nil);
 
-    [self configureFRC];
     
+    //filter view
     self.filterExpanded = NO;
-    
-    self.filterTitles = [@[@"all"] arrayByAddingObjectsFromArray:LIFEMAX_HASHTAGS];
-    
+    [self fetchHashTags:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchHashTags:) name:LIFEMAX_NOTIFICATION_HASHTAG_RETRIEVE_SUCCESS object:nil];
     [self.tableFilterView setTitle:self.filterTitles[0]];
-    
-    
-    
     [self.tableFilterView.tapgr addTarget:self action:@selector(toggleFilter)];
-    //    [self.tableFilterView addGestureRecognizer: [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleFilter)]];
+    
     
     SWRevealViewController *revealController = [self revealViewController];
     self.navigationController.navigationBar.translucent = NO;
     
-//    [revealController panGestureRecognizer];
     [revealController tapGestureRecognizer];
     
     UIBarButtonItem *revealButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"reveal-icon.png"]
@@ -82,20 +92,22 @@
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addbuttonPressed:)];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(configureFRC) name:LIFEMAX_INITIALIZED_CD_KEY object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refresh:) name:LIFEMAX_INITIALIZED_CD_KEY object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(configureFRC) name:LIFEMAX_INITIALIZED_CD_KEY object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refresh:) name:LIFEMAX_INITIALIZED_CD_KEY object:nil];
     
     self.navigationItem.leftBarButtonItem = revealButtonItem;
     
     self.refreshControl = [[UIRefreshControl alloc]init];
     [self.refreshControl addTarget:self action:@selector(refresh:) forControlEvents:UIControlEventValueChanged];
-//    [self filterForHashtag:nil];
+}
+- (void)loginSuccess:(id)object {
+    [self loadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reinitializeFRC) name:LIFEMAX_NOTIFICATION_NAME_LOGIN_SUCCESS object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loginSuccess:) name:LIFEMAX_NOTIFICATION_NAME_LOGIN_SUCCESS object:nil];
     [self performFetch];
     [self loadData];
 }
@@ -104,46 +116,57 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void) reinitializeFRC {
-    [self configureFRC];
-    [self loadData];
-}
 
-- (void) configureFRC {
-    
-    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Task"];
-    NSSortDescriptor *descriptor1 = [NSSortDescriptor sortDescriptorWithKey:@"displaydate" ascending:NO];
-    NSSortDescriptor *descriptor2 = [NSSortDescriptor sortDescriptorWithKey:@"task_id" ascending:NO];
-    fetchRequest.sortDescriptors = @[descriptor1, descriptor2];
-    if(self.isStoryController)
-        fetchRequest.predicate = [NSPredicate predicateWithFormat:@"user.user_id = %@", [[LMRestKitManager sharedManager] defaultUserId] ];
-    NSError *error = nil;
-    
-    NSManagedObjectContext *ctx = [RKManagedObjectStore defaultStore].mainQueueManagedObjectContext;
-    
-    if (!ctx) {
-        return;
-    }
-    // Setup fetched results
-    self.fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
+- (NSFetchedResultsController *) fetchedResultsController {
+    if(!_fetchedResultsController) {
+        NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Task"];
+        NSSortDescriptor *descriptor1 = [NSSortDescriptor sortDescriptorWithKey:@"displaydate" ascending:NO];
+        NSSortDescriptor *descriptor2 = [NSSortDescriptor sortDescriptorWithKey:@"task_id" ascending:NO];
+        fetchRequest.sortDescriptors = @[descriptor1, descriptor2];
+        if(self.isStoryController) {
+            id userid = [[LMRestKitManager sharedManager] defaultUserId];
+            if (!userid) return nil;
+            fetchRequest.predicate = [NSPredicate predicateWithFormat:@"user.user_id = %@", userid];
+            self.root_predicate = fetchRequest.predicate;
+        }
+        NSError *error = nil;
+        
+        NSManagedObjectContext *ctx = [RKManagedObjectStore defaultStore].mainQueueManagedObjectContext;
+        
+        if (!ctx) {
+            return nil;
+        }
+        // Setup fetched results
+        _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
                                                                         managedObjectContext:ctx
                                                                           sectionNameKeyPath:nil
                                                                                    cacheName:nil];
-    [self.fetchedResultsController setDelegate:self];
-    BOOL fetchSuccessful = [self.fetchedResultsController performFetch:&error];
-    
-    if (! fetchSuccessful) {
-        //NSLog(@"ERROR prefetching content");
+        [_fetchedResultsController setDelegate:self];
+        BOOL fetchSuccessful = [_fetchedResultsController performFetch:&error];
+        
+        if (! fetchSuccessful) {
+            //NSLog(@"ERROR prefetching content");
+        }
+
     }
+    return _fetchedResultsController;
 }
 
 
 - (void) loadData {
     //NSFetchedResultsController should automatically refresh
     //just trigger the manager to fetch from the server
-    id user = [[LMRestKitManager sharedManager] defaultUserId];
-    NSString *hashToken = [[LMRestKitManager sharedManager] defaultUserHashToken];
-    [[LMRestKitManager sharedManager] fetchFeedTasksForUser:user hashtag:nil maxResults:50 hashtoken:hashToken];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        id user = [[LMRestKitManager sharedManager] defaultUserId];
+        NSString *hashToken = [[LMRestKitManager sharedManager] defaultUserHashToken];
+        __weak id ws = self;
+        
+        [[LMRestKitManager sharedManager] fetchFeedTasksForUser:user hashtag:nil maxResults:50 hashtoken:hashToken completion:^(NSArray *results, NSError *error) {
+            id ss = ws;
+            [ss performSelector:@selector(performFetch) withObject:nil afterDelay:.05];
+        }];
+    });
+
 }
 
 - (void) performFetch {
@@ -153,7 +176,7 @@
         if(fetchSuccessful)
             [self.tableView reloadData];
         else{
-            //NSLog(@"ERROR FETCHING!");
+            NSLog(@"ERROR FETCHING!");
         }
     });
 }
@@ -209,7 +232,16 @@
     if (hashtag) {
         predicate = [NSPredicate predicateWithFormat:@"hashtag = %@", hashtag];
     }
-    self.fetchedResultsController.fetchRequest.predicate = predicate;
+    if (predicate) {
+        if(self.root_predicate)
+            self.fetchedResultsController.fetchRequest.predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[self.root_predicate, predicate]];
+        else     self.fetchedResultsController.fetchRequest.predicate = predicate;
+
+    } else if(self.root_predicate)
+        self.fetchedResultsController.fetchRequest.predicate = self.root_predicate;
+    else self.fetchedResultsController.fetchRequest.predicate = nil;
+
+
     [self performFetch];
 }
 
@@ -238,6 +270,13 @@
 #pragma mark - Table view delegate
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    Task *task = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    self.selectedIndexPath = indexPath;
+    if([task.user.user_id isEqualToNumber:[[LMRestKitManager sharedManager] defaultUserId]]) {
+        [self performSegueWithIdentifier:@"edit_task" sender:task];
+    }
+    
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
@@ -293,6 +332,9 @@
     
     
     FeedUserTaskCell *feedCell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+    BOOL usermatch = [task.user.user_id isEqualToNumber:[[LMRestKitManager sharedManager] defaultUserId]];
+
+    feedCell.selectionStyle = usermatch ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
     
     [feedCell.addButton addTarget:self action:@selector(addbuttonPressed:) forControlEvents:UIControlEventTouchUpInside];
     feedCell.addButton.tag = indexPath.row;
@@ -377,8 +419,15 @@
     // Pass the selected object to the new view controller.
     EditTaskViewController *editController = [segue destinationViewController];
 
-    if(self.selectedIndexPath)
-        [editController initializeWithTaskValues:[self.fetchedResultsController objectAtIndexPath:self.selectedIndexPath] fromFeed:YES];
+    if(self.selectedIndexPath){
+        if ([sender isKindOfClass:[Task class]]) {
+            [editController setTask:sender];
+        }else {
+            [editController initializeWithTaskValues:[self.fetchedResultsController objectAtIndexPath:self.selectedIndexPath] fromFeed:YES];
+
+        }
+    }
+
     editController.delegate = self;
 }
 

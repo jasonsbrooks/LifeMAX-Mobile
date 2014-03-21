@@ -100,13 +100,17 @@
     	return @"less than a minute ago";
     } else if (ti < 3600) {
     	int diff = round(ti / 60);
-    	return [NSString stringWithFormat:@"%d minutes ago", diff];
+        NSString *plural = (diff == 1) ? @"" : @"s";
+    	return [NSString stringWithFormat:@"%d minute%@ ago", diff, plural];
     } else if (ti < 86400) {
     	int diff = round(ti / 60 / 60);
-    	return[NSString stringWithFormat:@"%d hours ago", diff];
+        
+        NSString *plural = (diff == 1) ? @"" : @"s";
+        return[NSString stringWithFormat:@"%d hour%@ ago", diff,plural];
     } else if (ti < 2629743) {
     	int diff = round(ti / 60 / 60 / 24);
-    	return[NSString stringWithFormat:@"%d days ago", diff];
+        NSString *plural = (diff == 1) ? @"" : @"s";
+    	return[NSString stringWithFormat:@"%d day%@ ago", diff,plural];
     } else {
     	return @"never";
     }

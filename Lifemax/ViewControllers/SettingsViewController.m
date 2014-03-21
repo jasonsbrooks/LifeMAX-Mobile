@@ -77,7 +77,7 @@
     if([segue.identifier isEqualToString:@"about_identifier"]) {
         WebViewController *web = [segue destinationViewController];
         web.title = NSLocalizedString(@"About", nil);
-        NSURL *helpUrl = [[NSBundle mainBundle] URLForResource:@"about_lifemax" withExtension:@"html"];
+        NSURL *helpUrl = [NSURL URLWithString:@"http://lifemax-staging.herokuapp.com/about"];
         web.url = helpUrl;
     }
 }

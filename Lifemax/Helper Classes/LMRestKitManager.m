@@ -174,7 +174,7 @@
 - (void) fetchTasksForUser:(id)userid hashtoken:(NSString *)hashtoken completion:(void (^)(BOOL success, NSError *error))completionBlock {
     
     if(!hashtoken || !userid) {
-        NSLog(@"[LM-ERROR]: Error fetching, not logged in.");
+        NSLog(@"[LM-Warning]: Local fetch issue, not logged in yet.");
         return;
     }
     
@@ -189,30 +189,41 @@
         if(completionBlock) completionBlock(YES, nil);
         
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-        NSLog(@"Map Failure: %@", operation.HTTPRequestOperation.responseString);
+        NSLog(@"[LM-Error] Tasks Map Failure: %@", operation.HTTPRequestOperation.responseString);
         if(completionBlock) completionBlock(NO, error);
     }];
 }
 
-- (void) fetchFeedTasksForUser:(id)userid hashtag:(NSString *)hashtag maxResults:(NSInteger)maxResults hashtoken:(NSString *)hashtoken {
+- (void) fetchFeedTasksForUser:(id)userid hashtag:(NSString *)hashtag maxResults:(NSInteger)maxResults hashtoken:(NSString *)hashtoken completion:(void (^)(NSArray *results, NSError *error))onCompletion {
     
     if(!hashtoken || !userid) {
-        NSLog(@"[LM-ERROR]: Error fetching, not logged in.");
+        NSLog(@"[LM-Warning]: Local fetch issue, not logged in yet.");
         return;
     }
     
+    
     NSString *path = [NSString stringWithFormat:@"/api/user/%@/newsfeed", userid];
     
-    [[RKObjectManager sharedManager] getObjectsAtPath:path parameters:@{@"hashToken" : hashtoken} success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        for (Task *task in [mappingResult array]) {
-            if(task.timecompleted) task.displaydate = task.timecompleted;
-            else task.displaydate = task.timecreated;
-            [task.managedObjectContext save:nil];
-        }
-        
-    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-        NSLog(@"Map Failure: %@", operation.HTTPRequestOperation.responseString);
-    }];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[RKObjectManager sharedManager] getObjectsAtPath:path parameters:@{@"hashToken" : hashtoken} success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+            for (Task *task in [mappingResult array]) {
+                if(task.timecompleted) task.displaydate = task.timecompleted;
+                else task.displaydate = task.timecreated;
+                [task.managedObjectContext performBlock:^{
+                    [task.managedObjectContext save:nil];
+                }];
+            }
+            if (onCompletion)
+                onCompletion([mappingResult array], nil);
+            
+        } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+            NSLog(@"[LM-Error] Feed Map Failure: %@", operation.HTTPRequestOperation.responseString);
+            if (onCompletion)
+                onCompletion(nil, error);
+            
+        }];
+    });
+
 }
 
 - (void) uploadPhoto:(UIImage *)image forTask:(Task *)task {

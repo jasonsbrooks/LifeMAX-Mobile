@@ -100,8 +100,14 @@
 
     [((AppDelegate *)([UIApplication sharedApplication].delegate)) disablePanning:self];
     [self updateViewForTask];
+    
+    self.title = self.task ? NSLocalizedString(@"Edit Goal", nil) : NSLocalizedString(@"New Goal", nil);
 
-    self.contentScrollView.frame = self.view.bounds;
+
+     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.contentScrollView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:self.view.bounds.size.height]];
+    [self.view layoutIfNeeded];
+    
+    NSLog(@"Self height: %f, Scrollview height: %f", self.view.bounds.size.height, self.contentScrollView.bounds.size.height);
 }
 
 -(UIView *)overlayView {
@@ -131,9 +137,6 @@
 {
     [super viewDidLoad];
     self.deleted = NO;
-    
-    self.title = NSLocalizedString(@"Edit Task", nil);
-
 
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Save", nil) style:UIBarButtonItemStyleBordered target:self action:@selector(savePressed:)];
     
@@ -151,6 +154,10 @@
 //    self.contentScrollView.translatesAutoresizingMaskIntoConstraints = NO;
 //    self.view.translatesAutoresizingMaskIntoConstraints = NO;
 //    self.hashtagSelector.translatesAutoresizingMaskIntoConstraints = NO;
+    
+//    self.hashtags = @[@"one", @"one", @"one", @"one", @"one", @"one", @"one", @"one",
+//                      @"one", @"one"];
+    
     [self configureHashtagSelector];
     
     self.contentScrollView.alwaysBounceVertical = YES;

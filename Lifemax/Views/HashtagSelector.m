@@ -43,10 +43,11 @@
     button.layer.borderColor = LIFEMAX_MEDIUM_GRAY_COLOR.CGColor;
     button.layer.borderWidth = 2;
     [button setTitle:@"" forState:UIControlStateNormal];
-    button.titleLabel.font = [UIFont systemFontOfSize:16];
+    button.titleLabel.font = [UIFont systemFontOfSize:14];
 
-    [button setTitleColor:[UIColor darkTextColor] forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [button setTitleColor: LIFEMAX_LIGHT_GRAY_COLOR forState:UIControlStateHighlighted];
+    
 
     button.titleLabel.adjustsFontSizeToFitWidth = YES;
     button.titleLabel.minimumScaleFactor = .5;
@@ -67,7 +68,8 @@
     self.translatesAutoresizingMaskIntoConstraints = NO;
     
     UIView *ref = nil;
-    
+    NSNumber *verticalSpacing = @(10);
+
     for (int i = 0; i < numtags; i+=2) {
         if(i == 0) {
             UIButton *button1 = [self newTaskButtonWithHeight:size.height];
@@ -98,11 +100,11 @@
             [button2 setTitle:title2 forState:UIControlStateNormal];
             button1.tag = i + HASHTAG_BUTTON_INDEX_OFFSET;
             button2.tag = i + 1 + HASHTAG_BUTTON_INDEX_OFFSET;
-
+            
         
-            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[ref]-(5)-[button1]"
+            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[ref]-(vspace)-[button1]"
                                                                          options:0
-                                                                         metrics:nil
+                                                                         metrics:@{@"vspace" : verticalSpacing}
                                                                            views:NSDictionaryOfVariableBindings(button1, ref)]];
             
             [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[button1]-[button2(==button1)]|"
@@ -118,9 +120,9 @@
             button1.tag = i + HASHTAG_BUTTON_INDEX_OFFSET;
 
             
-            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[ref]-(5)-[button1]"
+            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[ref]-(vspace)-[button1]"
                                                                          options:0
-                                                                         metrics:nil
+                                                                         metrics:@{@"vspace" : verticalSpacing}
                                                                            views:NSDictionaryOfVariableBindings(button1, ref)]];
             
             [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[button1(==ref)]"
@@ -136,10 +138,6 @@
                                                      attribute:NSLayoutAttributeBottom
                                                     multiplier:1
                                                       constant:0]];
-    
-    
-
-    
 }
 
 - (void) reload{
@@ -153,6 +151,8 @@
     NSInteger tag = index + HASHTAG_BUTTON_INDEX_OFFSET;
     for (UIButton * button in self.subviews) {
         button.layer.backgroundColor = (button.tag == tag) ?LIFEMAX_MEDIUM_GRAY_COLOR.CGColor : [UIColor clearColor].CGColor;
+        
+        [button setTitleColor: (button.tag == tag) ? [UIColor whiteColor] : [UIColor blackColor] forState:UIControlStateNormal];
     }
 }
 
@@ -160,7 +160,6 @@
 - (IBAction)tagSelected:(UIButton *)sender {
     //tags are padded by 1 because default is 0
     NSInteger tag = sender.tag - HASHTAG_BUTTON_INDEX_OFFSET;
-    
     if(tag >= 0) {
         [self.delegate hashtagSelector:self buttonSelectedAtIndex:tag];
         [self selectTag:tag];
