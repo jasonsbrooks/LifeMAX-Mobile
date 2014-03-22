@@ -310,7 +310,7 @@
             break;
             
         case NSFetchedResultsChangeUpdate:
-            [(TaskCell *)[tableView cellForRowAtIndexPath:indexPath] updateWithTask:[self.fetchedResultsController objectAtIndexPath:indexPath]];
+            [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
             break;
             
         case NSFetchedResultsChangeMove:
@@ -413,7 +413,7 @@
 }
 
 -(void)editor:(EditTaskViewController *)editor didEditTaskFields:(NSDictionary *)values forTask:(Task *)task {
-    
+    NSLog(@"did edit task: %@" ,task);
     if(task)
         [[LMRestKitManager sharedManager] updateTask:task withValues:values];
     else

@@ -106,7 +106,7 @@
     NSDate *todayDate = [NSDate date];
     double ti = [origDate timeIntervalSinceDate:todayDate];
     ti = ti * -1;
-    if(ti < 1) {
+    if(ti < 0) {
     	return @"never";
     } else 	if (ti < 60) {
     	return @"less than a minute ago";
@@ -124,7 +124,7 @@
         NSString *plural = (diff == 1) ? @"" : @"s";
     	return[NSString stringWithFormat:@"%d day%@ ago", diff,plural];
     } else {
-    	return @"never";
+    	return @"some time ago";
     }
 }
 

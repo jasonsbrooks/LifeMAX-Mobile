@@ -406,6 +406,7 @@
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath*)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath*)newIndexPath {
+    
     UITableView* tableView = self.tableView;
     switch(type) {
         case NSFetchedResultsChangeInsert:
@@ -417,8 +418,8 @@
             break;
             
         case NSFetchedResultsChangeUpdate:
-            if([[self.fetchedResultsController fetchedObjects] count] > indexPath.row)
-            [(FeedUserTaskCell *)[tableView cellForRowAtIndexPath:indexPath] updateForTask:[self.fetchedResultsController objectAtIndexPath:indexPath]];
+            [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+
             break;
             
         case NSFetchedResultsChangeMove:
@@ -447,11 +448,8 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        //        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
         Task *t = [self.fetchedResultsController objectAtIndexPath:indexPath];
         [[LMRestKitManager sharedManager] deleteTask:t];
-        
     }
 }
 
@@ -478,11 +476,11 @@
 
 #pragma mark - Edit Task Delegate method
 
-
--(void)editor:(EditTaskViewController *)editor didEditTaskFields:(NSDictionary *)values forTask:(Task *)task {    
-    [[LMRestKitManager sharedManager] newTaskForValues:values];
+-(void)editor:(EditTaskViewController *)editor didEditTaskFields:(NSDictionary *)values forTask:(Task *)task {
     if(task)
-        [[LMRestKitManager sharedManager] deleteTask:task];
+        [[LMRestKitManager sharedManager] updateTask:task withValues:values];
+    else
+        [[LMRestKitManager sharedManager] newTaskForValues:values];
     
 }
 

@@ -283,7 +283,7 @@
 - (BOOL)deleteTask:(Task *) task {
     NSNumber *task_id = task.task_id;
 
-    
+    NSLog(@"Delete Task");
     NSString *deleteTasksPath = [NSString stringWithFormat:@"/api/user/%@/deletetasks", [self defaultUserId]];
     
     NSString *tok = [self defaultUserHashToken];
@@ -303,34 +303,47 @@
 }
 
 - (void) updateTask:(Task *)task withValues:(NSDictionary *)values {
-    if(values[@"name"])
-        task.name = values[@"name"];
-    if(values[@"hashtag"])
-        task.hashtag = values[@"hashtag"];
-    if(values[@"completed"])
-        task.completed = values[@"completed"];
-    if(values[@"pictureurl"])
-        task.pictureurl = values[@"pictureurl"];
-    if(values[@"private"])
-        task.private = values[@"private"];
-    
-    NSString *postPath = [NSString stringWithFormat:@"/api/user/%@/updatetask", [self defaultUserId]];
-    
-    [[RKObjectManager sharedManager] postObject:task
-                                           path:postPath
-                                     parameters:@{ @"hashToken" : [self defaultUserHashToken] }
-                                        success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-                                            Task *task = [mappingResult firstObject];
-                                            if(task.timecompleted) task.displaydate = task.timecompleted;
-                                            else task.displaydate = task.timecreated;
-                                            [task.managedObjectContext save:nil];
-                                            
-                                        }
-                                        failure:^(RKObjectRequestOperation *operation, NSError *error) {
-                                            NSLog(@"[LM-ERROR]: Update Task Failed: %@", operation.HTTPRequestOperation.responseString);
-                                            NSLog(@"[LM-ERROR]: Update Request Body: %@", [[NSString alloc]initWithData:operation.HTTPRequestOperation.request.HTTPBody encoding:NSUTF8StringEncoding] );
-                                        }];
-    [task.managedObjectContext save:nil];
+    [task.managedObjectContext performBlock:^{
+        if(values[@"name"])
+            task.name = values[@"name"];
+        if(values[@"hashtag"])
+            task.hashtag = values[@"hashtag"];
+        if(values[@"completed"])
+            task.completed = values[@"completed"];
+        if(values[@"pictureurl"])
+            task.pictureurl = values[@"pictureurl"];
+        if(values[@"private"])
+            task.private = values[@"private"];
+        
+        NSString *hashToken = [self defaultUserHashToken];
+        if(!hashToken) {
+            NSLog(@"[LM-WARNING: Attempting to update task but not logged in");
+        }
+        
+        NSString *postPath = [NSString stringWithFormat:@"/api/user/%@/updatetask", [self defaultUserId]];
+        
+        [[RKObjectManager sharedManager] postObject:task
+                                               path:postPath
+                                         parameters:@{ @"hashToken" : hashToken }
+                                            success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                                                Task *t = [mappingResult firstObject];
+                                                if(t.timecompleted) t.displaydate = t.timecompleted;
+                                                else t.displaydate = t.timecreated;
+                                                NSError *error = nil;
+                                                [t.managedObjectContext saveToPersistentStore:&error];
+                                                if(error)
+                                                    NSLog(@"[LM-ERROR]: Failed saving task to persistent store after update");
+                                                
+                                            }
+                                            failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                                                NSLog(@"[LM-ERROR]: Update Task Failed: %@", operation.HTTPRequestOperation.responseString);
+                                                NSLog(@"[LM-ERROR]: Update Request Body: %@", [[NSString alloc]initWithData:operation.HTTPRequestOperation.request.HTTPBody encoding:NSUTF8StringEncoding] );
+                                            }];
+        NSError *error = nil;
+        [task.managedObjectContext saveToPersistentStore:&error];
+        if(error)
+            NSLog(@"[LM-ERROR]: Failed saving task to persistent store");
+    }];
 }
 
 - (NSDictionary *)loginInfo {

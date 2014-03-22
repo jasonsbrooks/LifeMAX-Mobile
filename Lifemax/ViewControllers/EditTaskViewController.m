@@ -227,7 +227,7 @@
                                                         delegate:nil cancelButtonTitle:NSLocalizedString(@"Cancel", nil) otherButtonTitles:NSLocalizedString(@"OK", nil), nil];
     
     [cancelAlert showWithCompletion:^(UIAlertView *alertView, NSInteger buttonIndex) {
-        if(self.task){
+        if(alertView.cancelButtonIndex != buttonIndex && self.task){
             [[LMRestKitManager sharedManager] deleteTask:self.task];
             self.deleted = YES;
             [self exit];
