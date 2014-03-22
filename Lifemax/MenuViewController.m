@@ -105,6 +105,12 @@
     
     [cell setSelectedBackgroundView:selectedBackgroundView];
     
+    
+    for (UIView *v in cell.contentView.subviews) {
+        if([v isKindOfClass:[UILabel class]])
+            ((UILabel *)v).font = [UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleHeadlineBold];
+    }
+    
     return cell;
 }
 

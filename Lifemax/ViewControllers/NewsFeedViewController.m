@@ -21,7 +21,8 @@
 #import "NSString+MD5.h"
 #import "FeedUserTaskCell.h"
 #import "Hashtag.h"
-
+#import <OHAlertView/OHAlertView.h>
+#import <OHActionSheet/OHActionSheet.h>
 
 @interface NewsFeedViewController () <LifeListFilterDelegate, NSFetchedResultsControllerDelegate, EditTaskDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 @property (strong, nonatomic) IBOutlet LifeListFilter *tableFilterView;
@@ -291,13 +292,38 @@
     if([sender isKindOfClass:[UIBarButtonItem class]]){
         //dont do anything
         self.selectedIndexPath = nil;
+        [self performSegueWithIdentifier:@"edit_task" sender:self];
     } else {
-        NSIndexPath *selectedPath = [NSIndexPath indexPathForRow:[sender tag] inSection:0];
-        self.selectedIndexPath = selectedPath;
+        self.selectedIndexPath = [NSIndexPath indexPathForRow:[sender tag] inSection:0];
+        [self promtTaskCreationWithComplete:NO];
     }
     
-    [self performSegueWithIdentifier:@"edit_task" sender:self];
+}
+- (IBAction)donebuttonPressed:(id)sender {
+    self.selectedIndexPath = [NSIndexPath indexPathForRow:[sender tag] inSection:0];
+    [self promtTaskCreationWithComplete:YES];
+}
+
+- (void)promtTaskCreationWithComplete:(BOOL)completed {
     
+    [OHActionSheet showSheetInView:self.view title:NSLocalizedString(@"New Goal Privacy", nil) cancelButtonTitle:NSLocalizedString(@"Cancel", nil) destructiveButtonTitle:NSLocalizedString(@"Share with friends", nil) otherButtonTitles:@[NSLocalizedString(@"Make Private", nil)] completion:^(OHActionSheet *sheet, NSInteger buttonIndex) {
+        if (buttonIndex != sheet.cancelButtonIndex) {
+            BOOL private = !(buttonIndex == sheet.destructiveButtonIndex);
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                Task *task = [self.fetchedResultsController objectAtIndexPath:self.selectedIndexPath];
+                NSMutableDictionary *values = [NSMutableDictionary dictionary];
+                if(task.name) values[@"name"] = task.name;
+                if(task.hashtag) values[@"hashtag"] = task.hashtag;
+                if(task.pictureurl) values[@"pictureurl"] = task.pictureurl;
+                if(task.private) values[@"private"] = @(private);
+                
+                values[@"completed"] = @(completed);
+                
+                [[LMRestKitManager sharedManager] newTaskForValues:values];
+            });
+        }
+    }];
 }
 
 #pragma mark - Table view data source
@@ -328,7 +354,7 @@
     
     //user id == 0 means it is a suggestion
     BOOL suggestion = [task.user.user_id isEqualToNumber:@(0)];
-    CellIdentifier = (suggestion) ?@"feed-suggestion":  @"feed-user";
+    CellIdentifier = (suggestion) ? @"feed-suggestion":  @"feed-user";
     
     
     FeedUserTaskCell *feedCell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
@@ -338,6 +364,24 @@
     
     [feedCell.addButton addTarget:self action:@selector(addbuttonPressed:) forControlEvents:UIControlEventTouchUpInside];
     feedCell.addButton.tag = indexPath.row;
+    
+    [feedCell.doneButton addTarget:self action:@selector(donebuttonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    feedCell.doneButton.tag = indexPath.row;
+    
+    if ([feedCell.addButton.superview.gestureRecognizers count] == 0) {
+        UIGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:nil action:nil];
+        tap.cancelsTouchesInView = YES;
+        UIGestureRecognizer *press = [[UILongPressGestureRecognizer alloc] initWithTarget:nil action:nil];
+        press.cancelsTouchesInView = YES;
+        [press setDelaysTouchesBegan:YES];
+        UIGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:nil action:nil];
+        pan.cancelsTouchesInView = YES;
+        
+        [feedCell.addButton.superview addGestureRecognizer:tap];
+        [feedCell.addButton.superview addGestureRecognizer:press];
+        [feedCell.addButton.superview addGestureRecognizer:pan];
+    }
+    
     
     [feedCell updateForTask:task];
     
@@ -373,6 +417,7 @@
             break;
             
         case NSFetchedResultsChangeUpdate:
+            if([[self.fetchedResultsController fetchedObjects] count] > indexPath.row)
             [(FeedUserTaskCell *)[tableView cellForRowAtIndexPath:indexPath] updateForTask:[self.fetchedResultsController objectAtIndexPath:indexPath]];
             break;
             

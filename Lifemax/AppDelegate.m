@@ -44,6 +44,15 @@
     [[Countly sharedInstance] startOnCloudWithAppKey:@"be20105e17988ee1a090fece97e72956bda068f1"];
     [Crashlytics startWithAPIKey:@"5a1ea7c8bd1ae0bb396436b70b13b63df02a4039"];
     
+    //invalidate current auth token
+    NSUserDefaults *stdDefaults = [NSUserDefaults standardUserDefaults];
+    NSDictionary *info = [stdDefaults objectForKey:LIFEMAX_LOGIN_INFORMATION_KEY];
+    if(info){
+        [stdDefaults setObject:@{@"id" : info[@"id"]} forKey:LIFEMAX_LOGIN_INFORMATION_KEY];
+        [stdDefaults synchronize];
+    }
+    
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(facebookLoginSuccess) name:@"FACEBOOK_DID_LOGIN_NOTIFICATION" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(triggerLogout:) name:LIFEMAX_TRIGGER_LOGOUT object:nil];
     
@@ -76,10 +85,9 @@
     //revealController.bounceBackOnOverdraw=NO;
     //revealController.stableDragOnOverdraw=YES;
     
-    
     [[UINavigationBar appearance] setTitleTextAttributes:@{
                                                            NSForegroundColorAttributeName: [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0],
-                                                           NSFontAttributeName: [UIFont fontWithName:@"Georgia-Bold" size:0.0],
+                                                           NSFontAttributeName: [UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleHeadline],
                                                            }];
     
     [[UINavigationBar appearance] setBarTintColor:LIFEMAX_ROOT_COLOR];

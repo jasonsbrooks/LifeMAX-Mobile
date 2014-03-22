@@ -8,6 +8,7 @@
 
 #import "Task+TaskAdditions.h"
 #import "Hashtag.h"
+
 @implementation Task (TaskAdditions)
 
 - (NSString *)defaultImageUrl {
@@ -20,6 +21,12 @@
         return nil;
     }
     return hashtag.imageurl;
+    
+    /*    NSString *path = [NSString stringWithFormat:@"%@/api/imageforhashtag?hashtag=%@", LIFEMAX_ROOT_URL, self.hashtag];
+     path = [path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+     NSLog(@"Image default path for %@ = %@",self.hashtag, path);
+     return path;
+     */
 }
 
 - (NSString *)imageurlOrDefault {

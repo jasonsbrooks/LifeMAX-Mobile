@@ -9,6 +9,10 @@
 #ifndef Lifemax_LifemaxHeaders_h
 #define Lifemax_LifemaxHeaders_h
 
+#define LIFEMAX_FONT_NAME @"Georgia"
+#define LIFEMAX_FONT_NAME_BOLD @"Georgia-Bold"
+
+
 //////////////////////////////////
 #pragma mark - Notifications
 #define LIFEMAX_NOTIFICATION_NAME_REGISTER_SUCCESS @"com.yucg.lifemax.notification.registersuccess"
@@ -32,5 +36,7 @@
 #define LIFEMAX_LIGHT_GRAY_COLOR ([UIColor colorWithRed:248/255.0 green:249/255.0 blue:250/255.0 alpha:1])
 #define LIFEMAX_MEDIUM_GRAY_COLOR ([UIColor colorWithRed:166/255.0 green:175/255.0 blue:191/255.0 alpha:1])
 
+#define LIFEMAX_FONT_OF_SIZE(size) ([UIFont fontWithName:LIFEMAX_FONT_NAME size:(size)])
+#define LIFEMAX_BOLD_FONT_OF_SIZE(size) ([UIFont fontWithName:LIFEMAX_FONT_NAME_BOLD size:(size)])
 
 #endif

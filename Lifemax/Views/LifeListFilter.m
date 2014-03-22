@@ -28,6 +28,7 @@
 -(void)awakeFromNib {
     [super awakeFromNib];
     [self.tableView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    self.titleLabel.font = [UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleCaption2];
     [self collapseView];
 }
 
@@ -50,7 +51,11 @@
 }
 
 - (void) collapseView{
-    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, 44);
+    [self.titleLabel sizeToFit];
+    [self layoutIfNeeded];
+
+    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, self.topContainerView.bounds.size.height);
+    
     self.tableView.alpha = 0;
 }
 
@@ -74,6 +79,7 @@
     
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:10];
     label.text = title;
+    label.font = [UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleCaption2];
     
     UIView *imageview = [cell.contentView viewWithTag:11];
     imageview.hidden = (![self.titleLabel.text isEqualToString: title]);

@@ -24,6 +24,9 @@
 @property (nonatomic, strong) IBOutlet UIScrollView *contentScrollView;
 @property (nonatomic, strong) IBOutlet UIButton *deleteButton;
 @property (nonatomic, strong) IBOutlet UITextField *nameField;
+@property (nonatomic, strong) IBOutlet UILabel *privacyLabel;
+@property (nonatomic, strong) IBOutlet UILabel *completedLabel;
+
 @property (nonatomic, strong) IBOutlet Checkbox *privacyCheckbox;
 @property (nonatomic, strong) IBOutlet Checkbox *completedCheckbox;
 
@@ -69,9 +72,7 @@
 -(void)initializeWithTaskValues :(Task *)task fromFeed:(BOOL)fromFeed{
     if(task.name) self.values[@"name"] = task.name;
     if(task.hashtag) self.values[@"hashtag"] = task.hashtag;
-    
     if(task.pictureurl) self.values[@"pictureurl"] = task.pictureurl;
-
     if(task.private) self.values[@"private"] = @(task.private.boolValue);
     
     if(!fromFeed){
@@ -107,7 +108,6 @@
      [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.contentScrollView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:self.view.bounds.size.height]];
     [self.view layoutIfNeeded];
     
-    NSLog(@"Self height: %f, Scrollview height: %f", self.view.bounds.size.height, self.contentScrollView.bounds.size.height);
 }
 
 -(UIView *)overlayView {
@@ -144,6 +144,10 @@
     
     //configure default hashtags
     
+    self.nameField.font = [UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleHeadline];
+    self.privacyLabel.font = [UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleBody];
+    self.completedLabel.font = [UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleBody];
+
     NSFetchRequest *hashtagfetch = [[NSFetchRequest alloc] initWithEntityName:@"Hashtag"];
     NSArray *hashtagObjs = [[RKManagedObjectStore defaultStore].mainQueueManagedObjectContext executeFetchRequest:hashtagfetch error:nil];
     NSMutableArray *hashtags = [NSMutableArray array];
@@ -151,14 +155,10 @@
         [hashtags addObject:tag.name];
     }
     self.hashtags = hashtags;
-//    self.contentScrollView.translatesAutoresizingMaskIntoConstraints = NO;
-//    self.view.translatesAutoresizingMaskIntoConstraints = NO;
-//    self.hashtagSelector.translatesAutoresizingMaskIntoConstraints = NO;
     
-//    self.hashtags = @[@"one", @"one", @"one", @"one", @"one", @"one", @"one", @"one",
-//                      @"one", @"one"];
     
     [self configureHashtagSelector];
+    self.hashtagSelector.expanded = NO;
     
     self.contentScrollView.alwaysBounceVertical = YES;
     [self.completedCheckbox addTarget:self action:@selector(completedChanged:) forControlEvents:UIControlEventTouchUpInside];

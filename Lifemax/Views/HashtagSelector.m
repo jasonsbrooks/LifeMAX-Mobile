@@ -11,10 +11,14 @@
 #import "LifemaxHeaders.h"
 
 @interface HashtagSelector ()
+@property (nonatomic, strong) IBOutlet UIButton *dropdownButton;
+@property (nonatomic, strong) IBOutlet UIButton *lastButton;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *bottomConstraint;
 
 @end
 
 @implementation HashtagSelector
+@synthesize expanded = _expanded;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -43,7 +47,7 @@
     button.layer.borderColor = LIFEMAX_MEDIUM_GRAY_COLOR.CGColor;
     button.layer.borderWidth = 2;
     [button setTitle:@"" forState:UIControlStateNormal];
-    button.titleLabel.font = [UIFont systemFontOfSize:14];
+    button.titleLabel.font = [UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleCaption1];
 
     [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [button setTitleColor: LIFEMAX_LIGHT_GRAY_COLOR forState:UIControlStateHighlighted];
@@ -62,12 +66,40 @@
         [view removeFromSuperview];
     }
     NSInteger numtags = [self.delegate hashtagSelectorNumberOfTags:self];
-//    NSInteger numrows = numtags / 2 + numtags % 2;
     
     CGSize size = CGSizeMake((self.bounds.size.width - 20) / 2, 37);
     self.translatesAutoresizingMaskIntoConstraints = NO;
     
-    UIView *ref = nil;
+    UIButton *dropdown = [UIButton buttonWithType:UIButtonTypeCustom];
+    dropdown.translatesAutoresizingMaskIntoConstraints = NO;
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectZero];
+    titleLabel.text = @"Select Hashtag";
+    [titleLabel sizeToFit];
+    titleLabel.tag = 11;
+    UIImageView *dropdownhandle = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"list-dropdown"]];
+    [dropdown sizeToFit];
+    dropdownhandle.contentMode = UIViewContentModeCenter;
+    titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    dropdownhandle.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    [dropdown addSubview:titleLabel]; [dropdown addSubview:dropdownhandle];
+    [dropdown addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[title]-(>=10)-[icon(==iconw)]-15-|" options:NSLayoutFormatAlignAllCenterY metrics:@{@"iconw" : @(dropdownhandle.bounds.size.width)} views:@{@"title" : titleLabel, @"icon" : dropdownhandle}]];
+    [dropdown addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[title]|" options:0 metrics:nil views:@{@"title" : titleLabel, @"icon" : dropdownhandle}]];
+    
+    [dropdown addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[icon]|" options:0 metrics:nil views:@{@"title" : titleLabel, @"icon" : dropdownhandle}]];
+    [self addSubview:dropdown];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[dropdown]|" options:NSLayoutFormatAlignAllCenterY metrics:nil views:NSDictionaryOfVariableBindings(dropdown)]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[dropdown(28)]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(dropdown)]];
+    
+    dropdown.showsTouchWhenHighlighted = YES;
+    [dropdown addTarget:self action:@selector(toggleDropdown:) forControlEvents:UIControlEventTouchUpInside];
+    UIFont *dropdownFont = [UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleBody];
+;
+    [titleLabel setFont:dropdownFont];
+    
+    self.dropdownButton = dropdown;
+    
+    UIView *ref = dropdown;
     NSNumber *verticalSpacing = @(10);
 
     for (int i = 0; i < numtags; i+=2) {
@@ -81,10 +113,10 @@
             button1.tag = i + HASHTAG_BUTTON_INDEX_OFFSET;
             button2.tag = i + 1 + HASHTAG_BUTTON_INDEX_OFFSET;
 
-            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[button1]"
+            [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[ref]-(vspace)-[button1]"
                                                                          options:0
-                                                                         metrics:nil
-                                                                           views:NSDictionaryOfVariableBindings(button1)]];
+                                                                         metrics:@{@"vspace" : verticalSpacing}
+                                                                           views:NSDictionaryOfVariableBindings(button1, ref)]];
             
             [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[button1]-[button2(==button1)]|"
                                                                          options:NSLayoutFormatAlignAllCenterY
@@ -132,12 +164,42 @@
             ref = button1;
         }
     }
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:ref attribute:NSLayoutAttributeBottom
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:self
-                                                     attribute:NSLayoutAttributeBottom
-                                                    multiplier:1
-                                                      constant:0]];
+    self.lastButton = (UIButton *)ref;
+
+    self.bottomConstraint = [NSLayoutConstraint constraintWithItem:ref attribute:NSLayoutAttributeBottom
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:self
+                                                         attribute:NSLayoutAttributeBottom
+                                                        multiplier:1
+                                                          constant:0];
+    [self addConstraint:self.bottomConstraint];
+}
+- (void) toggleDropdown:(id)sender {
+    self.expanded = !self.expanded;
+}
+
+-(BOOL)expanded {
+    return _expanded;
+}
+
+- (void) setExpanded:(BOOL)expanded {
+    [self layoutIfNeeded];
+    [UIView animateWithDuration:.4 animations:^{
+        [self removeConstraint:self.bottomConstraint];
+        id seconditem = expanded ? self.lastButton : self.dropdownButton;
+        self.bottomConstraint = [NSLayoutConstraint constraintWithItem:seconditem attribute:NSLayoutAttributeBottom
+                                                             relatedBy:NSLayoutRelationEqual
+                                                                toItem:self
+                                                             attribute:NSLayoutAttributeBottom
+                                                            multiplier:1
+                                                              constant:0];
+        [self addConstraint:self.bottomConstraint];
+        [self layoutIfNeeded];
+
+    } completion:^(BOOL finished) {
+    }];
+    
+    _expanded = expanded;
 }
 
 - (void) reload{
@@ -151,8 +213,8 @@
     NSInteger tag = index + HASHTAG_BUTTON_INDEX_OFFSET;
     for (UIButton * button in self.subviews) {
         button.layer.backgroundColor = (button.tag == tag) ?LIFEMAX_MEDIUM_GRAY_COLOR.CGColor : [UIColor clearColor].CGColor;
-        
         [button setTitleColor: (button.tag == tag) ? [UIColor whiteColor] : [UIColor blackColor] forState:UIControlStateNormal];
+        if(button.tag == tag) ((UILabel *)[self.dropdownButton viewWithTag:11]).text = [self.delegate hashtagSelector:self titleForButtonIndex:index];
     }
 }
 

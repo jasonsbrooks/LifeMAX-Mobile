@@ -20,5 +20,6 @@
 -(UIImageView *)taskImageView;
 -(void)updateForTask: (Task *)task ;
 @property (nonatomic, strong) IBOutlet UIButton *addButton;
+@property (nonatomic, strong) IBOutlet UIButton *doneButton;
 
 @end

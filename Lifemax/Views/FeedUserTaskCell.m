@@ -16,7 +16,9 @@
 @property (nonatomic, strong) IBOutlet UILabel *timestampLabel;
 @property (nonatomic, strong) IBOutlet UILabel *titleLabel;
 @property (nonatomic, strong) IBOutlet UILabel *subtitleLabel;
+@property (nonatomic, strong) IBOutlet UILabel *maxsuggestsLabel;
 @property (nonatomic, strong) IBOutlet UIImageView *taskImageView;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint *heightConstraint;
 
 @end
 
@@ -62,32 +64,42 @@
 }
 
 -(void)updateForTask: (Task *)task {
-    BOOL suggestion = [task.user.user_id isEqualToNumber:@(0)];
-    if (!suggestion) {
-        NSMutableAttributedString *atrTitle = [[NSMutableAttributedString alloc]initWithString:task.user.user_name
-                                                                                    attributes:@{NSFontAttributeName:
-                                                                                                     [UIFont boldSystemFontOfSize:[UIFont systemFontSize]]}];
-        NSString *actionstring = [NSString stringWithFormat:@" %@ a goal", [task.completed boolValue] ? @"completed" : @"added" ];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        BOOL suggestion = [task.user.user_id isEqualToNumber:@(0)];
+        if (!suggestion) {
+            
+            NSMutableAttributedString *atrTitle = [[NSMutableAttributedString alloc]initWithString:task.user.user_name
+                                                                                        attributes:@{NSFontAttributeName:
+                                                                                                         [UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleSubheadlineBold]}];
+            NSString *actionstring = [NSString stringWithFormat:@" %@ a goal", [task.completed boolValue] ? @"completed" : @"added" ];
+            
+            NSDictionary * attributes = @{NSFontAttributeName:
+                                              [UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleSubheadline]};
+            NSAttributedString * subString = [[NSAttributedString alloc] initWithString:actionstring attributes:attributes];
+            [atrTitle appendAttributedString:subString];
+            
+            [self setAttributedAction:atrTitle];
+            
+            [self setTimestamp:[self dateDiff:task.displaydate]];
+            
+        } else {
+            [self.maxsuggestsLabel setFont:[UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleHeadline]];
+        }
         
-        NSDictionary * attributes = @{NSFontAttributeName:
-                                          [UIFont systemFontOfSize:[UIFont systemFontSize]]};
-        NSAttributedString * subString = [[NSAttributedString alloc] initWithString:actionstring attributes:attributes];
-        [atrTitle appendAttributedString:subString];
+        BOOL thisUser = [task.user.user_id isEqualToNumber:[[LMRestKitManager sharedManager] defaultUserId]];
+        self.addButton.superview.hidden = thisUser;
+        self.heightConstraint.constant = thisUser ? 0 : 40;
         
-        [self setAttributedAction:atrTitle];
+        [self.timestampLabel setFont:[UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleCaption1]];
+        [self.titleLabel setFont:[UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleBody]];
         
-        [self setTimestamp:[self dateDiff:task.displaydate]];
+        [self.subtitleLabel setFont:[UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleBody]];
         
-    }
-    
-    BOOL thisUser = [task.user.user_id isEqualToNumber:[[LMRestKitManager sharedManager] defaultUserId]];
-    self.addButton.hidden = thisUser;
-
-    
-    [self setTitle:task.name];
-    [self setSubtitle:task.hashtag];
-    
-    [self setImageFromURL:[task imageurlOrDefault]];
+        [self setTitle:task.name];
+        [self setSubtitle:task.hashtag];
+        
+        [self setImageFromURL:[task imageurlOrDefault]];
+    });
 }
 
 -(NSString *)dateDiff:(NSDate *)origDate {

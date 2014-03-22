@@ -42,6 +42,9 @@
 - (void)updateWithTask:(Task *)task {
     self.title = task.name ? task.name : @"Task Name";
     self.subtitle = task.hashtag;
+//    [self.titleLabel sizeToFit];
+    [self.subtitleLabel sizeToFit];
+    [self layoutIfNeeded];
     
     if(task.pictureurl && task.pictureurl.length > 0)
         [self setTaskImageFromUrl: task.pictureurl];
@@ -59,6 +62,9 @@
 
 - (void) configure {
     [self.checkbox addTapTarget:self action:@selector(checkboxTapped)];
+    self.titleLabel.font = [UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleHeadline];
+    self.subtitleLabel.font = [UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleCaption1];
+    self.titleLabel.minimumScaleFactor = .8;
 }
 
 - (void) checkboxTapped {

@@ -16,4 +16,10 @@
 #import <CoreData/CoreData.h>
 #import <SystemConfiguration/SystemConfiguration.h>
 #import <MobileCoreServices/MobileCoreServices.h>
+#import "UIFont+FontAdditions.h"
+#import "UIFontDescriptor+FontAdditions.h"
+
+#define UIFontTextStyleSubheadlineBold @"LIFEMAX_UICTFontTextStyleSubheadBold"
+#define UIFontTextStyleHeadlineBold @"LIFEMAX_UICTFontTextStyleHeadBold"
+
 #endif

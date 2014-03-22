@@ -20,6 +20,8 @@
 		981A15FE18DB680F005560DE /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 981A15FD18DB680F005560DE /* SystemConfiguration.framework */; };
 		981A160018DB6814005560DE /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 981A15FF18DB6814005560DE /* Security.framework */; };
 		981B73C518B42A2A0040D4A0 /* GoogleOAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = 981B73C418B42A290040D4A0 /* GoogleOAuth.m */; };
+		9826736018DCDF8700810A7D /* UIFont+FontAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9826735F18DCDF8700810A7D /* UIFont+FontAdditions.m */; };
+		9826736318DCE2A700810A7D /* UIFontDescriptor+FontAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9826736218DCE2A700810A7D /* UIFontDescriptor+FontAdditions.m */; };
 		983A92FC18B7BD6C00B02E2C /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 983A92FB18B7BD6C00B02E2C /* NSString+MD5.m */; };
 		984676E118B9B50A0021E439 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 984676E018B9B50A0021E439 /* CoreData.framework */; };
 		9847F3A118D3D7C70091A578 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9847F3A018D3D7C70091A578 /* WebViewController.m */; };
@@ -96,6 +98,10 @@
 		981A15FF18DB6814005560DE /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		981B73C318B42A290040D4A0 /* GoogleOAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoogleOAuth.h; sourceTree = "<group>"; };
 		981B73C418B42A290040D4A0 /* GoogleOAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoogleOAuth.m; sourceTree = "<group>"; };
+		9826735E18DCDF8700810A7D /* UIFont+FontAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+FontAdditions.h"; sourceTree = "<group>"; };
+		9826735F18DCDF8700810A7D /* UIFont+FontAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+FontAdditions.m"; sourceTree = "<group>"; };
+		9826736118DCE2A700810A7D /* UIFontDescriptor+FontAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFontDescriptor+FontAdditions.h"; sourceTree = "<group>"; };
+		9826736218DCE2A700810A7D /* UIFontDescriptor+FontAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFontDescriptor+FontAdditions.m"; sourceTree = "<group>"; };
 		983A92FA18B7BD6C00B02E2C /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
 		983A92FB18B7BD6C00B02E2C /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5.m"; sourceTree = "<group>"; };
 		984676DF18B971E10021E439 /* LifemaxHeaders.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LifemaxHeaders.h; sourceTree = "<group>"; };
@@ -215,6 +221,10 @@
 				9876A6CB18BC580100021A06 /* LMRestKitManager.m */,
 				983A92FA18B7BD6C00B02E2C /* NSString+MD5.h */,
 				983A92FB18B7BD6C00B02E2C /* NSString+MD5.m */,
+				9826735E18DCDF8700810A7D /* UIFont+FontAdditions.h */,
+				9826735F18DCDF8700810A7D /* UIFont+FontAdditions.m */,
+				9826736118DCE2A700810A7D /* UIFontDescriptor+FontAdditions.h */,
+				9826736218DCE2A700810A7D /* UIFontDescriptor+FontAdditions.m */,
 				984676DF18B971E10021E439 /* LifemaxHeaders.h */,
 				981A15EA18DA3279005560DE /* NSObject+ObjCSwitch.h */,
 				981A15EB18DA3279005560DE /* NSObject+ObjCSwitch.m */,
@@ -311,12 +321,12 @@
 				98FB50AA18A7FCDF00C916BC /* ViewControllers */,
 				98A269A018C40C6E0053D20B /* UIAlertView+NSCookbook.h */,
 				98A269A118C40C6E0053D20B /* UIAlertView+NSCookbook.m */,
-				98C7497E18A745B1000A4CAF /* Main.storyboard */,
 				9847F3A218D410500091A578 /* about_lifemax.html */,
 				981B73C318B42A290040D4A0 /* GoogleOAuth.h */,
 				981B73C418B42A290040D4A0 /* GoogleOAuth.m */,
 				98C749A518A74AFB000A4CAF /* MenuViewController.h */,
 				98C749A618A74AFB000A4CAF /* MenuViewController.m */,
+				98C7497E18A745B1000A4CAF /* Main.storyboard */,
 				98C7498418A745B1000A4CAF /* Images.xcassets */,
 				9876A6CD18BC596400021A06 /* LifemaxCoreData.xcdatamodeld */,
 				98C7497318A745B1000A4CAF /* Supporting Files */,
@@ -584,6 +594,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9826736318DCE2A700810A7D /* UIFontDescriptor+FontAdditions.m in Sources */,
 				9847F3A618D515A10091A578 /* EditDescriptionCell.m in Sources */,
 				981A15F218DAA7E8005560DE /* Task+TaskAdditions.m in Sources */,
 				98D951BB18A877F700333D4D /* CameraCheckbox.m in Sources */,
@@ -608,6 +619,7 @@
 				98FB50B218A80D0900C916BC /* LoginViewController.m in Sources */,
 				98DF58A418A8207E00AC2BE0 /* LifeListFilter.m in Sources */,
 				9847F3A118D3D7C70091A578 /* WebViewController.m in Sources */,
+				9826736018DCDF8700810A7D /* UIFont+FontAdditions.m in Sources */,
 				98C749A418A7495B000A4CAF /* SWRevealViewController.m in Sources */,
 				989CE3EE18B92B020079ECA7 /* EditTaskViewController.m in Sources */,
 				980FB60018D9840A008BCF14 /* User.m in Sources */,

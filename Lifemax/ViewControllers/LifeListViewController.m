@@ -21,7 +21,6 @@
 #import <OHActionSheet/OHActionSheet.h>
 #import <OHAlertView/OHAlertView.h>
 #import "NSObject+ObjCSwitch.h"
-//#import "OH"
 
 @interface LifeListViewController () <LifeListFilterDelegate, NSFetchedResultsControllerDelegate, EditTaskDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 @property (strong, nonatomic) IBOutlet LifeListFilter *tableFilterView;
@@ -276,9 +275,11 @@
     Task *task = [self.fetchedResultsController objectAtIndexPath:indexPath];
     [cell updateWithTask:task];
     [cell setCheckboxTarget:self action:@selector(checkboxTapped:)];
-    
+        
     return cell;
 }
+
+
 
 #pragma mark NSFetchedResultsControllerDelegate methods
 

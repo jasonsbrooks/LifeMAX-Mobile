@@ -26,5 +26,5 @@
 - (void) reload;
 - (void)selectTag:(NSInteger) tag;
 - (void) initialize;
-
+@property BOOL expanded;
 @end

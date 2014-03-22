@@ -398,6 +398,7 @@
     [self fetchTasksForUser: [self defaultUserId] hashtoken:[self defaultUserHashToken] completion:completionBlock];
 }
 
+
 - (void)fetchHashtagListOnCompletion:(void (^)(NSArray *, NSError *))completionBlock {
     [[RKObjectManager sharedManager] getObjectsAtPath:@"/api/hashtags"
                                            parameters:nil
