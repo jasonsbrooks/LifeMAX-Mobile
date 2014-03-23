@@ -14,7 +14,7 @@
 
 - (void)initializeMappings;
 + (LMRestKitManager *)sharedManager;
-
+- (void) deleteCache;
 -(void)fetchTasksForDefaultUserOnCompletion:(void (^)(BOOL success, NSError *error))completionBlock;
 
 - (BOOL)deleteTask:(Task *) task;

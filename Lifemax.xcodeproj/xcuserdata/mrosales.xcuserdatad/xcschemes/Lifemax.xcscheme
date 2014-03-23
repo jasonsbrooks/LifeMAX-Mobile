@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "98C7496818A745B1000A4CAF"
-               BuildableName = "Lifemax.app"
-               BlueprintName = "Lifemax"
+               BuildableName = "LifeMax.app"
+               BlueprintName = "LifeMax"
                ReferencedContainer = "container:Lifemax.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -43,8 +43,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "98C7496818A745B1000A4CAF"
-            BuildableName = "Lifemax.app"
-            BlueprintName = "Lifemax"
+            BuildableName = "LifeMax.app"
+            BlueprintName = "LifeMax"
             ReferencedContainer = "container:Lifemax.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -62,8 +62,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "98C7496818A745B1000A4CAF"
-            BuildableName = "Lifemax.app"
-            BlueprintName = "Lifemax"
+            BuildableName = "LifeMax.app"
+            BlueprintName = "LifeMax"
             ReferencedContainer = "container:Lifemax.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -85,8 +85,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "98C7496818A745B1000A4CAF"
-            BuildableName = "Lifemax.app"
-            BlueprintName = "Lifemax"
+            BuildableName = "LifeMax.app"
+            BlueprintName = "LifeMax"
             ReferencedContainer = "container:Lifemax.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -107,8 +107,8 @@
                   <BuildableReference
                      BuildableIdentifier = "primary"
                      BlueprintIdentifier = "98C7496818A745B1000A4CAF"
-                     BuildableName = "Lifemax.app"
-                     BlueprintName = "Lifemax"
+                     BuildableName = "LifeMax.app"
+                     BlueprintName = "LifeMax"
                      ReferencedContainer = "container:Lifemax.xcodeproj">
                   </BuildableReference>
                </EnvironmentBuildable>

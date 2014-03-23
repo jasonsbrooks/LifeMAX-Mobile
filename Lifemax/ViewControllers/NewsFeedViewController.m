@@ -74,6 +74,7 @@
     
     self.title = self.isStoryController ?  NSLocalizedString(@"My Story", nil) :  NSLocalizedString(@"News Feed", nil);
 
+//    self.tableView.tableHeaderView.translatesAutoresizingMaskIntoConstraints = NO;
     
     //filter view
     self.filterExpanded = NO;
@@ -127,8 +128,12 @@
         if(self.isStoryController) {
             id userid = [[LMRestKitManager sharedManager] defaultUserId];
             if (!userid) return nil;
-            fetchRequest.predicate = [NSPredicate predicateWithFormat:@"user.user_id = %@", userid];
+            fetchRequest.predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[[NSPredicate predicateWithFormat:@"user.user_id = %@", userid], [NSPredicate predicateWithFormat:@"completed = %@", @(YES)]]];
             self.root_predicate = fetchRequest.predicate;
+        }else {
+            fetchRequest.predicate = [NSPredicate predicateWithFormat:@"completed = %@", @(YES)];
+            self.root_predicate = fetchRequest.predicate;
+
         }
         NSError *error = nil;
         
@@ -174,8 +179,10 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         BOOL fetchSuccessful = [self.fetchedResultsController performFetch:nil];
         
-        if(fetchSuccessful)
+        if(fetchSuccessful){
             [self.tableView reloadData];
+            self.tableView.tableFooterView.hidden = !([self.fetchedResultsController.fetchedObjects count] == 0);
+        }
         else{
             NSLog(@"ERROR FETCHING!");
         }

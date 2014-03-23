@@ -68,17 +68,19 @@
         BOOL suggestion = [task.user.user_id isEqualToNumber:@(0)];
         if (!suggestion) {
             
-            NSMutableAttributedString *atrTitle = [[NSMutableAttributedString alloc]initWithString:task.user.user_name
-                                                                                        attributes:@{NSFontAttributeName:
-                                                                                                         [UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleSubheadlineBold]}];
-            NSString *actionstring = [NSString stringWithFormat:@" %@ a goal", [task.completed boolValue] ? @"completed" : @"added" ];
-            
-            NSDictionary * attributes = @{NSFontAttributeName:
-                                              [UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleSubheadline]};
-            NSAttributedString * subString = [[NSAttributedString alloc] initWithString:actionstring attributes:attributes];
-            [atrTitle appendAttributedString:subString];
-            
-            [self setAttributedAction:atrTitle];
+            if(task.user.user_name) {
+                NSMutableAttributedString *atrTitle = [[NSMutableAttributedString alloc]initWithString:task.user.user_name
+                                                                                            attributes:@{NSFontAttributeName:
+                                                                                                             [UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleSubheadlineBold]}];
+                NSString *actionstring = [NSString stringWithFormat:@" %@ a goal", [task.completed boolValue] ? @"completed" : @"added" ];
+                
+                NSDictionary * attributes = @{NSFontAttributeName:
+                                                  [UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleSubheadline]};
+                NSAttributedString * subString = [[NSAttributedString alloc] initWithString:actionstring attributes:attributes];
+                [atrTitle appendAttributedString:subString];
+                
+                [self setAttributedAction:atrTitle];
+            } else [self setAttributedAction:nil];
             
             [self setTimestamp:[self dateDiff:task.displaydate]];
             
@@ -88,7 +90,7 @@
         
         BOOL thisUser = [task.user.user_id isEqualToNumber:[[LMRestKitManager sharedManager] defaultUserId]];
         self.addButton.superview.hidden = thisUser;
-        self.heightConstraint.constant = thisUser ? 0 : 40;
+        self.heightConstraint.constant = thisUser ? 0 : 50;
         
         [self.timestampLabel setFont:[UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleCaption1]];
         [self.titleLabel setFont:[UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleBody]];

@@ -23,6 +23,7 @@
 #import <Crashlytics/Crashlytics.h>
 #import "Flurry.h"
 #import <Countly/Countly.h>
+#import <RestKit/RestKit.h>
 
 @interface AppDelegate () <SWRevealViewControllerDelegate>
 @property BOOL dismissing;
@@ -51,7 +52,6 @@
         [stdDefaults setObject:@{@"id" : info[@"id"]} forKey:LIFEMAX_LOGIN_INFORMATION_KEY];
         [stdDefaults synchronize];
     }
-    
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(facebookLoginSuccess) name:@"FACEBOOK_DID_LOGIN_NOTIFICATION" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(triggerLogout:) name:LIFEMAX_TRIGGER_LOGOUT object:nil];
@@ -215,6 +215,7 @@
 
 -(void)triggerLogout:(id)sender {
     [FBSession.activeSession closeAndClearTokenInformation ];
+    [[LMRestKitManager sharedManager] deleteCache];
     [self checkLogin];
 }
 
@@ -237,6 +238,7 @@
         }];
     
 }
+
 
 - (void)revealController:(SWRevealViewController *)revealController willMoveToPosition:(FrontViewPosition)position
 {

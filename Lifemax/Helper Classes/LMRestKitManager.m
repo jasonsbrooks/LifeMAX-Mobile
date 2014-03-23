@@ -24,10 +24,10 @@
     [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
     
     // Initialize managed object store
-    NSManagedObjectModel *managedObjectModel = [NSManagedObjectModel mergedModelFromBundles:nil];
-    RKManagedObjectStore *managedObjectStore = [[RKManagedObjectStore alloc] initWithManagedObjectModel:managedObjectModel];
-    objectManager.managedObjectStore = managedObjectStore;
     objectManager.requestSerializationMIMEType = RKMIMETypeJSON;
+    
+    [self initializeStore:objectManager];
+    RKManagedObjectStore *managedObjectStore = objectManager.managedObjectStore;
     
     // Setup our object mappings
     /**
@@ -35,6 +35,8 @@
      name. This allows us to map back Twitter user objects directly onto NSManagedObject instances --
      there is no backing model class!
      */
+    
+    
     
     RKEntityMapping *hashtagMapping = [RKEntityMapping mappingForEntityForName:@"Hashtag" inManagedObjectStore:managedObjectStore];
     hashtagMapping.identificationAttributes = @[ @"name" ];
@@ -63,9 +65,6 @@
                                                       }];
     
     [taskMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"user" toKeyPath:@"user" withMapping:userMapping]];
-    
-//    RKDotNetDateFormatter *formatter = [ dotNetDateFormatterWithTimeZone:[NSTimeZone defaultTimeZone]];
-//    [[RKValueTransformer defaultValueTransformer] insertValueTransformer: formatter atIndex:0];
     
     // Register our mappings with the provider
     RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:taskMapping
@@ -148,6 +147,28 @@
     /**
      Complete Core Data stack initialization
      */
+    
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:LIFEMAX_INITIALIZED_CD_KEY object:nil];
+    
+    [objectManager.HTTPClient setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+        if (status == AFNetworkReachabilityStatusNotReachable) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No network connection"
+                                                            message:@"You must be connected to the internet to use this app. Offline support will be added "
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+            [alert show];
+            [[NSNotificationCenter defaultCenter] postNotificationName:LIFEMAX_TRIGGER_LOGOUT object:nil userInfo:nil];
+        }
+    }];
+    
+}
+- (void) initializeStore:(RKObjectManager *)objectManager {
+    NSManagedObjectModel *managedObjectModel = [NSManagedObjectModel mergedModelFromBundles:nil];
+    RKManagedObjectStore *managedObjectStore = [[RKManagedObjectStore alloc] initWithManagedObjectModel:managedObjectModel];
+    objectManager.managedObjectStore = managedObjectStore;
+    
     [managedObjectStore createPersistentStoreCoordinator];
     NSString *storePath = [RKApplicationDataDirectory() stringByAppendingPathComponent:@"RKLifemax.sqlite"];
     //    NSString *seedPath = [[NSBundle mainBundle] pathForResource:@"RKSeedDatabase" ofType:@"sqlite"];
@@ -166,9 +187,10 @@
     
     // Configure a managed object cache to ensure we do not create duplicate objects
     managedObjectStore.managedObjectCache = [[RKInMemoryManagedObjectCache alloc] initWithManagedObjectContext:managedObjectStore.persistentStoreManagedObjectContext];
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:LIFEMAX_INITIALIZED_CD_KEY object:nil];
-    
+}
+
+- (void) deleteCache {
+    [[RKManagedObjectStore defaultStore] resetPersistentStores:nil];
 }
 
 - (void) fetchTasksForUser:(id)userid hashtoken:(NSString *)hashtoken completion:(void (^)(BOOL success, NSError *error))completionBlock {
@@ -362,11 +384,6 @@
 
 - (void) newTaskForValues:(NSDictionary *)values {
     if(values) {
-        
-        NSDateFormatter *dateFormatter = [NSDateFormatter new];
-        dateFormatter.dateFormat = @"yyyy-MM-dd'T'hh:mm:ssZ";
-        dateFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
-
         NSString *name = values[@"name"];
         name = name ? name : @"new task";
         
@@ -378,32 +395,34 @@
         NSNumber *completed = values[@"completed"];
         completed = completed ? completed : @(NO);
         
-        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-        [dict setObject:@"" forKey:@"pictureurl"];
-        [dict setObject:name forKey:@"name"];
-        [dict setObject:hashtag forKey:@"hashtag"];
-        [dict setObject:private forKey:@"private"];
-        [dict setObject:completed forKey:@"completed"];
-
-        Task *task = [[RKObjectManager sharedManager].managedObjectStore.mainQueueManagedObjectContext insertNewObjectForEntityForName:@"Task"];
+        NSManagedObjectContext *ctx = [RKManagedObjectStore defaultStore].mainQueueManagedObjectContext;
         
-        NSString *hashTok = [self defaultUserHashToken];
-        if(!hashTok)
-            return;
-        
-        NSString *path = [NSString stringWithFormat:@"/api/user/%@/tasks", [self defaultUserId]];
-        
-        [dict setObject:hashTok forKey:@"hashToken"];
-
-        [[RKObjectManager sharedManager] postObject:task path:path parameters:dict success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-            Task *task = [mappingResult firstObject];
-            if(task.timecompleted) task.displaydate = task.timecompleted;
-            else task.displaydate = task.timecreated;
-            [task.managedObjectContext save:nil];
-        } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-            NSLog(@"[LM-ERROR]: New Task Mapping Failed: %@ - %@", [error localizedDescription], operation.HTTPRequestOperation.responseString);
+        [ctx performBlock:^{
+            Task *task =  [ctx insertNewObjectForEntityForName:@"Task"];
+            task.name = name;
+            task.hashtag = hashtag;
+            task.private = private;
+            task.completed = completed;
+            task.pictureurl = nil;
+            [task.managedObjectContext saveToPersistentStore:nil];
+            
+            NSString *hashTok = [self defaultUserHashToken];
+            if(!hashTok)
+                return;
+            
+            NSString *path = [NSString stringWithFormat:@"/api/user/%@/tasks", [self defaultUserId]];
+            
+            NSDictionary *params = @{@"hashToken": hashTok};
+            
+            [[RKObjectManager sharedManager] postObject:task path:path parameters:params success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+                Task *task = [mappingResult firstObject];
+                if(task.timecompleted) task.displaydate = task.timecompleted;
+                else task.displaydate = task.timecreated;
+                [task.managedObjectContext saveToPersistentStore:nil];
+            } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+                NSLog(@"[LM-ERROR]: New Task Mapping Failed: %@ - %@", [error localizedDescription], operation.HTTPRequestOperation.responseString);
+            }];
         }];
-
     }
 }
 

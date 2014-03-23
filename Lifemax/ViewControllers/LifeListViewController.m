@@ -94,6 +94,7 @@
     
     self.refreshControl = [[UIRefreshControl alloc]init];
     [self.refreshControl addTarget:self action:@selector(refresh:) forControlEvents:UIControlEventValueChanged];
+    [self loadData];
 
 }
 
@@ -151,11 +152,18 @@
 - (void) loadData {
     //NSFetchedResultsController should automatically refresh
     //just trigger the manager to fetch from the server
-    [[LMRestKitManager sharedManager] fetchTasksForDefaultUserOnCompletion:^(BOOL success, NSError *error) {
-        if (success) {
-            [self performFetch];
-        }
-    }];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __weak id ws = self;
+        
+        [[LMRestKitManager sharedManager] fetchTasksForDefaultUserOnCompletion:^(BOOL success, NSError *error) {
+            if (success) {
+                id ss = ws;
+                [ss performSelector:@selector(performFetch) withObject:nil afterDelay:.05];
+            }
+        }];
+    });
+    
+
 }
 
 - (void) performFetch {
@@ -413,12 +421,10 @@
 }
 
 -(void)editor:(EditTaskViewController *)editor didEditTaskFields:(NSDictionary *)values forTask:(Task *)task {
-    NSLog(@"did edit task: %@" ,task);
     if(task)
         [[LMRestKitManager sharedManager] updateTask:task withValues:values];
     else
         [[LMRestKitManager sharedManager] newTaskForValues:values];
-    
 }
 
 

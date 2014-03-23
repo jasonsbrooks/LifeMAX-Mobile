@@ -131,7 +131,7 @@
 		98A269A118C40C6E0053D20B /* UIAlertView+NSCookbook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+NSCookbook.m"; sourceTree = "<group>"; };
 		98B62E7B18B5E8D500872BDE /* LMHttpClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMHttpClient.h; sourceTree = "<group>"; };
 		98B62E7C18B5E8D500872BDE /* LMHttpClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMHttpClient.m; sourceTree = "<group>"; };
-		98C7496918A745B1000A4CAF /* Lifemax.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lifemax.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		98C7496918A745B1000A4CAF /* LifeMax.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LifeMax.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		98C7496C18A745B1000A4CAF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		98C7496E18A745B1000A4CAF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		98C7497018A745B1000A4CAF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -283,7 +283,7 @@
 		98C7496A18A745B1000A4CAF /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				98C7496918A745B1000A4CAF /* Lifemax.app */,
+				98C7496918A745B1000A4CAF /* LifeMax.app */,
 				98C7498A18A745B1000A4CAF /* LifemaxTests.xctest */,
 			);
 			name = Products;
@@ -429,9 +429,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		98C7496818A745B1000A4CAF /* Lifemax */ = {
+		98C7496818A745B1000A4CAF /* LifeMax */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 98C7499B18A745B1000A4CAF /* Build configuration list for PBXNativeTarget "Lifemax" */;
+			buildConfigurationList = 98C7499B18A745B1000A4CAF /* Build configuration list for PBXNativeTarget "LifeMax" */;
 			buildPhases = (
 				F1FD69D9756D41EB96440E76 /* Check Pods Manifest.lock */,
 				98C7496518A745B1000A4CAF /* Sources */,
@@ -445,9 +445,9 @@
 			);
 			dependencies = (
 			);
-			name = Lifemax;
+			name = LifeMax;
 			productName = Lifemax;
-			productReference = 98C7496918A745B1000A4CAF /* Lifemax.app */;
+			productReference = 98C7496918A745B1000A4CAF /* LifeMax.app */;
 			productType = "com.apple.product-type.application";
 		};
 		98C7498918A745B1000A4CAF /* LifemaxTests */ = {
@@ -498,7 +498,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				98C7496818A745B1000A4CAF /* Lifemax */,
+				98C7496818A745B1000A4CAF /* LifeMax */,
 				98C7498918A745B1000A4CAF /* LifemaxTests */,
 			);
 		};
@@ -644,7 +644,7 @@
 /* Begin PBXTargetDependency section */
 		98C7499018A745B1000A4CAF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 98C7496818A745B1000A4CAF /* Lifemax */;
+			target = 98C7496818A745B1000A4CAF /* LifeMax */;
 			targetProxy = 98C7498F18A745B1000A4CAF /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -716,7 +716,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Lifemax Icon";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -829,7 +829,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Lifemax Icon";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -854,7 +854,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Lifemax Icon";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -926,7 +926,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		98C7499B18A745B1000A4CAF /* Build configuration list for PBXNativeTarget "Lifemax" */ = {
+		98C7499B18A745B1000A4CAF /* Build configuration list for PBXNativeTarget "LifeMax" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				98C7499C18A745B1000A4CAF /* Debug */,

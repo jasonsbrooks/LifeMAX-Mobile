@@ -42,6 +42,8 @@
 
 -(void)loginViewShowingLoggedOutUser:(FBLoginView *)loginView {
     //can only log out of facebook by loging out of lifemax
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"FACEBOOK_DID_LOGOUT_NOTIFICATION" object:nil];
+
 }
 
 // Handle possible errors that can occur during login
