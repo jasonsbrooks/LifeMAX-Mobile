@@ -15,6 +15,7 @@
 @dynamic completed;
 @dynamic hashtag;
 @dynamic name;
+@dynamic desc;
 @dynamic pictureurl;
 @dynamic task_id;
 @dynamic private;

@@ -23,6 +23,7 @@
 @implementation TaskCell
 
 @synthesize title=_title;
+@synthesize desc=_desc;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -41,6 +42,7 @@
 
 - (void)updateWithTask:(Task *)task {
     self.title = task.name ? task.name : @"Task Name";
+    self.desc = task.desc;
     self.subtitle = task.hashtag;
 //    [self.titleLabel sizeToFit];
     [self.subtitleLabel sizeToFit];

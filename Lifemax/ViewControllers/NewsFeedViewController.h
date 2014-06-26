@@ -10,5 +10,6 @@
 
 @interface NewsFeedViewController : UITableViewController
 @property BOOL isStoryController;
+@property BOOL isSuggestionsController;
 
 @end

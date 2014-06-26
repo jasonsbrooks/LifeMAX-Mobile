@@ -216,15 +216,15 @@
     }];
 }
 
-- (void) fetchFeedTasksForUser:(id)userid hashtag:(NSString *)hashtag maxResults:(NSInteger)maxResults hashtoken:(NSString *)hashtoken completion:(void (^)(NSArray *results, NSError *error))onCompletion {
+- (void) fetchFeedTasksForUser:(id)userid hashtag:(NSString *)hashtag maxResults:(NSInteger)maxResults hashtoken:(NSString *)hashtoken type:(NSString *)type completion:(void (^)(NSArray *results, NSError *error))onCompletion {
     
     if(!hashtoken || !userid) {
         NSLog(@"[LM-Warning]: Local fetch issue, not logged in yet.");
         return;
     }
     
-    
     NSString *path = [NSString stringWithFormat:@"/api/user/%@/newsfeed", userid];
+//    NSString *path = [NSString stringWithFormat:@"/api/user/%@/newsfeed/%@", userid, type];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [[RKObjectManager sharedManager] getObjectsAtPath:path parameters:@{@"hashToken" : hashtoken} success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {

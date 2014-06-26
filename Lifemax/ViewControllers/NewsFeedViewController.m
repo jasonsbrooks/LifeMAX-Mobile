@@ -72,7 +72,12 @@
 {
     [super viewDidLoad];
     
-    self.title = self.isStoryController ?  NSLocalizedString(@"My Story", nil) :  NSLocalizedString(@"News Feed", nil);
+    if (self.isStoryController)
+        self.title = NSLocalizedString(@"My Story", nil);
+    else if (self.isSuggestionsController)
+        self.title = NSLocalizedString(@"Max Suggests", nil);
+    else
+        self.title = NSLocalizedString(@"News Feed", nil);
 
 //    self.tableView.tableHeaderView.translatesAutoresizingMaskIntoConstraints = NO;
     
@@ -167,7 +172,9 @@
         NSString *hashToken = [[LMRestKitManager sharedManager] defaultUserHashToken];
         __weak id ws = self;
         
-        [[LMRestKitManager sharedManager] fetchFeedTasksForUser:user hashtag:nil maxResults:50 hashtoken:hashToken completion:^(NSArray *results, NSError *error) {
+        NSString *type = self.isSuggestionsController ? NSLocalizedString(@"suggests", nil) : NSLocalizedString(@"friends", nil);
+
+        [[LMRestKitManager sharedManager] fetchFeedTasksForUser:user hashtag:nil maxResults:50 hashtoken:hashToken type:type completion:^(NSArray *results, NSError *error) {
             id ss = ws;
             [ss performSelector:@selector(performFetch) withObject:nil afterDelay:.05];
         }];
@@ -283,6 +290,8 @@
     self.selectedIndexPath = indexPath;
     if([task.user.user_id isEqualToNumber:[[LMRestKitManager sharedManager] defaultUserId]]) {
         [self performSegueWithIdentifier:@"edit_task" sender:task];
+    } else {
+        [self performSegueWithIdentifier:@"edit_task" sender:self];
     }
     
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];

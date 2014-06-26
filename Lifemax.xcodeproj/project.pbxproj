@@ -63,6 +63,8 @@
 		98FB50A918A7FCC800C916BC /* LifeListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98FB50A818A7FCC800C916BC /* LifeListViewController.m */; };
 		98FB50AF18A8044200C916BC /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98FB50AE18A8044200C916BC /* FacebookSDK.framework */; };
 		98FB50B218A80D0900C916BC /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98FB50B118A80D0900C916BC /* LoginViewController.m */; };
+		B7A40A53195BCB57009161E5 /* LeaderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B7A40A52195BCB57009161E5 /* LeaderViewController.m */; };
+		B7A40A56195BFEF6009161E5 /* GoalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B7A40A55195BFEF6009161E5 /* GoalViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -171,6 +173,10 @@
 		98FB50AE18A8044200C916BC /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../../Documents/FacebookSDK/FacebookSDK.framework; sourceTree = "<group>"; };
 		98FB50B018A80D0900C916BC /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		98FB50B118A80D0900C916BC /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		B7A40A51195BCB57009161E5 /* LeaderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeaderViewController.h; sourceTree = "<group>"; };
+		B7A40A52195BCB57009161E5 /* LeaderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LeaderViewController.m; sourceTree = "<group>"; };
+		B7A40A54195BFEF6009161E5 /* GoalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoalViewController.h; sourceTree = "<group>"; };
+		B7A40A55195BFEF6009161E5 /* GoalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoalViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -408,8 +414,12 @@
 		98FB50AA18A7FCDF00C916BC /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				B7A40A54195BFEF6009161E5 /* GoalViewController.h */,
+				B7A40A55195BFEF6009161E5 /* GoalViewController.m */,
 				98FB50A718A7FCC800C916BC /* LifeListViewController.h */,
 				98FB50A818A7FCC800C916BC /* LifeListViewController.m */,
+				B7A40A51195BCB57009161E5 /* LeaderViewController.h */,
+				B7A40A52195BCB57009161E5 /* LeaderViewController.m */,
 				98DF58A518A83E9000AC2BE0 /* GoogleSyncViewController.h */,
 				98DF58A618A83E9000AC2BE0 /* GoogleSyncViewController.m */,
 				98D951C518A8902A00333D4D /* NewsFeedViewController.h */,
@@ -478,7 +488,7 @@
 				ORGANIZATIONNAME = YUCG;
 				TargetAttributes = {
 					98C7496818A745B1000A4CAF = {
-						DevelopmentTeam = ZFT3A4WCFY;
+						DevelopmentTeam = NXGFCU2954;
 					};
 					98C7498918A745B1000A4CAF = {
 						TestTargetID = 98C7496818A745B1000A4CAF;
@@ -603,6 +613,7 @@
 				98FB50A918A7FCC800C916BC /* LifeListViewController.m in Sources */,
 				98DF58AB18A85BAF00AC2BE0 /* TaskCell.m in Sources */,
 				98C7497D18A745B1000A4CAF /* AppDelegate.m in Sources */,
+				B7A40A53195BCB57009161E5 /* LeaderViewController.m in Sources */,
 				98A269A218C40C6E0053D20B /* UIAlertView+NSCookbook.m in Sources */,
 				98DC9FC118B28A0A004747B5 /* SettingsViewController.m in Sources */,
 				989CE3F118B9364F0079ECA7 /* HashtagSelector.m in Sources */,
@@ -622,6 +633,7 @@
 				9826736018DCDF8700810A7D /* UIFont+FontAdditions.m in Sources */,
 				98C749A418A7495B000A4CAF /* SWRevealViewController.m in Sources */,
 				989CE3EE18B92B020079ECA7 /* EditTaskViewController.m in Sources */,
+				B7A40A56195BFEF6009161E5 /* GoalViewController.m in Sources */,
 				980FB60018D9840A008BCF14 /* User.m in Sources */,
 				98C749A918A74AFB000A4CAF /* MenuViewController.m in Sources */,
 				989CE3F618B94C490079ECA7 /* EditFieldCell.m in Sources */,
@@ -720,7 +732,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/mrosales/Documents/FacebookSDK,
+					/Users/charlesjin/Documents/FacebookSDK,
 					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -731,6 +743,7 @@
 					"$(PROJECT_DIR)/Flurry",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Testflight;
@@ -833,7 +846,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/mrosales/Documents/FacebookSDK,
+					/Users/charlesjin/Documents/FacebookSDK,
 					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -844,6 +857,7 @@
 					"$(PROJECT_DIR)/Flurry",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -858,7 +872,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/mrosales/Documents/FacebookSDK,
+					/Users/charlesjin/Documents/FacebookSDK,
 					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -869,6 +883,7 @@
 					"$(PROJECT_DIR)/Flurry",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
