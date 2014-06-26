@@ -17,6 +17,7 @@
 #import "Task+TaskAdditions.h"
 #import "User.h"
 #import "EditTaskViewController.h"
+#import "GoalViewController.h"
 #import "LMHttpClient.h"
 #import "NSString+MD5.h"
 #import "FeedUserTaskCell.h"
@@ -487,6 +488,17 @@
             }
         }
         editController.delegate = self;
+    } else if ([segue.identifier isEqualToString:@"view_task"]){
+        GoalViewController *goalController = [segue destinationViewController];
+        if(self.selectedIndexPath){
+            if ([sender isKindOfClass:[Task class]]) {
+                [goalController setTask:sender];
+            }else {
+                [goalController initializeWithTaskValues:[self.fetchedResultsController objectAtIndexPath:self.selectedIndexPath]];
+                
+            }
+        }
+//        goalController.delegate = self;
     }
 }
 

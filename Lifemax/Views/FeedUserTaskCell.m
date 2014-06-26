@@ -85,7 +85,7 @@
             [self setTimestamp:[self dateDiff:task.displaydate]];
             
         } else {
-            [self.maxsuggestsLabel setFont:[UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleHeadline]];
+//            [self.maxsuggestsLabel setFont:[UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleHeadline]];
         }
         
         BOOL thisUser = [task.user.user_id isEqualToNumber:[[LMRestKitManager sharedManager] defaultUserId]];

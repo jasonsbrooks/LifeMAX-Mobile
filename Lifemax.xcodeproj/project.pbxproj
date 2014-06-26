@@ -157,7 +157,7 @@
 		98D951B918A877F700333D4D /* CameraCheckbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraCheckbox.h; sourceTree = "<group>"; };
 		98D951BA18A877F700333D4D /* CameraCheckbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraCheckbox.m; sourceTree = "<group>"; };
 		98D951C218A88D7700333D4D /* FeedUserTaskCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedUserTaskCell.h; sourceTree = "<group>"; };
-		98D951C318A88D7700333D4D /* FeedUserTaskCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedUserTaskCell.m; sourceTree = "<group>"; };
+		98D951C318A88D7700333D4D /* FeedUserTaskCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FeedUserTaskCell.m; path = ../Views/FeedUserTaskCell.m; sourceTree = "<group>"; };
 		98D951C518A8902A00333D4D /* NewsFeedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsFeedViewController.h; sourceTree = "<group>"; };
 		98D951C618A8902A00333D4D /* NewsFeedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsFeedViewController.m; sourceTree = "<group>"; };
 		98DC9FBF18B28A0A004747B5 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
@@ -402,7 +402,6 @@
 				98DF58A918A85BAF00AC2BE0 /* TaskCell.h */,
 				98DF58AA18A85BAF00AC2BE0 /* TaskCell.m */,
 				98D951C218A88D7700333D4D /* FeedUserTaskCell.h */,
-				98D951C318A88D7700333D4D /* FeedUserTaskCell.m */,
 				989CE3F418B94C490079ECA7 /* EditFieldCell.h */,
 				989CE3F518B94C490079ECA7 /* EditFieldCell.m */,
 				9847F3A418D515A10091A578 /* EditDescriptionCell.h */,
@@ -418,6 +417,7 @@
 				B7A40A55195BFEF6009161E5 /* GoalViewController.m */,
 				98FB50A718A7FCC800C916BC /* LifeListViewController.h */,
 				98FB50A818A7FCC800C916BC /* LifeListViewController.m */,
+				98D951C318A88D7700333D4D /* FeedUserTaskCell.m */,
 				B7A40A51195BCB57009161E5 /* LeaderViewController.h */,
 				B7A40A52195BCB57009161E5 /* LeaderViewController.m */,
 				98DF58A518A83E9000AC2BE0 /* GoogleSyncViewController.h */,

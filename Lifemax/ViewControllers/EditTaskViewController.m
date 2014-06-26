@@ -260,6 +260,7 @@
 
 - (void)tapInScrollView {
     [self.nameField endEditing:YES];
+    [self.desc endEditing: YES];
 }
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
