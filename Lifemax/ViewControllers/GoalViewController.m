@@ -10,4 +10,8 @@
 
 @implementation GoalViewController
 
+-(void)initializeWithTaskValues :(Task *)task{
+
+    
+}
 @end
