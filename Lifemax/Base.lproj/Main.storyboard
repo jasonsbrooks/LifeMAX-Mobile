@@ -767,12 +767,13 @@
                     <connections>
                         <outlet property="tableFilterView" destination="mfi-mH-dpJ" id="A1B-oN-aAj"/>
                         <segue destination="HcA-dI-R5W" kind="push" identifier="edit_task" id="VU4-Eb-Got"/>
+                        <segue destination="dI3-AT-PEh" kind="push" identifier="view_task" customClass="SWRevealViewControllerSegue" id="0No-9X-9zI"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xjL-6G-uSV" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tapGestureRecognizer id="eG2-1O-S26" userLabel="Filter TapGR"/>
             </objects>
-            <point key="canvasLocation" x="929" y="-402"/>
+            <point key="canvasLocation" x="771" y="-392"/>
         </scene>
         <!--Login View Controller - Login-->
         <scene sceneID="fud-dL-XVO">
@@ -1091,6 +1092,21 @@
             </objects>
             <point key="canvasLocation" x="408" y="199"/>
         </scene>
+        <!--Goal View Controller-->
+        <scene sceneID="5GF-VE-L0b">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jMv-RM-J4g" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="dI3-AT-PEh" customClass="GoalViewController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="puA-mI-wmx">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="s7r-LE-75z"/>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="898" y="241"/>
+        </scene>
         <!--Menu View Controller-->
         <scene sceneID="AaK-C5-OTz">
             <objects>
@@ -1400,7 +1416,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B9a-Q8-SZN">
-                                        <rect key="frame" x="98" y="242" width="124" height="40"/>
+                                        <rect key="frame" x="98" y="269" width="124" height="40"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="124" id="pvo-if-dn3"/>
@@ -1438,7 +1454,7 @@
                                         </state>
                                     </button>
                                     <view clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gtW-DH-q2H" customClass="HashtagSelector">
-                                        <rect key="frame" x="20" y="134" width="280" height="100"/>
+                                        <rect key="frame" x="20" y="244" width="280" height="15"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -1449,15 +1465,29 @@
                                             <outlet property="delegate" destination="HcA-dI-R5W" id="LZ1-6L-umn"/>
                                         </connections>
                                     </view>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wut-di-2Mx">
+                                        <rect key="frame" x="15" y="134" width="290" height="100"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <accessibility key="accessibilityConfiguration" label="task (ie: Go on a run)"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="100" id="ipY-Hg-VY8"/>
+                                            <constraint firstAttribute="width" constant="290" id="mkW-oP-JuO"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done"/>
+                                    </textView>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstAttribute="centerX" secondItem="Wut-di-2Mx" secondAttribute="centerX" id="5fx-0d-ahr"/>
                                     <constraint firstItem="gtW-DH-q2H" firstAttribute="leading" secondItem="FHP-1A-3bL" secondAttribute="leading" constant="20" id="A4L-dA-n9W"/>
                                     <constraint firstItem="pm8-2t-dwV" firstAttribute="trailing" secondItem="ZWS-g8-yyD" secondAttribute="trailing" id="B6q-hN-OoZ"/>
                                     <constraint firstItem="luE-rs-rFi" firstAttribute="top" secondItem="ZWS-g8-yyD" secondAttribute="bottom" constant="10" id="ETv-ya-rE8"/>
-                                    <constraint firstItem="gtW-DH-q2H" firstAttribute="top" secondItem="luE-rs-rFi" secondAttribute="bottom" constant="10" id="ErK-Ab-w5O"/>
                                     <constraint firstItem="fX9-0q-1Oz" firstAttribute="height" secondItem="6uf-zn-UPA" secondAttribute="height" id="HS2-J5-a4L"/>
+                                    <constraint firstItem="gtW-DH-q2H" firstAttribute="top" secondItem="Wut-di-2Mx" secondAttribute="bottom" constant="10" id="JiY-GU-rfw"/>
                                     <constraint firstItem="fX9-0q-1Oz" firstAttribute="leading" secondItem="6uf-zn-UPA" secondAttribute="leading" id="MUs-lz-jms"/>
                                     <constraint firstItem="6uf-zn-UPA" firstAttribute="leading" secondItem="pm8-2t-dwV" secondAttribute="leading" id="NGn-tj-jNF"/>
+                                    <constraint firstItem="Wut-di-2Mx" firstAttribute="top" secondItem="luE-rs-rFi" secondAttribute="bottom" constant="10" id="Nzz-4m-XST"/>
                                     <constraint firstItem="fX9-0q-1Oz" firstAttribute="centerY" secondItem="luE-rs-rFi" secondAttribute="centerY" id="PmT-5i-ihd"/>
                                     <constraint firstItem="6uf-zn-UPA" firstAttribute="top" secondItem="pm8-2t-dwV" secondAttribute="bottom" constant="10" id="RHl-6X-674"/>
                                     <constraint firstAttribute="bottom" secondItem="B9a-Q8-SZN" secondAttribute="bottom" constant="20" id="XZx-0y-Kt3"/>
@@ -1481,8 +1511,8 @@
                         </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
-                    <navigationItem key="navigationItem" id="IRt-q9-hDg"/>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
+                    <navigationItem key="navigationItem" id="bWj-ZL-dSM"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <size key="freeformSize" width="320" height="480"/>
                     <connections>
@@ -1490,6 +1520,7 @@
                         <outlet property="completedLabel" destination="fX9-0q-1Oz" id="D2a-Ou-iEw"/>
                         <outlet property="contentScrollView" destination="FHP-1A-3bL" id="joC-3y-xy0"/>
                         <outlet property="deleteButton" destination="B9a-Q8-SZN" id="bmC-iB-PPu"/>
+                        <outlet property="desc" destination="Wut-di-2Mx" id="bcf-1n-RJG"/>
                         <outlet property="hashtagSelector" destination="gtW-DH-q2H" id="hNa-1p-tQc"/>
                         <outlet property="nameField" destination="pm8-2t-dwV" id="gzU-qi-N1C"/>
                         <outlet property="privacyCheckbox" destination="ZWS-g8-yyD" id="YRK-yt-bS4"/>
@@ -1521,6 +1552,6 @@
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="d4P-Uc-qv3"/>
-        <segue reference="idr-cX-zpy"/>
+        <segue reference="VU4-Eb-Got"/>
     </inferredMetricsTieBreakers>
 </document>

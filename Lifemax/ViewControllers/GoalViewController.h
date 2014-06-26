@@ -8,6 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface GoalViewController : UITableViewController
+@class GoalViewController;
+@class Task;
 
+@interface GoalViewController : UIViewController
+
+@property (nonatomic, retain) Task *task;
+-(void)initializeWithTaskValues :(Task *)task fromFeed:(BOOL)fromFeed;
 @end

@@ -291,7 +291,7 @@
     if([task.user.user_id isEqualToNumber:[[LMRestKitManager sharedManager] defaultUserId]]) {
         [self performSegueWithIdentifier:@"edit_task" sender:task];
     } else {
-        [self performSegueWithIdentifier:@"edit_task" sender:self];
+        [self performSegueWithIdentifier:@"view_task" sender:self];
     }
     
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -476,18 +476,18 @@
 {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
-    EditTaskViewController *editController = [segue destinationViewController];
+    if ([segue.identifier isEqualToString:@"edit_task"]){
+        EditTaskViewController *editController = [segue destinationViewController];
+        if(self.selectedIndexPath){
+            if ([sender isKindOfClass:[Task class]]) {
+                [editController setTask:sender];
+            }else {
+                [editController initializeWithTaskValues:[self.fetchedResultsController objectAtIndexPath:self.selectedIndexPath] fromFeed:YES];
 
-    if(self.selectedIndexPath){
-        if ([sender isKindOfClass:[Task class]]) {
-            [editController setTask:sender];
-        }else {
-            [editController initializeWithTaskValues:[self.fetchedResultsController objectAtIndexPath:self.selectedIndexPath] fromFeed:YES];
-
+            }
         }
+        editController.delegate = self;
     }
-
-    editController.delegate = self;
 }
 
 #pragma mark - Edit Task Delegate method
