@@ -56,7 +56,7 @@
     [taskMapping addAttributeMappingsFromDictionary:@{
                                                       @"name" : @"name",
                                                       @"id": @"task_id",
-                                                      @"desc" : @"desc",
+                                                      @"description" : @"desc", //JASONJASONJASON
                                                       @"pictureurl" :@"pictureurl",
                                                       @"hashtag" : @"hashtag",
                                                       @"completed" : @"completed",
@@ -72,11 +72,11 @@
     leaderboardMapping.identificationAttributes = @[ @"user_id" ];
     [leaderboardMapping addAttributeMappingsFromDictionary:@{
                                                       @"fbid" : @"fbid",
-                                                      @"id": @"id",
-                                                      @"name" : @"name",
-                                                      @"picture" :@"picture"
+                                                      @"id": @"user_id",
+                                                      @"name" : @"user_name",
+                                                      @"picture" :@"picture_url"
                                                       }];
-    [leaderboardMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"user" toKeyPath:@"user" withMapping:userMapping]];
+//    [leaderboardMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"user" toKeyPath:@"user" withMapping:userMapping]];
 
     
     // Register our mappings with the provider
@@ -89,7 +89,7 @@
     [objectManager addResponseDescriptor:responseDescriptor];
 
     
-    RKResponseDescriptor *leaderboardReponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:taskMapping
+    RKResponseDescriptor *leaderboardReponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:leaderboardMapping
                                                                                             method:RKRequestMethodGET
                                                                                        pathPattern:@"/api/user/:userid/leaderboard"
                                                                                            keyPath:@"users"

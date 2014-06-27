@@ -5,7 +5,7 @@
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
-        <!--Leader View Controller-->
+        <!--Leader View Controller - Leaderboard-->
         <scene sceneID="gPp-3c-Nxy">
             <objects>
                 <tableViewController storyboardIdentifier="LeaderViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="JxC-2N-X2H" customClass="LeaderViewController" sceneMemberID="viewController">
@@ -28,9 +28,9 @@
                             <outlet property="delegate" destination="JxC-2N-X2H" id="0lh-5y-7lR"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" title="Leaderboard" id="9Sa-3l-pVj"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                 </tableViewController>
-                <navigationItem title="Leaderboard" id="9Sa-3l-pVj"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PLa-BJ-8Ef" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-284" y="-1056"/>
