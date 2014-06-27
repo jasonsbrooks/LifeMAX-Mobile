@@ -24,6 +24,7 @@
 
 #define LIFEMAX_HASHTAGS (@[@"#raging", @"#school", @"#friends", @"#fitness", @"#nutrition", @"#spirit", @"#culture", @"#personal", @"#entertainment", @"#work", @"#travel", @"#bucketlist", @"#firsttime"])
 #define LIFEMAX_ROOT_URL @"http://lifemax-staging.herokuapp.com"
+//#define LIFEMAX_ROOT_URL @"http://lifemax.ngrok.com"
 
 #define LIFEMAX_LOGIN_INFORMATION_KEY @"com.yucg.lifemax.login-information-defaults-key"
 #define LIFEMAX_INITIALIZED_CD_KEY @"com.yucg.lifemax.initializedcoredata"

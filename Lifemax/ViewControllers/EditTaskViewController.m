@@ -20,7 +20,7 @@
 #import "Checkbox.h"
 #define DESCRIPTION_PLACEHOLDER_TEXT @"description"
 
-@interface EditTaskViewController () <UIScrollViewDelegate, UITextFieldDelegate, HashtagSelectorDelegate>
+@interface EditTaskViewController () <UIScrollViewDelegate, UITextFieldDelegate, UITextViewDelegate, HashtagSelectorDelegate>
 @property (nonatomic, strong) IBOutlet UIScrollView *contentScrollView;
 @property (nonatomic, strong) IBOutlet UIButton *deleteButton;
 @property (nonatomic, strong) IBOutlet UITextField *nameField;
@@ -193,6 +193,7 @@
 
 - (void) savePressed:(id)sender {
     [self.nameField endEditing:YES];
+    [self.desc endEditing:YES];
     NSString *validated = [self validateInput];
     if([validated isEqualToString:@"OK"]) {
         [self.delegate editor:self didEditTaskFields:self.values forTask:self.task];
@@ -265,6 +266,7 @@
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [self.nameField endEditing:YES];
+    [self.desc endEditing: YES];
 }
 
 
@@ -306,14 +308,45 @@
     }
 }
 
-
-
 -(BOOL)textFieldShouldEndEditing:(UITextField *)textField {
     return YES;
 }
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
+    return YES;
+}
+
+-(void)textViewDidBeginEditing:(UITextView *)textView {
+    self.desc = textView;
+    [self.view addSubview:self.overlayView];
+    //    [self enableTaskEditing];
+    [UIView animateWithDuration:.5 animations:^{
+        self.hashtagSelector.alpha = .5;
+    } completion:nil];
+}
+
+- (BOOL)textView:(UITextView *)textView shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    return YES;
+}
+
+-(void)textViewDidEndEditing:(UITextView *)textView {
+    [self.overlayView removeFromSuperview];
+    [UIView animateWithDuration:.5 animations:^{
+        self.hashtagSelector.alpha = 1;
+    } completion:^(BOOL finished) {
+    }];
+    if(textView == self.desc) {
+        self.values[@"desc"] = textView.text;
+    }
+}
+
+-(BOOL)textViewShouldEndEditing:(UITextView *)textView {
+    return YES;
+}
+- (BOOL)textViewShouldReturn:(UITextView *)textView
+{
+    [textView resignFirstResponder];
     return YES;
 }
 

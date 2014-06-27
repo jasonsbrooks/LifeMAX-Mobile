@@ -8,6 +8,7 @@
 
 #import "LMHttpClient.h"
 #import <RestKit/RestKit.h>
+#import "LifemaxHeaders.h"
 
 @implementation LMHttpClient
 
@@ -48,7 +49,7 @@
     static dispatch_once_t pred;
     static LMHttpClient *_sharedManager = nil;
     
-    dispatch_once(&pred, ^{ _sharedManager = [[self alloc] initWithBaseURL:[NSURL URLWithString:@"http://lifemax-staging.herokuapp.com"]]; }); // You should probably make this a constant somewhere
+    dispatch_once(&pred, ^{ _sharedManager = [[self alloc] initWithBaseURL:[NSURL URLWithString:LIFEMAX_ROOT_URL]]; }); // You should probably make this a constant somewhere
     return _sharedManager;
 }
 

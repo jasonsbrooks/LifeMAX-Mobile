@@ -173,7 +173,7 @@
         NSString *hashToken = [[LMRestKitManager sharedManager] defaultUserHashToken];
         __weak id ws = self;
         
-        NSString *type = self.isSuggestionsController ? NSLocalizedString(@"suggests", nil) : NSLocalizedString(@"friends", nil);
+        NSString *type = self.isSuggestionsController ? NSLocalizedString(@"maxsuggests", nil) : NSLocalizedString(@"newsfeed", nil);
 
         [[LMRestKitManager sharedManager] fetchFeedTasksForUser:user hashtag:nil maxResults:50 hashtoken:hashToken type:type completion:^(NSArray *results, NSError *error) {
             id ss = ws;
@@ -321,6 +321,28 @@
     [self promtTaskCreationWithComplete:YES];
 }
 
+- (IBAction)removebuttonPressed:(id)sender {
+    self.selectedIndexPath = [NSIndexPath indexPathForRow:[sender tag] inSection:0];
+    [self promtTaskDeletion];
+}
+
+- (void)promtTaskDeletion {
+    [OHActionSheet showSheetInView:self.view
+                             title:NSLocalizedString(@"Remove Task from Suggestions", nil)
+                 cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+            destructiveButtonTitle:NSLocalizedString(@"Remove Forever", nil)
+                otherButtonTitles:nil
+                        completion:^(OHActionSheet *sheet, NSInteger buttonIndex)
+    {
+        if (buttonIndex != sheet.cancelButtonIndex) {
+            // post deletion
+            Task *task = [self.fetchedResultsController objectAtIndexPath:self.selectedIndexPath];
+            NSLog(@"delete %@", task.task_id);
+            // JASONJASONJASON
+        }
+    }];
+}
+
 - (void)promtTaskCreationWithComplete:(BOOL)completed {
     
     [OHActionSheet showSheetInView:self.view title:NSLocalizedString(@"New Goal Privacy", nil) cancelButtonTitle:NSLocalizedString(@"Cancel", nil) destructiveButtonTitle:NSLocalizedString(@"Share with friends", nil) otherButtonTitles:@[NSLocalizedString(@"Make Private", nil)] completion:^(OHActionSheet *sheet, NSInteger buttonIndex) {
@@ -332,9 +354,11 @@
                 NSMutableDictionary *values = [NSMutableDictionary dictionary];
                 if(task.name) values[@"name"] = task.name;
                 if(task.hashtag) values[@"hashtag"] = task.hashtag;
+                if(task.desc) values[@"desc"] = task.desc;
                 if(task.pictureurl) values[@"pictureurl"] = task.pictureurl;
-                if(task.private) values[@"private"] = @(private);
-                
+//                if(task.private) values[@"private"] = @(private);
+
+                values[@"private"] = @(private);
                 values[@"completed"] = @(completed);
                 
                 [[LMRestKitManager sharedManager] newTaskForValues:values];
@@ -384,6 +408,9 @@
     
     [feedCell.doneButton addTarget:self action:@selector(donebuttonPressed:) forControlEvents:UIControlEventTouchUpInside];
     feedCell.doneButton.tag = indexPath.row;
+    
+    [feedCell.removeButton addTarget:self action:@selector(removebuttonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    feedCell.removeButton.tag = indexPath.row;
     
     if ([feedCell.addButton.superview.gestureRecognizers count] == 0) {
         UIGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:nil action:nil];

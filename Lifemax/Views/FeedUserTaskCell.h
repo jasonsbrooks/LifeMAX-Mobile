@@ -21,5 +21,6 @@
 -(void)updateForTask: (Task *)task ;
 @property (nonatomic, strong) IBOutlet UIButton *addButton;
 @property (nonatomic, strong) IBOutlet UIButton *doneButton;
+@property (nonatomic, strong) IBOutlet UIButton *removeButton;
 
 @end

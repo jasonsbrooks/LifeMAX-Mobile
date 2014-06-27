@@ -17,7 +17,7 @@
 @implementation LMRestKitManager
 
 - (void)initializeMappings {
-    NSURL *baseURL = [NSURL URLWithString:@"http://lifemax-staging.herokuapp.com"];
+    NSURL *baseURL = [NSURL URLWithString:LIFEMAX_ROOT_URL];
     RKObjectManager *objectManager = [RKObjectManager managerWithBaseURL:baseURL];
     
     // Enable Activity Indicator Spinner
@@ -56,6 +56,7 @@
     [taskMapping addAttributeMappingsFromDictionary:@{
                                                       @"name" : @"name",
                                                       @"id": @"task_id",
+                                                      @"desc" : @"desc",
                                                       @"pictureurl" :@"pictureurl",
                                                       @"hashtag" : @"hashtag",
                                                       @"completed" : @"completed",
@@ -223,8 +224,8 @@
         return;
     }
     
-    NSString *path = [NSString stringWithFormat:@"/api/user/%@/newsfeed", userid];
-//    NSString *path = [NSString stringWithFormat:@"/api/user/%@/newsfeed/%@", userid, type];
+//    NSString *path = [NSString stringWithFormat:@"/api/user/%@/newsfeed", userid];
+    NSString *path = [NSString stringWithFormat:@"/api/user/%@/%@", userid, type];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [[RKObjectManager sharedManager] getObjectsAtPath:path parameters:@{@"hashToken" : hashtoken} success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
@@ -328,6 +329,8 @@
     [task.managedObjectContext performBlock:^{
         if(values[@"name"])
             task.name = values[@"name"];
+        if(values[@"desc"])
+            task.desc = values[@"desc"];
         if(values[@"hashtag"])
             task.hashtag = values[@"hashtag"];
         if(values[@"completed"])
@@ -387,6 +390,9 @@
         NSString *name = values[@"name"];
         name = name ? name : @"new task";
         
+        NSString *desc = values[@"desc"];
+        desc = desc ? desc : @"description";
+        
         NSString *hashtag = values[@"hashtag"];
         hashtag = hashtag ? hashtag : @"#yalebucketlist";
         
@@ -400,6 +406,7 @@
         [ctx performBlock:^{
             Task *task =  [ctx insertNewObjectForEntityForName:@"Task"];
             task.name = name;
+            task.desc = desc;
             task.hashtag = hashtag;
             task.private = private;
             task.completed = completed;
