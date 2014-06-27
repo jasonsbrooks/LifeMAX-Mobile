@@ -67,6 +67,18 @@
     
     [taskMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"user" toKeyPath:@"user" withMapping:userMapping]];
     
+    // JASONJASONJASON
+    RKEntityMapping *leaderboardMapping = [RKEntityMapping mappingForEntityForName:@"User" inManagedObjectStore:managedObjectStore];
+    leaderboardMapping.identificationAttributes = @[ @"user_id" ];
+    [leaderboardMapping addAttributeMappingsFromDictionary:@{
+                                                      @"fbid" : @"fbid",
+                                                      @"id": @"id",
+                                                      @"name" : @"name",
+                                                      @"picture" :@"picture"
+                                                      }];
+    [leaderboardMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"user" toKeyPath:@"user" withMapping:userMapping]];
+
+    
     // Register our mappings with the provider
     RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:taskMapping
                                                                                             method:RKRequestMethodGET
@@ -75,6 +87,15 @@
                                                                                        statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
     
     [objectManager addResponseDescriptor:responseDescriptor];
+
+    
+    RKResponseDescriptor *leaderboardReponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:taskMapping
+                                                                                            method:RKRequestMethodGET
+                                                                                       pathPattern:@"/api/user/:userid/leaderboard"
+                                                                                           keyPath:@"users"
+                                                                                       statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
+    
+    [objectManager addResponseDescriptor:leaderboardReponseDescriptor];
     
     RKResponseDescriptor *postResponse = [RKResponseDescriptor responseDescriptorWithMapping:taskMapping
                                                                                             method:RKRequestMethodPOST
@@ -99,6 +120,14 @@
                                                                                            statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
     
     [objectManager addResponseDescriptor:feedResponseDescriptor];
+    
+    RKResponseDescriptor *suggestionsResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:taskMapping
+                                                                                                method:RKRequestMethodGET
+                                                                                           pathPattern:@"/api/user/:userid/maxsuggests"
+                                                                                               keyPath:@"items"
+                                                                                           statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
+    
+    [objectManager addResponseDescriptor:suggestionsResponseDescriptor];
     
     
     RKRequestDescriptor *postTask = [RKRequestDescriptor requestDescriptorWithMapping:[taskMapping inverseMapping]
@@ -453,6 +482,33 @@
                                                       completionBlock(nil, error);
                                               }];
 }
+
+- (void)fetchLeaderboardForUser:(id)userid completion:(void (^)(NSArray *results, NSError *error))completionBlock {
+    
+    NSString *hashtoken = [self defaultUserHashToken];
+    
+    if(!hashtoken || !userid) {
+        NSLog(@"[LM-Warning]: Local fetch issue, not logged in yet.");
+        return;
+    }
+    
+    NSString *path = [NSString stringWithFormat:@"/api/user/%@/leaderboard", userid];
+    
+    [[RKObjectManager sharedManager] getObjectsAtPath:path parameters:@{@"hashToken" : hashtoken} success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+//        for (Task *task in [mappingResult array]) {
+//            if(task.timecompleted) task.displaydate = task.timecompleted;
+//            else task.displaydate = task.timecreated;
+//            [task.managedObjectContext save:nil];
+//        }
+        NSLog(@"mappingResults %@", mappingResult);
+//        if(completionBlock) completionBlock(YES, nil);
+        
+    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+        NSLog(@"[LM-Error] Leaderboard Map Failure: %@", operation.HTTPRequestOperation.responseString);
+        if(completionBlock) completionBlock(NO, error);
+    }];
+}
+
 
 
 #pragma mark - Singleton Methods

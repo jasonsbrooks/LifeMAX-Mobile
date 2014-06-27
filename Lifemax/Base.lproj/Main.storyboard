@@ -30,6 +30,7 @@
                     </tableView>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                 </tableViewController>
+                <navigationItem title="Leaderboard" id="9Sa-3l-pVj"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PLa-BJ-8Ef" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-284" y="-1056"/>
@@ -50,7 +51,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="list-dropdown" translatesAutoresizingMaskIntoConstraints="NO" id="XRa-xN-Vz8">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="list-dropdown" translatesAutoresizingMaskIntoConstraints="NO" id="XRa-xN-Vz8">
                                             <rect key="frame" x="285" y="15" width="15" height="14"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <constraints>
@@ -316,7 +317,7 @@
                                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <imageView userInteractionEnabled="NO" tag="11" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="list-check" translatesAutoresizingMaskIntoConstraints="NO" id="wSF-al-R8x">
+                                                    <imageView userInteractionEnabled="NO" tag="11" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="list-check" translatesAutoresizingMaskIntoConstraints="NO" id="wSF-al-R8x">
                                                         <rect key="frame" x="286" y="17" width="14" height="10"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <constraints>
@@ -1626,6 +1627,6 @@
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="d4P-Uc-qv3"/>
-        <segue reference="VU4-Eb-Got"/>
+        <segue reference="idr-cX-zpy"/>
     </inferredMetricsTieBreakers>
 </document>
