@@ -10,5 +10,8 @@
 
 @interface LeaderViewController : UITableViewController
 
+@property (nonatomic, strong) NSMutableArray *leaders;
+
+
 
 @end

@@ -10,12 +10,33 @@
 #import "LeaderViewController.h"
 #import "LMRestKitManager.h"
 #import "SWRevealViewController.h"
+#import "UIAlertView+NSCookbook.h"
+#import "User.h"
+#import "LeaderboardCell.h"
 
 @implementation LeaderViewController
+
+-(NSMutableArray *)leaders {
+    if (!_leaders) {
+        _leaders = [[NSMutableArray alloc]init];
+    }
+    return _leaders;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+}
+-(void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+}
+
 -(void) viewDidLoad{
     [super viewDidLoad];
     
     self.title = NSLocalizedString(@"Leaderboard", nil);
+    
+    [self loadData];
     
     //filter view
     
@@ -31,22 +52,64 @@
     self.navigationItem.leftBarButtonItem = revealButtonItem;
     
     self.navigationController.navigationBar.translucent = NO;
-    
-    [self loadData];
-
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-//    [super viewWillAppear:animated];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(performFetch) name:LIFEMAX_NOTIFICATION_NAME_LOGIN_SUCCESS object:nil];
+-(void) exit {
+//    [self.navigationController popViewControllerAnimated:YES];
 }
-
 
 -(void) loadData {
     id userid = [[LMRestKitManager sharedManager] defaultUserId];
     [[LMRestKitManager sharedManager] fetchLeaderboardForUser:userid completion:^(NSArray *results, NSError *error) {
-        NSLog(@"%@", results);
+        if (results){
+            self.leaders = [results mutableCopy];
+            [self.tableView reloadData];
+        } else {
+            UIAlertView *errorAlert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"Error loading data...", nil)
+                                                                 message:@"Please try again later."
+                                                                delegate:nil cancelButtonTitle:NSLocalizedString(@"Okay", nil) otherButtonTitles:nil, nil];
+            [errorAlert showWithCompletion:^(UIAlertView *alertView, NSInteger buttonIndex) {
+                [self exit];
+            }];
+        }
     }];
 }
+
+#pragma mark - Table view data source
+
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    // Return the number of sections.
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    if (self.leaders) return [self.leaders count];
+    return 0;
+    
+}
+
+-(User*) userAtIndex: (NSInteger) index
+{
+    return [self.leaders objectAtIndex:index] ;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 300;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *CellIdentifier = @"LeaderCell";
+    LeaderboardCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+    User* u = [self userAtIndex: indexPath.row];
+    
+    cell.titleLabel.text = u.user_name;
+//    cell.titleLabel.text = @"HI";
+    
+    return cell;
+}
+
 @end

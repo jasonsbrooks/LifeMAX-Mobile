@@ -10,5 +10,4 @@
 
 @interface LifeListViewController : UITableViewController
 
-
 @end

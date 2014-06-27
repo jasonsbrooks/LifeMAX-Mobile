@@ -495,13 +495,8 @@
     NSString *path = [NSString stringWithFormat:@"/api/user/%@/leaderboard", userid];
     
     [[RKObjectManager sharedManager] getObjectsAtPath:path parameters:@{@"hashToken" : hashtoken} success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-//        for (Task *task in [mappingResult array]) {
-//            if(task.timecompleted) task.displaydate = task.timecompleted;
-//            else task.displaydate = task.timecreated;
-//            [task.managedObjectContext save:nil];
-//        }
-        NSLog(@"mappingResults %@", mappingResult);
-//        if(completionBlock) completionBlock(YES, nil);
+        
+        if(completionBlock) completionBlock([mappingResult array], nil);
         
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
         NSLog(@"[LM-Error] Leaderboard Map Failure: %@", operation.HTTPRequestOperation.responseString);

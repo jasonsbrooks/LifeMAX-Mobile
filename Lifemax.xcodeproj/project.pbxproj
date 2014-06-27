@@ -65,6 +65,7 @@
 		98FB50B218A80D0900C916BC /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98FB50B118A80D0900C916BC /* LoginViewController.m */; };
 		B7A40A53195BCB57009161E5 /* LeaderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B7A40A52195BCB57009161E5 /* LeaderViewController.m */; };
 		B7A40A56195BFEF6009161E5 /* GoalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B7A40A55195BFEF6009161E5 /* GoalViewController.m */; };
+		B7A40A59195D787C009161E5 /* LeaderboardCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B7A40A58195D787C009161E5 /* LeaderboardCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -177,6 +178,8 @@
 		B7A40A52195BCB57009161E5 /* LeaderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LeaderViewController.m; sourceTree = "<group>"; };
 		B7A40A54195BFEF6009161E5 /* GoalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoalViewController.h; sourceTree = "<group>"; };
 		B7A40A55195BFEF6009161E5 /* GoalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoalViewController.m; sourceTree = "<group>"; };
+		B7A40A57195D787C009161E5 /* LeaderboardCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeaderboardCell.h; sourceTree = "<group>"; };
+		B7A40A58195D787C009161E5 /* LeaderboardCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LeaderboardCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -399,6 +402,8 @@
 		98DF58A818A85B9A00AC2BE0 /* TableViewCells */ = {
 			isa = PBXGroup;
 			children = (
+				B7A40A57195D787C009161E5 /* LeaderboardCell.h */,
+				B7A40A58195D787C009161E5 /* LeaderboardCell.m */,
 				98DF58A918A85BAF00AC2BE0 /* TaskCell.h */,
 				98DF58AA18A85BAF00AC2BE0 /* TaskCell.m */,
 				98D951C218A88D7700333D4D /* FeedUserTaskCell.h */,
@@ -625,6 +630,7 @@
 				98C7497918A745B1000A4CAF /* main.m in Sources */,
 				98D951C418A88D7700333D4D /* FeedUserTaskCell.m in Sources */,
 				9852B61418B40BC500CE1CFC /* StoryViewController.m in Sources */,
+				B7A40A59195D787C009161E5 /* LeaderboardCell.m in Sources */,
 				981B73C518B42A2A0040D4A0 /* GoogleOAuth.m in Sources */,
 				989CE3E618B926660079ECA7 /* LMHelpViewController.m in Sources */,
 				98FB50B218A80D0900C916BC /* LoginViewController.m in Sources */,
