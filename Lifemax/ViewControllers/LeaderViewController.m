@@ -13,6 +13,7 @@
 #import "UIAlertView+NSCookbook.h"
 #import "User.h"
 #import "LeaderboardCell.h"
+#import "UIImageView+AFNetworking.h"
 
 @implementation LeaderViewController
 
@@ -97,7 +98,7 @@
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 300;
+    return 80;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -106,8 +107,16 @@
     LeaderboardCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     User* u = [self userAtIndex: indexPath.row];
     
+    cell.titleLabel.font = [UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleHeadline];
+    cell.placeLabel.font = [UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleHeadline];
+    cell.scoreLabel.font = [UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleHeadline];
+    
     cell.titleLabel.text = u.user_name;
-//    cell.titleLabel.text = @"HI";
+    cell.placeLabel.text = [@(indexPath.row + 1) stringValue];
+    cell.scoreLabel.text = @"100"; //JASONJASONJASON
+    [cell.profilePicture setImageWithURL:[NSURL URLWithString:u.picture_url] placeholderImage:[UIImage imageNamed:@"max-suggests"]];
+    
+    [cell configureImage];
     
     return cell;
 }

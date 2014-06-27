@@ -11,5 +11,10 @@
 @interface LeaderboardCell : UITableViewCell
 
 @property (nonatomic, strong) IBOutlet UILabel *titleLabel;
+@property (nonatomic, strong) IBOutlet UILabel *placeLabel;
+@property (nonatomic, strong) IBOutlet UILabel *scoreLabel;
+@property (nonatomic, strong) IBOutlet UIImageView *profilePicture;
+
+-(void) configureImage;
 
 @end
