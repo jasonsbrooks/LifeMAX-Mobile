@@ -335,13 +335,14 @@
                         completion:^(OHActionSheet *sheet, NSInteger buttonIndex)
     {
         if (buttonIndex != sheet.cancelButtonIndex) {
-            // post deletion
+            
             Task *task = [self.fetchedResultsController objectAtIndexPath:self.selectedIndexPath];
-            NSLog(@"delete %@", task.task_id);
-            // JASONJASONJASON
+            [[LMRestKitManager sharedManager] hideSuggestion:task];
+            [task.managedObjectContext deleteObject:task];
         }
     }];
 }
+
 
 - (void)promtTaskCreationWithComplete:(BOOL)completed {
     

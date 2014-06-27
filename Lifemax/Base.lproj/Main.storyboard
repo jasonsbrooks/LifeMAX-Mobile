@@ -146,7 +146,7 @@
                                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <imageView userInteractionEnabled="NO" tag="11" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="list-check" translatesAutoresizingMaskIntoConstraints="NO" id="I52-HE-5e8">
+                                                    <imageView userInteractionEnabled="NO" tag="11" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="list-check" translatesAutoresizingMaskIntoConstraints="NO" id="I52-HE-5e8">
                                                         <rect key="frame" x="286" y="17" width="14" height="10"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <constraints>
@@ -1315,7 +1315,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Sidebar - Settings" translatesAutoresizingMaskIntoConstraints="NO" id="qzu-7n-Jyw">
+                                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Sidebar - Leaderboard" translatesAutoresizingMaskIntoConstraints="NO" id="qzu-7n-Jyw">
                                             <rect key="frame" x="10" y="8" width="28" height="28"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <constraints>
@@ -1354,8 +1354,8 @@
                                     <rect key="frame" x="0.0" y="0.0" width="287" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="Sidebar - Settings" translatesAutoresizingMaskIntoConstraints="NO" id="xig-X0-vKu">
-                                            <rect key="frame" x="10" y="8" width="0.0" height="28"/>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Sidebar - Challenges" translatesAutoresizingMaskIntoConstraints="NO" id="xig-X0-vKu">
+                                            <rect key="frame" x="10" y="8" width="28" height="28"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="28" id="Zcu-nd-Bn4"/>
@@ -1652,6 +1652,8 @@
         <image name="News Feed - Add Goal" width="17" height="17"/>
         <image name="News Feed - Delete Goal" width="22" height="22"/>
         <image name="News Feed - Done" width="22" height="16"/>
+        <image name="Sidebar - Challenges" width="23" height="22"/>
+        <image name="Sidebar - Leaderboard" width="23" height="23"/>
         <image name="Sidebar - My Story" width="19" height="23"/>
         <image name="Sidebar - News Feed" width="23" height="19"/>
         <image name="Sidebar - Settings" width="26" height="26"/>

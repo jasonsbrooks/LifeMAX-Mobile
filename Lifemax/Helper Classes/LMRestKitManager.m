@@ -278,6 +278,31 @@
 
 }
 
+- (void) hideSuggestion:(Task *)task {
+    //JASONJASONJASON
+    NSString *hashToken = [self defaultUserHashToken];
+    NSNumber *userid = [self defaultUserId];
+    
+    if (!userid || !hashToken) {
+        NSLog(@"[LM-ERROR]: Error deleting task - Not logged in");
+        return;
+    }
+    
+    NSString *path = [NSString stringWithFormat:@"/api/user/%@/hidesuggestion", userid]; //JASONJASONJASON
+    
+    [[LMHttpClient sharedManager] postPath:path parameters:@{@"hashToken" : hashToken, @"taskId" : task.task_id} success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        [self deleteTaskFromLocalStore:task];
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        if(operation.response.statusCode == 200) {
+            [self deleteTaskFromLocalStore:task];
+        } else {
+            NSLog(@"[LM-ERROR]: Delete Response: %@", operation.responseString);
+        }
+    }];
+}
+
 - (void) uploadPhoto:(UIImage *)image forTask:(Task *)task {
 
     NSData *jpegData = UIImageJPEGRepresentation(image, .6);

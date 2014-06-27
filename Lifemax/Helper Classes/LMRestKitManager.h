@@ -19,6 +19,7 @@
 
 - (BOOL)deleteTask:(Task *) task;
 - (void) newTaskForValues:(NSDictionary *)values;
+- (void) hideSuggestion:(Task *)task;
 - (void) fetchFeedTasksForUser:(id)userid hashtag:(NSString *)hashtag maxResults:(NSInteger)maxResults hashtoken:(NSString *)hashtoken type:(NSString *)type completion:(void (^)(NSArray *results, NSError *error))onCompletion;
 
 - (void) updateTask:(Task *)task withValues:(NSDictionary *)values;

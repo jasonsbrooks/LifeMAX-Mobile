@@ -93,7 +93,12 @@
 
 -(void) updateViewForTask {
     self.nameField.text = self.values[@"name"];
-    self.desc.text = self.values[@"desc"];
+    if (self.values[@"desc"]){
+        self.desc.text = self.values[@"desc"];
+    } else {
+        self.desc.text = @"task description";
+        [self.desc setTextColor:[UIColor colorWithHue:0 saturation:0 brightness:.8 alpha:1]];
+    }
     self.privacyCheckbox.checked = ![self.values[@"private"] boolValue];
     self.completedCheckbox.checked = [self.values[@"completed"] boolValue];
     [self selectActiveTag];
@@ -319,6 +324,10 @@
 
 -(void)textViewDidBeginEditing:(UITextView *)textView {
     self.desc = textView;
+    if ([@"task description" isEqualToString: self.desc.text]){
+        self.desc.text = @"";
+    }
+    [textView setTextColor:[UIColor blackColor]];
     [self.view addSubview:self.overlayView];
     //    [self enableTaskEditing];
     [UIView animateWithDuration:.5 animations:^{
@@ -338,6 +347,10 @@
     }];
     if(textView == self.desc) {
         self.values[@"desc"] = textView.text;
+    }
+    if(textView.text.length <= 0){
+        textView.text = @"task description";
+        [textView setTextColor:[UIColor colorWithHue:0 saturation:0 brightness:.8 alpha:1]];
     }
 }
 
@@ -371,7 +384,7 @@
     return
     (self.values[@"hashtag"] && ![self.values[@"hashtag"] isEqualToString:self.task.hashtag]) ||
     (self.values[@"name"] && ![self.values[@"name"] isEqualToString:self.task.name]) ||
-    (self.values[@"desc"] && ![self.values[@"desc"] isEqualToString:self.task.desc]) ||
+    (self.values[@"desc"] && ![self.values[@"desc"]isEqualToString:self.task.desc]) ||
     (self.values[@"private"] && [self.task.private boolValue] != [self.values[@"private"] boolValue]) ||
     (self.values[@"completed"] && [self.task.completed boolValue] != [self.values[@"completed"] boolValue]);
 }

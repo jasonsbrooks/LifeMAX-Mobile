@@ -7,6 +7,7 @@
 //
 
 #import "LeaderboardCell.h"
+#import "LifemaxHeaders.h"
 
 @implementation LeaderboardCell
 
@@ -14,8 +15,8 @@
     self.profilePicture.layer.cornerRadius = self.profilePicture.frame.size.width / 2;
     self.profilePicture.clipsToBounds = YES;
     
-//    self.profilePicture.layer.borderWidth = 3.0f;
-//    self.profilePicture.layer.borderColor = [UIColor blackColor].CGColor;
+    self.profilePicture.layer.borderWidth = 1.0f;
+    self.profilePicture.layer.borderColor = [UIColor grayColor].CGColor;
     
     self.contentMode = UIViewContentModeScaleAspectFill;
     self.autoresizingMask = (UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleWidth);
