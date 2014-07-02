@@ -20,6 +20,7 @@
     <entity name="User" representedClassName="User" syncable="YES">
         <attribute name="fbid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="picture_url" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="score" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="user_id" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="user_name" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="tasks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Task" inverseName="user" inverseEntity="Task" syncable="YES"/>
@@ -27,6 +28,6 @@
     <elements>
         <element name="Hashtag" positionX="9" positionY="72" width="128" height="73"/>
         <element name="Task" positionX="0" positionY="0" width="128" height="210"/>
-        <element name="User" positionX="0" positionY="0" width="128" height="120"/>
+        <element name="User" positionX="0" positionY="0" width="128" height="135"/>
     </elements>
 </model>

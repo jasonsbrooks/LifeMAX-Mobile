@@ -113,7 +113,7 @@
     
     cell.titleLabel.text = u.user_name;
     cell.placeLabel.text = [@(indexPath.row + 1) stringValue];
-    cell.scoreLabel.text = @"100"; //JASONJASONJASON
+    cell.scoreLabel.text = u.score ? u.score : @"???";
     [cell.profilePicture setImageWithURL:[NSURL URLWithString:u.picture_url] placeholderImage:[UIImage imageNamed:@"max-suggests"]];
     
     [cell configureImage];

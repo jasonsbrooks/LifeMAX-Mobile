@@ -18,6 +18,7 @@
 @property (nonatomic, retain) NSString * fbid;
 @property (nonatomic, retain) NSSet *tasks;
 @property (nonatomic, retain) NSString * picture_url;
+@property (nonatomic, retain) NSString * score;
 @end
 
 @interface User (CoreDataGeneratedAccessors)

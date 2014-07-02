@@ -17,5 +17,6 @@
 @dynamic fbid;
 @dynamic tasks;
 @dynamic picture_url;
+@dynamic score;
 
 @end

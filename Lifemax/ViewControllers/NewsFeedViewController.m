@@ -36,6 +36,8 @@
 @property (nonatomic, strong) NSIndexPath *selectedIndexPath;
 @property BOOL selectedUserTask;
 @property (nonatomic, strong) NSPredicate *root_predicate;
+@property NSInteger lastCell;
+@property NSInteger scrollDirection;
 @end
 
 @implementation NewsFeedViewController
@@ -73,6 +75,8 @@
 {
     [super viewDidLoad];
     
+    self.scrollDirection = 0;
+    self.lastCell = 0;
     if (self.isStoryController)
         self.title = NSLocalizedString(@"My Story", nil);
     else if (self.isSuggestionsController)
@@ -122,6 +126,45 @@
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if ([scrollView.panGestureRecognizer translationInView:scrollView.superview].y < 0) {
+        self.scrollDirection = 1;
+    } else {
+        self.scrollDirection = -1;
+    }
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    if (self.isSuggestionsController && decelerate == NO) {
+        [self centerTable];
+    }
+}
+
+- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
+    if (self.isSuggestionsController) {
+        [self centerTable];
+    }
+}
+
+- (void)centerTable {
+    NSIndexPath *newIndexPath = [self.tableView indexPathForRowAtPoint:CGPointMake(CGRectGetMidX(self.tableView.bounds), CGRectGetMidY(self.tableView.bounds))];
+    
+    if (self.scrollDirection > 0){
+        NSInteger count = (int) [[self tableView] numberOfRowsInSection:0]-1;
+        if (self.lastCell < count) {
+            newIndexPath = [NSIndexPath indexPathForRow:self.lastCell + 1 inSection:0];
+        }
+    } else if (self.scrollDirection < 0) {
+        newIndexPath = [NSIndexPath indexPathForRow:self.lastCell - 1 inSection:0];
+    }
+
+    if (self.lastCell != 0 || self.scrollDirection >= 0){
+        [self.tableView scrollToRowAtIndexPath:newIndexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+        self.lastCell = newIndexPath.row;
+    }
+    self.scrollDirection = 0;
 }
 
 
@@ -385,7 +428,15 @@
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 300;
+    if (self.isSuggestionsController){
+        if (indexPath.row == 0){
+            return MIN(self.view.bounds.size.height, self.tableView.contentSize.height) - 45;
+        } else {
+            return MIN(self.view.bounds.size.height, self.tableView.contentSize.height);
+        }
+    } else {
+        return 300;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

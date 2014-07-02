@@ -92,7 +92,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="list-dropdown" translatesAutoresizingMaskIntoConstraints="NO" id="XRa-xN-Vz8">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="list-dropdown" translatesAutoresizingMaskIntoConstraints="NO" id="XRa-xN-Vz8">
                                             <rect key="frame" x="285" y="15" width="15" height="14"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <constraints>
@@ -352,7 +352,7 @@
                                                         <rect key="frame" x="20" y="5" width="256" height="33"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="33" id="erm-DD-4UB"/>
+                                                            <constraint firstAttribute="height" constant="33" id="erm-DD-4UB"/>
                                                         </constraints>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -1650,7 +1650,7 @@
     <resources>
         <image name="Max Launch" width="164" height="164"/>
         <image name="News Feed - Add Goal" width="17" height="17"/>
-        <image name="News Feed - Delete Goal" width="22" height="22"/>
+        <image name="News Feed - Delete Goal" width="17" height="17"/>
         <image name="News Feed - Done" width="22" height="16"/>
         <image name="Sidebar - Challenges" width="23" height="22"/>
         <image name="Sidebar - Leaderboard" width="23" height="23"/>
@@ -1670,6 +1670,6 @@
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="d4P-Uc-qv3"/>
-        <segue reference="idr-cX-zpy"/>
+        <segue reference="VU4-Eb-Got"/>
     </inferredMetricsTieBreakers>
 </document>

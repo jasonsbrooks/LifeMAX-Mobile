@@ -56,7 +56,7 @@
     [taskMapping addAttributeMappingsFromDictionary:@{
                                                       @"name" : @"name",
                                                       @"id": @"task_id",
-                                                      @"description" : @"desc", //JASONJASONJASON
+                                                      @"description" : @"desc",
                                                       @"pictureurl" :@"pictureurl",
                                                       @"hashtag" : @"hashtag",
                                                       @"completed" : @"completed",
@@ -67,14 +67,14 @@
     
     [taskMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"user" toKeyPath:@"user" withMapping:userMapping]];
     
-    // JASONJASONJASON
     RKEntityMapping *leaderboardMapping = [RKEntityMapping mappingForEntityForName:@"User" inManagedObjectStore:managedObjectStore];
     leaderboardMapping.identificationAttributes = @[ @"user_id" ];
     [leaderboardMapping addAttributeMappingsFromDictionary:@{
                                                       @"fbid" : @"fbid",
                                                       @"id": @"user_id",
                                                       @"name" : @"user_name",
-                                                      @"picture" :@"picture_url"
+                                                      @"picture" :@"picture_url",
+                                                      @"score" : @"score"
                                                       }];
 //    [leaderboardMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"user" toKeyPath:@"user" withMapping:userMapping]];
 
@@ -279,7 +279,6 @@
 }
 
 - (void) hideSuggestion:(Task *)task {
-    //JASONJASONJASON
     NSString *hashToken = [self defaultUserHashToken];
     NSNumber *userid = [self defaultUserId];
     
