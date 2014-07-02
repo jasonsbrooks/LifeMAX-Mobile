@@ -97,6 +97,10 @@
     SWRevealViewController *revealController = [self revealViewController];
     self.navigationController.navigationBar.translucent = NO;
     
+    if (!self.isSuggestionsController) {
+        self.tableView.contentInset = UIEdgeInsetsMake(0, 0, -70, 0);
+    }
+    
     [revealController tapGestureRecognizer];
     
     UIBarButtonItem *revealButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"reveal-icon.png"]
