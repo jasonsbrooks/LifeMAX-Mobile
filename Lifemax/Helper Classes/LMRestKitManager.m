@@ -279,27 +279,31 @@
 }
 
 - (void) hideSuggestion:(Task *)task {
-    NSString *hashToken = [self defaultUserHashToken];
-    NSNumber *userid = [self defaultUserId];
+    if (task && task.task_id) {
+        NSString *hashToken = [self defaultUserHashToken];
+        NSNumber *userid = [self defaultUserId];
     
-    if (!userid || !hashToken) {
-        NSLog(@"[LM-ERROR]: Error deleting task - Not logged in");
-        return;
-    }
-    
-    NSString *path = [NSString stringWithFormat:@"/api/user/%@/hidesuggestion", userid]; //JASONJASONJASON
-    
-    [[LMHttpClient sharedManager] postPath:path parameters:@{@"hashToken" : hashToken, @"taskId" : task.task_id} success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        
-        [self deleteTaskFromLocalStore:task];
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        if(operation.response.statusCode == 200) {
-            [self deleteTaskFromLocalStore:task];
-        } else {
-            NSLog(@"[LM-ERROR]: Delete Response: %@", operation.responseString);
+        if (!userid || !hashToken) {
+            NSLog(@"[LM-ERROR]: Error deleting task - Not logged in");
+            return;
         }
-    }];
+    
+        NSString *path = [NSString stringWithFormat:@"/api/user/%@/hidesuggestion", userid]; //JASONJASONJASON
+    
+        [[LMHttpClient sharedManager] postPath:path parameters:@{@"hashToken" : hashToken, @"taskId" : task.task_id} success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+            [self deleteTaskFromLocalStore:task];
+        
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            if(operation.response.statusCode == 200) {
+                [self deleteTaskFromLocalStore:task];
+            } else {
+                NSLog(@"[LM-ERROR]: Delete Response: %@", operation.responseString);
+            }
+        }];
+    } else if (task) {
+        [self deleteTaskFromLocalStore:task];
+    }
 }
 
 - (void) uploadPhoto:(UIImage *)image forTask:(Task *)task {
@@ -358,24 +362,29 @@
 
 - (BOOL)deleteTask:(Task *) task {
     NSNumber *task_id = task.task_id;
+    
+    if (task_id){
 
-    NSLog(@"Delete Task");
-    NSString *deleteTasksPath = [NSString stringWithFormat:@"/api/user/%@/deletetasks", [self defaultUserId]];
+        NSLog(@"Delete Task");
+        NSString *deleteTasksPath = [NSString stringWithFormat:@"/api/user/%@/deletetasks", [self defaultUserId]];
     
-    NSString *tok = [self defaultUserHashToken];
+        NSString *tok = [self defaultUserHashToken];
     
-    [[LMHttpClient sharedManager] postPath:deleteTasksPath parameters:@{@"hashToken" : tok, @"taskId" : task_id} success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [[LMHttpClient sharedManager] postPath:deleteTasksPath parameters:@{@"hashToken" : tok, @"taskId" : task_id} success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
-        [self deleteTaskFromLocalStore:task];
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        if(operation.response.statusCode == 200) {
             [self deleteTaskFromLocalStore:task];
-        } else {
-            NSLog(@"[LM-ERROR]: Delete Response: %@", operation.responseString);
-        }
-    }];
-    return YES;
+        
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            if(operation.response.statusCode == 200) {
+                [self deleteTaskFromLocalStore:task];
+            } else {
+                NSLog(@"[LM-ERROR]: Delete Response: %@", operation.responseString);
+            }
+        }];
+        return YES;
+    } else {
+        return NO;
+    }
 }
 
 - (void) updateTask:(Task *)task withValues:(NSDictionary *)values {

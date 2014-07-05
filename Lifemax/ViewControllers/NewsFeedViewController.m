@@ -52,11 +52,21 @@
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
+    
     self = [super initWithStyle:style];
     if (self) {
         // Custom initialization
     }
     return self;
+    
+//    self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
+//    if (self)
+//    {
+//        self.contentView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+//        [self loadViews];
+//        [self constrainViews];
+//    }
+//    return self;
 }
 
 - (void) fetchHashTags:(id)sender {
@@ -183,6 +193,9 @@
             if (!userid) return nil;
             fetchRequest.predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[[NSPredicate predicateWithFormat:@"user.user_id = %@", userid], [NSPredicate predicateWithFormat:@"completed = %@", @(YES)]]];
             self.root_predicate = fetchRequest.predicate;
+        }else if (self.isSuggestionsController) {
+            fetchRequest.predicate = [NSPredicate predicateWithFormat:@"user.user_id = 0"];
+            self.root_predicate = fetchRequest.predicate;
         }else {
             fetchRequest.predicate = [NSPredicate predicateWithFormat:@"completed = %@", @(YES)];
             self.root_predicate = fetchRequest.predicate;
@@ -235,8 +248,15 @@
         BOOL fetchSuccessful = [self.fetchedResultsController performFetch:nil];
         
         if(fetchSuccessful){
+//            self.tableView.tableFooterView.hidden = !([self.fetchedResultsController.fetchedObjects count] == 0); //JASONJASONJASON
+            if ([self.fetchedResultsController.fetchedObjects count] != 0){
+                self.tableView.tableFooterView.hidden = TRUE;
+                self.tableView.rowHeight = self.view.bounds.size.height - 45;
+            } else {
+                self.tableView.tableFooterView.hidden = FALSE;
+                self.tableView.rowHeight = 100;
+            }
             [self.tableView reloadData];
-            self.tableView.tableFooterView.hidden = !([self.fetchedResultsController.fetchedObjects count] == 0);
         }
         else{
             NSLog(@"ERROR FETCHING!");
@@ -384,8 +404,11 @@
         if (buttonIndex != sheet.cancelButtonIndex) {
             
             Task *task = [self.fetchedResultsController objectAtIndexPath:self.selectedIndexPath];
-            [[LMRestKitManager sharedManager] hideSuggestion:task];
-            [task.managedObjectContext deleteObject:task];
+            if (task){
+                [task.managedObjectContext deleteObject:task];
+                [[LMRestKitManager sharedManager] hideSuggestion:task];
+            }
+            
         }
     }];
 }
@@ -434,9 +457,9 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (self.isSuggestionsController){
         if (indexPath.row == 0){
-            return MIN(self.view.bounds.size.height, self.tableView.contentSize.height) - 45;
+            return self.view.bounds.size.height - 45;
         } else {
-            return MIN(self.view.bounds.size.height, self.tableView.contentSize.height);
+            return self.view.bounds.size.height;
         }
     } else {
         return 300;
@@ -508,6 +531,7 @@
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath*)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath*)newIndexPath {
     
     UITableView* tableView = self.tableView;
+    tableView.userInteractionEnabled = NO;
     switch(type) {
         case NSFetchedResultsChangeInsert:
             [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
@@ -524,9 +548,12 @@
             
         case NSFetchedResultsChangeMove:
             [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            if (newIndexPath.row >= 0) {
+                [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            }
             break;
     }
+    tableView.userInteractionEnabled = YES;
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {

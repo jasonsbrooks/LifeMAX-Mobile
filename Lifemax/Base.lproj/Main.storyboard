@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="eZy-Nx-uPK">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="eZy-Nx-uPK">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
@@ -92,7 +92,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="list-dropdown" translatesAutoresizingMaskIntoConstraints="NO" id="XRa-xN-Vz8">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="list-dropdown" translatesAutoresizingMaskIntoConstraints="NO" id="XRa-xN-Vz8">
                                             <rect key="frame" x="285" y="15" width="15" height="14"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <constraints>
@@ -146,7 +146,7 @@
                                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <imageView userInteractionEnabled="NO" tag="11" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="list-check" translatesAutoresizingMaskIntoConstraints="NO" id="I52-HE-5e8">
+                                                    <imageView userInteractionEnabled="NO" tag="11" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="list-check" translatesAutoresizingMaskIntoConstraints="NO" id="I52-HE-5e8">
                                                         <rect key="frame" x="286" y="17" width="14" height="10"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <constraints>
@@ -352,14 +352,14 @@
                                                         <rect key="frame" x="20" y="5" width="256" height="33"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="height" constant="33" id="erm-DD-4UB"/>
+                                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="33" id="erm-DD-4UB"/>
                                                         </constraints>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <imageView userInteractionEnabled="NO" tag="11" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="list-check" translatesAutoresizingMaskIntoConstraints="NO" id="wSF-al-R8x">
-                                                        <rect key="frame" x="286" y="17" width="14" height="10"/>
+                                                    <imageView userInteractionEnabled="NO" tag="11" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="list-check" translatesAutoresizingMaskIntoConstraints="NO" id="wSF-al-R8x">
+                                                        <rect key="frame" x="286" y="17" width="14" height="9"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="14" id="VoB-m9-1h0"/>
@@ -403,16 +403,16 @@
                                 <outlet property="topContainerView" destination="Vr9-Cf-jUJ" id="n8G-Mz-Kd9"/>
                             </connections>
                         </view>
-                        <view key="tableFooterView" contentMode="scaleToFill" id="WcZ-lL-DRd">
-                            <rect key="frame" x="0.0" y="1093" width="320" height="72"/>
+                        <view key="tableFooterView" hidden="YES" contentMode="scaleToFill" id="WcZ-lL-DRd">
+                            <rect key="frame" x="0.0" y="1093" width="320" height="64"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
-                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No goals match this search, try completing your own in this #list" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="XQX-Rf-raZ">
-                                    <rect key="frame" x="20" y="10" width="280" height="52"/>
+                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="No goals match this search, try completing your own in this #list" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="XQX-Rf-raZ">
+                                    <rect key="frame" x="20" y="-418" width="280" height="900"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="52" id="z1b-Mg-x0Y"/>
+                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" priority="100" constant="72" id="z1b-Mg-x0Y"/>
                                     </constraints>
                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                     <nil key="highlightedColor"/>
@@ -421,8 +421,7 @@
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="trailing" secondItem="XQX-Rf-raZ" secondAttribute="trailing" constant="20" id="27O-Sc-7Fo"/>
-                                <constraint firstItem="XQX-Rf-raZ" firstAttribute="top" secondItem="WcZ-lL-DRd" secondAttribute="top" constant="10" id="3XL-EW-7Ub"/>
-                                <constraint firstAttribute="centerY" secondItem="XQX-Rf-raZ" secondAttribute="centerY" id="N52-5Q-bdO"/>
+                                <constraint firstItem="XQX-Rf-raZ" firstAttribute="centerY" secondItem="WcZ-lL-DRd" secondAttribute="centerY" id="3XL-EW-7Ub"/>
                                 <constraint firstItem="XQX-Rf-raZ" firstAttribute="leading" secondItem="WcZ-lL-DRd" secondAttribute="leading" constant="20" id="R8m-lh-bF7"/>
                             </constraints>
                         </view>

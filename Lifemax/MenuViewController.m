@@ -53,6 +53,7 @@
     } else if ([segue.identifier isEqualToString:@"max-suggests"]) {
         NewsFeedViewController *feed = segue.destinationViewController;
         feed.isSuggestionsController = YES;
+        
     }
 }
 
