@@ -16,6 +16,7 @@
 @property (nonatomic, retain) NSNumber * completed;
 @property (nonatomic, retain) NSString * hashtag;
 @property (nonatomic, retain) NSString * name;
+@property (nonatomic, retain) NSString * desc;
 @property (nonatomic, retain) NSString * pictureurl;
 @property (nonatomic, retain) NSNumber * task_id;
 @property (nonatomic, retain) NSNumber * private;

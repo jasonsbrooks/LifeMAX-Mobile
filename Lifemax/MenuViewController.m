@@ -47,9 +47,13 @@
         };
     }
     
-    if([segue.identifier isEqualToString:@"my-story"]) {
+    if ([segue.identifier isEqualToString:@"my-story"]) {
         NewsFeedViewController *feed = segue.destinationViewController;
         feed.isStoryController = YES;
+    } else if ([segue.identifier isEqualToString:@"max-suggests"]) {
+        NewsFeedViewController *feed = segue.destinationViewController;
+        feed.isSuggestionsController = YES;
+        
     }
 }
 
@@ -70,7 +74,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if(section == 0) return 3;
+    if(section == 0) return 5;
     else if(section == 1) return 1;
     return 0;
 }
@@ -84,6 +88,8 @@
     if(indexPath.section == 0) {
         if(indexPath.row == 0) CellIdentifier = @"feed";
         else if(indexPath.row == 1) CellIdentifier = @"lifelist";
+        else if(indexPath.row == 2) CellIdentifier = @"leaderboard";
+        else if(indexPath.row == 3) CellIdentifier = @"suggestions";
         else CellIdentifier = @"story";
     } else {
         if(indexPath.row == 0) CellIdentifier = @"settings";

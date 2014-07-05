@@ -19,7 +19,8 @@
 
 - (BOOL)deleteTask:(Task *) task;
 - (void) newTaskForValues:(NSDictionary *)values;
-- (void) fetchFeedTasksForUser:(id)userid hashtag:(NSString *)hashtag maxResults:(NSInteger)maxResults hashtoken:(NSString *)hashtoken completion:(void (^)(NSArray *results, NSError *error))onCompletion;
+- (void) hideSuggestion:(Task *)task;
+- (void) fetchFeedTasksForUser:(id)userid hashtag:(NSString *)hashtag maxResults:(NSInteger)maxResults hashtoken:(NSString *)hashtoken type:(NSString *)type completion:(void (^)(NSArray *results, NSError *error))onCompletion;
 
 - (void) updateTask:(Task *)task withValues:(NSDictionary *)values;
 - (NSString *) defaultUserAuthToken;
@@ -28,6 +29,6 @@
 - (void) uploadPhoto:(UIImage *)image forTask: (Task *)task;
 
 - (void)fetchHashtagListOnCompletion:(void (^)(NSArray *, NSError *))completionBlock;
-
+- (void)fetchLeaderboardForUser:(id)userid completion:(void (^)(NSArray *results, NSError *error))completionBlock;
 
 @end

@@ -20,12 +20,13 @@
 #import "Checkbox.h"
 #define DESCRIPTION_PLACEHOLDER_TEXT @"description"
 
-@interface EditTaskViewController () <UIScrollViewDelegate, UITextFieldDelegate, HashtagSelectorDelegate>
+@interface EditTaskViewController () <UIScrollViewDelegate, UITextFieldDelegate, UITextViewDelegate, HashtagSelectorDelegate>
 @property (nonatomic, strong) IBOutlet UIScrollView *contentScrollView;
 @property (nonatomic, strong) IBOutlet UIButton *deleteButton;
 @property (nonatomic, strong) IBOutlet UITextField *nameField;
 @property (nonatomic, strong) IBOutlet UILabel *privacyLabel;
 @property (nonatomic, strong) IBOutlet UILabel *completedLabel;
+@property (nonatomic, strong) IBOutlet UITextView *desc;
 
 @property (nonatomic, strong) IBOutlet Checkbox *privacyCheckbox;
 @property (nonatomic, strong) IBOutlet Checkbox *completedCheckbox;
@@ -74,6 +75,7 @@
     if(task.hashtag) self.values[@"hashtag"] = task.hashtag;
     if(task.pictureurl) self.values[@"pictureurl"] = task.pictureurl;
     if(task.private) self.values[@"private"] = @(task.private.boolValue);
+    if(task.desc) self.values[@"desc"] = task.desc;
     
     if(!fromFeed){
         if(task.completed) self.values[@"completed"] = @(task.completed.boolValue);
@@ -91,6 +93,12 @@
 
 -(void) updateViewForTask {
     self.nameField.text = self.values[@"name"];
+    if (self.values[@"desc"]){
+        self.desc.text = self.values[@"desc"];
+    } else {
+        self.desc.text = @"task description";
+        [self.desc setTextColor:[UIColor colorWithHue:0 saturation:0 brightness:.8 alpha:1]];
+    }
     self.privacyCheckbox.checked = ![self.values[@"private"] boolValue];
     self.completedCheckbox.checked = [self.values[@"completed"] boolValue];
     [self selectActiveTag];
@@ -147,6 +155,7 @@
     self.nameField.font = [UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleHeadline];
     self.privacyLabel.font = [UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleBody];
     self.completedLabel.font = [UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleBody];
+    self.desc.font = [UIFont preferredAvenirNextFontWithTextStyle:UIFontTextStyleBody];
 
     NSFetchRequest *hashtagfetch = [[NSFetchRequest alloc] initWithEntityName:@"Hashtag"];
     NSArray *hashtagObjs = [[RKManagedObjectStore defaultStore].mainQueueManagedObjectContext executeFetchRequest:hashtagfetch error:nil];
@@ -176,29 +185,40 @@
     self.values[@"private"] = @(private);
 }
 
-- (BOOL) validateInput
+- (NSString *) validateInput
 {
-    if(self.values && [self.values objectForKey:@"name"] && [[self.values objectForKey:@"name"] length] > 0) {
-        return YES;
+    if(self.values){
+        if (![self.values objectForKey:@"name"] || [[self.values objectForKey:@"name"] length] <= 0)
+            return @"name";
+        if (![self.values objectForKey:@"desc"] || [[self.values objectForKey:@"desc"] length] <= 0)
+            return @"desc";
     }
-
-    return NO;
+    return @"OK";
 }
 
 - (void) savePressed:(id)sender {
     [self.nameField endEditing:YES];
-    BOOL validated = [self validateInput];
-    if(validated) {
+    [self.desc endEditing:YES];
+    NSString *validated = [self validateInput];
+    if([validated isEqualToString:@"OK"]) {
         [self.delegate editor:self didEditTaskFields:self.values forTask:self.task];
         [self exit];
-    }
-    else if ([self didInputChange]){
-        UIAlertView *warn = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"Incomplete", nil)
+    } else if ([self didInputChange]){
+        if ([validated isEqualToString:@"name"]){
+            UIAlertView *warn = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"Incomplete", nil)
                                                       message:NSLocalizedString(@"A task must have a title", nil)
-                                                     delegate:nil
+                                                      delegate:nil
                                             cancelButtonTitle:@"OK"
                                             otherButtonTitles:nil];
-        [warn show];
+            [warn show];
+        } else {
+            UIAlertView *warn = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"Incomplete", nil)
+                                                        message:NSLocalizedString(@"A task must have a description", nil)
+                                                        delegate:nil
+                                                cancelButtonTitle:@"OK"
+                                                otherButtonTitles:nil];
+            [warn show];
+        }
     } else [self exit];
 }
 
@@ -246,10 +266,12 @@
 
 - (void)tapInScrollView {
     [self.nameField endEditing:YES];
+    [self.desc endEditing: YES];
 }
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [self.nameField endEditing:YES];
+    [self.desc endEditing: YES];
 }
 
 
@@ -291,14 +313,53 @@
     }
 }
 
-
-
 -(BOOL)textFieldShouldEndEditing:(UITextField *)textField {
     return YES;
 }
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
+    return YES;
+}
+
+-(void)textViewDidBeginEditing:(UITextView *)textView {
+    self.desc = textView;
+    if ([@"task description" isEqualToString: self.desc.text]){
+        self.desc.text = @"";
+    }
+    [textView setTextColor:[UIColor blackColor]];
+    [self.view addSubview:self.overlayView];
+    //    [self enableTaskEditing];
+    [UIView animateWithDuration:.5 animations:^{
+        self.hashtagSelector.alpha = .5;
+    } completion:nil];
+}
+
+- (BOOL)textView:(UITextView *)textView shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    return YES;
+}
+
+-(void)textViewDidEndEditing:(UITextView *)textView {
+    [self.overlayView removeFromSuperview];
+    [UIView animateWithDuration:.5 animations:^{
+        self.hashtagSelector.alpha = 1;
+    } completion:^(BOOL finished) {
+    }];
+    if(textView == self.desc) {
+        self.values[@"desc"] = textView.text;
+    }
+    if(textView.text.length <= 0){
+        textView.text = @"task description";
+        [textView setTextColor:[UIColor colorWithHue:0 saturation:0 brightness:.8 alpha:1]];
+    }
+}
+
+-(BOOL)textViewShouldEndEditing:(UITextView *)textView {
+    return YES;
+}
+- (BOOL)textViewShouldReturn:(UITextView *)textView
+{
+    [textView resignFirstResponder];
     return YES;
 }
 
@@ -323,6 +384,7 @@
     return
     (self.values[@"hashtag"] && ![self.values[@"hashtag"] isEqualToString:self.task.hashtag]) ||
     (self.values[@"name"] && ![self.values[@"name"] isEqualToString:self.task.name]) ||
+    (self.values[@"desc"] && ![self.values[@"desc"]isEqualToString:self.task.desc]) ||
     (self.values[@"private"] && [self.task.private boolValue] != [self.values[@"private"] boolValue]) ||
     (self.values[@"completed"] && [self.task.completed boolValue] != [self.values[@"completed"] boolValue]);
 }

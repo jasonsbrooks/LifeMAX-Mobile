@@ -17,7 +17,7 @@
 @implementation LMRestKitManager
 
 - (void)initializeMappings {
-    NSURL *baseURL = [NSURL URLWithString:@"http://lifemax-staging.herokuapp.com"];
+    NSURL *baseURL = [NSURL URLWithString:LIFEMAX_ROOT_URL];
     RKObjectManager *objectManager = [RKObjectManager managerWithBaseURL:baseURL];
     
     // Enable Activity Indicator Spinner
@@ -56,6 +56,7 @@
     [taskMapping addAttributeMappingsFromDictionary:@{
                                                       @"name" : @"name",
                                                       @"id": @"task_id",
+                                                      @"description" : @"desc",
                                                       @"pictureurl" :@"pictureurl",
                                                       @"hashtag" : @"hashtag",
                                                       @"completed" : @"completed",
@@ -66,6 +67,18 @@
     
     [taskMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"user" toKeyPath:@"user" withMapping:userMapping]];
     
+    RKEntityMapping *leaderboardMapping = [RKEntityMapping mappingForEntityForName:@"User" inManagedObjectStore:managedObjectStore];
+    leaderboardMapping.identificationAttributes = @[ @"user_id" ];
+    [leaderboardMapping addAttributeMappingsFromDictionary:@{
+                                                      @"fbid" : @"fbid",
+                                                      @"id": @"user_id",
+                                                      @"name" : @"user_name",
+                                                      @"picture" :@"picture_url",
+                                                      @"score" : @"score"
+                                                      }];
+//    [leaderboardMapping addPropertyMapping:[RKRelationshipMapping relationshipMappingFromKeyPath:@"user" toKeyPath:@"user" withMapping:userMapping]];
+
+    
     // Register our mappings with the provider
     RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:taskMapping
                                                                                             method:RKRequestMethodGET
@@ -74,6 +87,15 @@
                                                                                        statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
     
     [objectManager addResponseDescriptor:responseDescriptor];
+
+    
+    RKResponseDescriptor *leaderboardReponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:leaderboardMapping
+                                                                                            method:RKRequestMethodGET
+                                                                                       pathPattern:@"/api/user/:userid/leaderboard"
+                                                                                           keyPath:@"users"
+                                                                                       statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
+    
+    [objectManager addResponseDescriptor:leaderboardReponseDescriptor];
     
     RKResponseDescriptor *postResponse = [RKResponseDescriptor responseDescriptorWithMapping:taskMapping
                                                                                             method:RKRequestMethodPOST
@@ -98,6 +120,14 @@
                                                                                            statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
     
     [objectManager addResponseDescriptor:feedResponseDescriptor];
+    
+    RKResponseDescriptor *suggestionsResponseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:taskMapping
+                                                                                                method:RKRequestMethodGET
+                                                                                           pathPattern:@"/api/user/:userid/maxsuggests"
+                                                                                               keyPath:@"items"
+                                                                                           statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
+    
+    [objectManager addResponseDescriptor:suggestionsResponseDescriptor];
     
     
     RKRequestDescriptor *postTask = [RKRequestDescriptor requestDescriptorWithMapping:[taskMapping inverseMapping]
@@ -216,15 +246,15 @@
     }];
 }
 
-- (void) fetchFeedTasksForUser:(id)userid hashtag:(NSString *)hashtag maxResults:(NSInteger)maxResults hashtoken:(NSString *)hashtoken completion:(void (^)(NSArray *results, NSError *error))onCompletion {
+- (void) fetchFeedTasksForUser:(id)userid hashtag:(NSString *)hashtag maxResults:(NSInteger)maxResults hashtoken:(NSString *)hashtoken type:(NSString *)type completion:(void (^)(NSArray *results, NSError *error))onCompletion {
     
     if(!hashtoken || !userid) {
         NSLog(@"[LM-Warning]: Local fetch issue, not logged in yet.");
         return;
     }
     
-    
-    NSString *path = [NSString stringWithFormat:@"/api/user/%@/newsfeed", userid];
+//    NSString *path = [NSString stringWithFormat:@"/api/user/%@/newsfeed", userid];
+    NSString *path = [NSString stringWithFormat:@"/api/user/%@/%@", userid, type];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [[RKObjectManager sharedManager] getObjectsAtPath:path parameters:@{@"hashToken" : hashtoken} success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
@@ -246,6 +276,34 @@
         }];
     });
 
+}
+
+- (void) hideSuggestion:(Task *)task {
+    if (task && task.task_id) {
+        NSString *hashToken = [self defaultUserHashToken];
+        NSNumber *userid = [self defaultUserId];
+    
+        if (!userid || !hashToken) {
+            NSLog(@"[LM-ERROR]: Error deleting task - Not logged in");
+            return;
+        }
+    
+        NSString *path = [NSString stringWithFormat:@"/api/user/%@/hidesuggestion", userid]; //JASONJASONJASON
+    
+        [[LMHttpClient sharedManager] postPath:path parameters:@{@"hashToken" : hashToken, @"taskId" : task.task_id} success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+            [self deleteTaskFromLocalStore:task];
+        
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            if(operation.response.statusCode == 200) {
+                [self deleteTaskFromLocalStore:task];
+            } else {
+                NSLog(@"[LM-ERROR]: Delete Response: %@", operation.responseString);
+            }
+        }];
+    } else if (task) {
+        [self deleteTaskFromLocalStore:task];
+    }
 }
 
 - (void) uploadPhoto:(UIImage *)image forTask:(Task *)task {
@@ -304,30 +362,37 @@
 
 - (BOOL)deleteTask:(Task *) task {
     NSNumber *task_id = task.task_id;
+    
+    if (task_id){
 
-    NSLog(@"Delete Task");
-    NSString *deleteTasksPath = [NSString stringWithFormat:@"/api/user/%@/deletetasks", [self defaultUserId]];
+        NSLog(@"Delete Task");
+        NSString *deleteTasksPath = [NSString stringWithFormat:@"/api/user/%@/deletetasks", [self defaultUserId]];
     
-    NSString *tok = [self defaultUserHashToken];
+        NSString *tok = [self defaultUserHashToken];
     
-    [[LMHttpClient sharedManager] postPath:deleteTasksPath parameters:@{@"hashToken" : tok, @"taskId" : task_id} success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [[LMHttpClient sharedManager] postPath:deleteTasksPath parameters:@{@"hashToken" : tok, @"taskId" : task_id} success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
-        [self deleteTaskFromLocalStore:task];
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        if(operation.response.statusCode == 200) {
             [self deleteTaskFromLocalStore:task];
-        } else {
-            NSLog(@"[LM-ERROR]: Delete Response: %@", operation.responseString);
-        }
-    }];
-    return YES;
+        
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            if(operation.response.statusCode == 200) {
+                [self deleteTaskFromLocalStore:task];
+            } else {
+                NSLog(@"[LM-ERROR]: Delete Response: %@", operation.responseString);
+            }
+        }];
+        return YES;
+    } else {
+        return NO;
+    }
 }
 
 - (void) updateTask:(Task *)task withValues:(NSDictionary *)values {
     [task.managedObjectContext performBlock:^{
         if(values[@"name"])
             task.name = values[@"name"];
+        if(values[@"desc"])
+            task.desc = values[@"desc"];
         if(values[@"hashtag"])
             task.hashtag = values[@"hashtag"];
         if(values[@"completed"])
@@ -387,6 +452,9 @@
         NSString *name = values[@"name"];
         name = name ? name : @"new task";
         
+        NSString *desc = values[@"desc"];
+        desc = desc ? desc : @"description";
+        
         NSString *hashtag = values[@"hashtag"];
         hashtag = hashtag ? hashtag : @"#yalebucketlist";
         
@@ -400,6 +468,7 @@
         [ctx performBlock:^{
             Task *task =  [ctx insertNewObjectForEntityForName:@"Task"];
             task.name = name;
+            task.desc = desc;
             task.hashtag = hashtag;
             task.private = private;
             task.completed = completed;
@@ -446,6 +515,28 @@
                                                       completionBlock(nil, error);
                                               }];
 }
+
+- (void)fetchLeaderboardForUser:(id)userid completion:(void (^)(NSArray *results, NSError *error))completionBlock {
+    
+    NSString *hashtoken = [self defaultUserHashToken];
+    
+    if(!hashtoken || !userid) {
+        NSLog(@"[LM-Warning]: Local fetch issue, not logged in yet.");
+        return;
+    }
+    
+    NSString *path = [NSString stringWithFormat:@"/api/user/%@/leaderboard", userid];
+    
+    [[RKObjectManager sharedManager] getObjectsAtPath:path parameters:@{@"hashToken" : hashtoken} success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+        
+        if(completionBlock) completionBlock([mappingResult array], nil);
+        
+    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+        NSLog(@"[LM-Error] Leaderboard Map Failure: %@", operation.HTTPRequestOperation.responseString);
+        if(completionBlock) completionBlock(NO, error);
+    }];
+}
+
 
 
 #pragma mark - Singleton Methods

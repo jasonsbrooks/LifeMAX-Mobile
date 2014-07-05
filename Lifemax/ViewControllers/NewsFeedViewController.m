@@ -17,6 +17,7 @@
 #import "Task+TaskAdditions.h"
 #import "User.h"
 #import "EditTaskViewController.h"
+#import "GoalViewController.h"
 #import "LMHttpClient.h"
 #import "NSString+MD5.h"
 #import "FeedUserTaskCell.h"
@@ -35,6 +36,8 @@
 @property (nonatomic, strong) NSIndexPath *selectedIndexPath;
 @property BOOL selectedUserTask;
 @property (nonatomic, strong) NSPredicate *root_predicate;
+@property NSInteger lastCell;
+@property NSInteger scrollDirection;
 @end
 
 @implementation NewsFeedViewController
@@ -49,11 +52,21 @@
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
+    
     self = [super initWithStyle:style];
     if (self) {
         // Custom initialization
     }
     return self;
+    
+//    self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
+//    if (self)
+//    {
+//        self.contentView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+//        [self loadViews];
+//        [self constrainViews];
+//    }
+//    return self;
 }
 
 - (void) fetchHashTags:(id)sender {
@@ -72,7 +85,14 @@
 {
     [super viewDidLoad];
     
-    self.title = self.isStoryController ?  NSLocalizedString(@"My Story", nil) :  NSLocalizedString(@"News Feed", nil);
+    self.scrollDirection = 0;
+    self.lastCell = 0;
+    if (self.isStoryController)
+        self.title = NSLocalizedString(@"My Story", nil);
+    else if (self.isSuggestionsController)
+        self.title = NSLocalizedString(@"Max Suggests", nil);
+    else
+        self.title = NSLocalizedString(@"News Feed", nil);
 
 //    self.tableView.tableHeaderView.translatesAutoresizingMaskIntoConstraints = NO;
     
@@ -86,6 +106,10 @@
     
     SWRevealViewController *revealController = [self revealViewController];
     self.navigationController.navigationBar.translucent = NO;
+    
+    if (!self.isSuggestionsController) {
+        self.tableView.contentInset = UIEdgeInsetsMake(0, 0, -70, 0);
+    }
     
     [revealController tapGestureRecognizer];
     
@@ -118,6 +142,45 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if ([scrollView.panGestureRecognizer translationInView:scrollView.superview].y < 0) {
+        self.scrollDirection = 1;
+    } else {
+        self.scrollDirection = -1;
+    }
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    if (self.isSuggestionsController && decelerate == NO) {
+        [self centerTable];
+    }
+}
+
+- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
+    if (self.isSuggestionsController) {
+        [self centerTable];
+    }
+}
+
+- (void)centerTable {
+    NSIndexPath *newIndexPath = [self.tableView indexPathForRowAtPoint:CGPointMake(CGRectGetMidX(self.tableView.bounds), CGRectGetMidY(self.tableView.bounds))];
+    
+    if (self.scrollDirection > 0){
+        NSInteger count = (int) [[self tableView] numberOfRowsInSection:0]-1;
+        if (self.lastCell < count) {
+            newIndexPath = [NSIndexPath indexPathForRow:self.lastCell + 1 inSection:0];
+        }
+    } else if (self.scrollDirection < 0) {
+        newIndexPath = [NSIndexPath indexPathForRow:self.lastCell - 1 inSection:0];
+    }
+
+    if (self.lastCell != 0 || self.scrollDirection >= 0){
+        [self.tableView scrollToRowAtIndexPath:newIndexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+        self.lastCell = newIndexPath.row;
+    }
+    self.scrollDirection = 0;
+}
+
 
 - (NSFetchedResultsController *) fetchedResultsController {
     if(!_fetchedResultsController) {
@@ -129,6 +192,9 @@
             id userid = [[LMRestKitManager sharedManager] defaultUserId];
             if (!userid) return nil;
             fetchRequest.predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[[NSPredicate predicateWithFormat:@"user.user_id = %@", userid], [NSPredicate predicateWithFormat:@"completed = %@", @(YES)]]];
+            self.root_predicate = fetchRequest.predicate;
+        }else if (self.isSuggestionsController) {
+            fetchRequest.predicate = [NSPredicate predicateWithFormat:@"user.user_id = 0"];
             self.root_predicate = fetchRequest.predicate;
         }else {
             fetchRequest.predicate = [NSPredicate predicateWithFormat:@"completed = %@", @(YES)];
@@ -167,7 +233,9 @@
         NSString *hashToken = [[LMRestKitManager sharedManager] defaultUserHashToken];
         __weak id ws = self;
         
-        [[LMRestKitManager sharedManager] fetchFeedTasksForUser:user hashtag:nil maxResults:50 hashtoken:hashToken completion:^(NSArray *results, NSError *error) {
+        NSString *type = self.isSuggestionsController ? NSLocalizedString(@"maxsuggests", nil) : NSLocalizedString(@"newsfeed", nil);
+
+        [[LMRestKitManager sharedManager] fetchFeedTasksForUser:user hashtag:nil maxResults:50 hashtoken:hashToken type:type completion:^(NSArray *results, NSError *error) {
             id ss = ws;
             [ss performSelector:@selector(performFetch) withObject:nil afterDelay:.05];
         }];
@@ -180,8 +248,15 @@
         BOOL fetchSuccessful = [self.fetchedResultsController performFetch:nil];
         
         if(fetchSuccessful){
+//            self.tableView.tableFooterView.hidden = !([self.fetchedResultsController.fetchedObjects count] == 0); //JASONJASONJASON
+            if ([self.fetchedResultsController.fetchedObjects count] != 0){
+                self.tableView.tableFooterView.hidden = TRUE;
+                self.tableView.rowHeight = self.view.bounds.size.height - 45;
+            } else {
+                self.tableView.tableFooterView.hidden = FALSE;
+                self.tableView.rowHeight = 100;
+            }
             [self.tableView reloadData];
-            self.tableView.tableFooterView.hidden = !([self.fetchedResultsController.fetchedObjects count] == 0);
         }
         else{
             NSLog(@"ERROR FETCHING!");
@@ -283,6 +358,8 @@
     self.selectedIndexPath = indexPath;
     if([task.user.user_id isEqualToNumber:[[LMRestKitManager sharedManager] defaultUserId]]) {
         [self performSegueWithIdentifier:@"edit_task" sender:task];
+    } else {
+        [self performSegueWithIdentifier:@"view_task" sender:self];
     }
     
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -311,6 +388,32 @@
     [self promtTaskCreationWithComplete:YES];
 }
 
+- (IBAction)removebuttonPressed:(id)sender {
+    self.selectedIndexPath = [NSIndexPath indexPathForRow:[sender tag] inSection:0];
+    [self promtTaskDeletion];
+}
+
+- (void)promtTaskDeletion {
+    [OHActionSheet showSheetInView:self.view
+                             title:NSLocalizedString(@"Remove Task from Suggestions", nil)
+                 cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+            destructiveButtonTitle:NSLocalizedString(@"Remove Forever", nil)
+                otherButtonTitles:nil
+                        completion:^(OHActionSheet *sheet, NSInteger buttonIndex)
+    {
+        if (buttonIndex != sheet.cancelButtonIndex) {
+            
+            Task *task = [self.fetchedResultsController objectAtIndexPath:self.selectedIndexPath];
+            if (task){
+                [task.managedObjectContext deleteObject:task];
+                [[LMRestKitManager sharedManager] hideSuggestion:task];
+            }
+            
+        }
+    }];
+}
+
+
 - (void)promtTaskCreationWithComplete:(BOOL)completed {
     
     [OHActionSheet showSheetInView:self.view title:NSLocalizedString(@"New Goal Privacy", nil) cancelButtonTitle:NSLocalizedString(@"Cancel", nil) destructiveButtonTitle:NSLocalizedString(@"Share with friends", nil) otherButtonTitles:@[NSLocalizedString(@"Make Private", nil)] completion:^(OHActionSheet *sheet, NSInteger buttonIndex) {
@@ -322,9 +425,11 @@
                 NSMutableDictionary *values = [NSMutableDictionary dictionary];
                 if(task.name) values[@"name"] = task.name;
                 if(task.hashtag) values[@"hashtag"] = task.hashtag;
+                if(task.desc) values[@"desc"] = task.desc;
                 if(task.pictureurl) values[@"pictureurl"] = task.pictureurl;
-                if(task.private) values[@"private"] = @(private);
-                
+//                if(task.private) values[@"private"] = @(private);
+
+                values[@"private"] = @(private);
                 values[@"completed"] = @(completed);
                 
                 [[LMRestKitManager sharedManager] newTaskForValues:values];
@@ -350,7 +455,15 @@
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 300;
+    if (self.isSuggestionsController){
+        if (indexPath.row == 0){
+            return self.view.bounds.size.height - 45;
+        } else {
+            return self.view.bounds.size.height;
+        }
+    } else {
+        return 300;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -374,6 +487,9 @@
     
     [feedCell.doneButton addTarget:self action:@selector(donebuttonPressed:) forControlEvents:UIControlEventTouchUpInside];
     feedCell.doneButton.tag = indexPath.row;
+    
+    [feedCell.removeButton addTarget:self action:@selector(removebuttonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    feedCell.removeButton.tag = indexPath.row;
     
     if ([feedCell.addButton.superview.gestureRecognizers count] == 0) {
         UIGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:nil action:nil];
@@ -415,6 +531,7 @@
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath*)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath*)newIndexPath {
     
     UITableView* tableView = self.tableView;
+    tableView.userInteractionEnabled = NO;
     switch(type) {
         case NSFetchedResultsChangeInsert:
             [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
@@ -431,9 +548,12 @@
             
         case NSFetchedResultsChangeMove:
             [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            if (newIndexPath.row >= 0) {
+                [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            }
             break;
     }
+    tableView.userInteractionEnabled = YES;
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
@@ -467,18 +587,29 @@
 {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
-    EditTaskViewController *editController = [segue destinationViewController];
+    if ([segue.identifier isEqualToString:@"edit_task"]){
+        EditTaskViewController *editController = [segue destinationViewController];
+        if(self.selectedIndexPath){
+            if ([sender isKindOfClass:[Task class]]) {
+                [editController setTask:sender];
+            }else {
+                [editController initializeWithTaskValues:[self.fetchedResultsController objectAtIndexPath:self.selectedIndexPath] fromFeed:YES];
 
-    if(self.selectedIndexPath){
-        if ([sender isKindOfClass:[Task class]]) {
-            [editController setTask:sender];
-        }else {
-            [editController initializeWithTaskValues:[self.fetchedResultsController objectAtIndexPath:self.selectedIndexPath] fromFeed:YES];
-
+            }
         }
+        editController.delegate = self;
+    } else if ([segue.identifier isEqualToString:@"view_task"]){
+        GoalViewController *goalController = [segue destinationViewController];
+        if(self.selectedIndexPath){
+            if ([sender isKindOfClass:[Task class]]) {
+                [goalController setTask:sender];
+            }else {
+                [goalController initializeWithTaskValues:[self.fetchedResultsController objectAtIndexPath:self.selectedIndexPath]];
+                
+            }
+        }
+//        goalController.delegate = self;
     }
-
-    editController.delegate = self;
 }
 
 #pragma mark - Edit Task Delegate method

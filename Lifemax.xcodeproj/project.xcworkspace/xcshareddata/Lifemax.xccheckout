@@ -5,60 +5,36 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>27F18EF2-555E-4065-A09B-0F7B72B5D053</string>
+	<string>F8E83BE2-195C-4B1F-BBA5-141D26116045</string>
 	<key>IDESourceControlProjectName</key>
 	<string>Lifemax</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>1AAC480B-F769-4CFE-A275-DF3E97E7B048</key>
-		<string>https://bitbucket.org/mrosales/lifemax.git</string>
-		<key>AC4EA57F-7285-4F78-88AE-2CAA67B4AB3E</key>
-		<string>https://github.com/AFNetworking/AFNetworking.git</string>
-		<key>E92F3EEE-986D-425F-A15C-49489F09FB69</key>
-		<string>https://github.com/rs/SDWebImage.git</string>
+		<key>96FCACB8-19C5-42ED-9A75-9951565DAA5F</key>
+		<string>https://github.com/jasonsbrooks/LifeMAX-Mobile.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>Lifemax.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>1AAC480B-F769-4CFE-A275-DF3E97E7B048</key>
+		<key>96FCACB8-19C5-42ED-9A75-9951565DAA5F</key>
 		<string>../..</string>
-		<key>AC4EA57F-7285-4F78-88AE-2CAA67B4AB3E</key>
-		<string>../../AFNetworking</string>
-		<key>E92F3EEE-986D-425F-A15C-49489F09FB69</key>
-		<string>../../SDWebImage</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://bitbucket.org/mrosales/lifemax.git</string>
+	<string>https://github.com/jasonsbrooks/LifeMAX-Mobile.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>1AAC480B-F769-4CFE-A275-DF3E97E7B048</string>
+	<string>96FCACB8-19C5-42ED-9A75-9951565DAA5F</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>AC4EA57F-7285-4F78-88AE-2CAA67B4AB3E</string>
+			<string>96FCACB8-19C5-42ED-9A75-9951565DAA5F</string>
 			<key>IDESourceControlWCCName</key>
-			<string>AFNetworking</string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>1AAC480B-F769-4CFE-A275-DF3E97E7B048</string>
-			<key>IDESourceControlWCCName</key>
-			<string>Lifemax</string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>E92F3EEE-986D-425F-A15C-49489F09FB69</string>
-			<key>IDESourceControlWCCName</key>
-			<string>SDWebImage</string>
+			<string>lifeMAX</string>
 		</dict>
 	</array>
 </dict>

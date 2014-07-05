@@ -16,5 +16,7 @@
 @dynamic user_name;
 @dynamic fbid;
 @dynamic tasks;
+@dynamic picture_url;
+@dynamic score;
 
 @end

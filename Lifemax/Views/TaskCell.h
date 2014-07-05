@@ -11,6 +11,7 @@
 @interface TaskCell : UITableViewCell
 
 @property (nonatomic, strong)  NSString *title;
+@property (nonatomic, strong)  NSString *desc;
 @property (nonatomic, readwrite)  NSString *subtitle;
 
 
