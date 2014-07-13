@@ -9,7 +9,7 @@
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.yucg.lifemax</string>
+	<string>com.yucg.LifeMAXCharles</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -30,7 +30,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>370</string>
+	<string>391</string>
 	<key>FacebookAppID</key>
 	<string>670660326330598</string>
 	<key>FacebookDisplayName</key>
