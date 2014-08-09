@@ -749,7 +749,7 @@
 					"$(PROJECT_DIR)/Flurry",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "5AF54A42-8D66-46F6-971E-05DD7EB8100E";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Testflight;
@@ -863,7 +863,7 @@
 					"$(PROJECT_DIR)/Flurry",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "5AF54A42-8D66-46F6-971E-05DD7EB8100E";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -889,7 +889,7 @@
 					"$(PROJECT_DIR)/Flurry",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "5AF54A42-8D66-46F6-971E-05DD7EB8100E";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
