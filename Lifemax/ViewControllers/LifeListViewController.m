@@ -127,8 +127,10 @@
             return nil;
         }
         
-        fetchRequest.predicate = [NSPredicate predicateWithFormat:@"user.user_id = %@", user_id];
-        
+        fetchRequest.predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[
+                                        [NSPredicate predicateWithFormat:@"user.user_id = %@", user_id],
+                                        [NSPredicate predicateWithFormat:@"completed = %@", @(NO)]
+                                    ]];
         
         // Setup fetched results
         _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest

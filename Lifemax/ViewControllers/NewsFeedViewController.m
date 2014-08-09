@@ -107,9 +107,9 @@
     SWRevealViewController *revealController = [self revealViewController];
     self.navigationController.navigationBar.translucent = NO;
     
-    if (!self.isSuggestionsController) {
-        self.tableView.contentInset = UIEdgeInsetsMake(0, 0, -70, 0);
-    }
+//    if (!self.isSuggestionsController) {
+        self.tableView.contentInset = UIEdgeInsetsMake(0, 0, -60, 0);
+//    }
     
     [revealController tapGestureRecognizer];
     
@@ -142,44 +142,44 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if ([scrollView.panGestureRecognizer translationInView:scrollView.superview].y < 0) {
-        self.scrollDirection = 1;
-    } else {
-        self.scrollDirection = -1;
-    }
-}
+//- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+//    if ([scrollView.panGestureRecognizer translationInView:scrollView.superview].y < 0) {
+//        self.scrollDirection = 1;
+//    } else {
+//        self.scrollDirection = -1;
+//    }
+//}
+//
+//- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+//    if (self.isSuggestionsController && decelerate == NO) {
+//        [self centerTable];
+//    }
+//}
+//
+//- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
+//    if (self.isSuggestionsController) {
+//        [self centerTable];
+//    }
+//}
 
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-    if (self.isSuggestionsController && decelerate == NO) {
-        [self centerTable];
-    }
-}
-
-- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
-    if (self.isSuggestionsController) {
-        [self centerTable];
-    }
-}
-
-- (void)centerTable {
-    NSIndexPath *newIndexPath = [self.tableView indexPathForRowAtPoint:CGPointMake(CGRectGetMidX(self.tableView.bounds), CGRectGetMidY(self.tableView.bounds))];
-    
-    if (self.scrollDirection > 0){
-        NSInteger count = (int) [[self tableView] numberOfRowsInSection:0]-1;
-        if (self.lastCell < count) {
-            newIndexPath = [NSIndexPath indexPathForRow:self.lastCell + 1 inSection:0];
-        }
-    } else if (self.scrollDirection < 0) {
-        newIndexPath = [NSIndexPath indexPathForRow:self.lastCell - 1 inSection:0];
-    }
-
-    if (self.lastCell != 0 || self.scrollDirection >= 0){
-        [self.tableView scrollToRowAtIndexPath:newIndexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
-        self.lastCell = newIndexPath.row;
-    }
-    self.scrollDirection = 0;
-}
+//- (void)centerTable {
+//    NSIndexPath *newIndexPath = [self.tableView indexPathForRowAtPoint:CGPointMake(CGRectGetMidX(self.tableView.bounds), CGRectGetMidY(self.tableView.bounds))];
+//    
+//    if (self.scrollDirection > 0){
+//        NSInteger count = (int) [[self tableView] numberOfRowsInSection:0]-1;
+//        if (self.lastCell < count) {
+//            newIndexPath = [NSIndexPath indexPathForRow:self.lastCell + 1 inSection:0];
+//        }
+//    } else if (self.scrollDirection < 0) {
+//        newIndexPath = [NSIndexPath indexPathForRow:self.lastCell - 1 inSection:0];
+//    }
+//
+//    if (self.lastCell != 0 || self.scrollDirection >= 0){
+//        [self.tableView scrollToRowAtIndexPath:newIndexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+//        self.lastCell = newIndexPath.row;
+//    }
+//    self.scrollDirection = 0;
+//}
 
 
 - (NSFetchedResultsController *) fetchedResultsController {
@@ -434,6 +434,12 @@
                 
                 [[LMRestKitManager sharedManager] newTaskForValues:values];
             });
+            
+            Task *task = [self.fetchedResultsController objectAtIndexPath:self.selectedIndexPath];
+            if (task){
+                [task.managedObjectContext deleteObject:task];
+                [[LMRestKitManager sharedManager] hideSuggestion:task];
+            }
         }
     }];
 }
@@ -455,15 +461,15 @@
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.isSuggestionsController){
-        if (indexPath.row == 0){
-            return self.view.bounds.size.height - 45;
-        } else {
-            return self.view.bounds.size.height;
-        }
-    } else {
+//    if (self.isSuggestionsController){
+//        if (indexPath.row == 0){
+//            return self.view.bounds.size.height - 45;
+//        } else {
+//            return self.view.bounds.size.height;
+//        }
+//    } else {
         return 300;
-    }
+//    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
